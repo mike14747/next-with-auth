@@ -1,0 +1,27 @@
+{
+    "name": "next-with-auth",
+    "version": "1.0.0",
+    "description": "This is my reference app for creating a next.js app using next-auth.",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mike14747/next-with-auth.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/mike14747/next-with-auth/issues"
+    },
+    "homepage": "https://github.com/mike14747/next-with-auth#readme",
+    "dependencies": {
+        "next": "^12.2.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    }
+}
