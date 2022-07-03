@@ -141,7 +141,6 @@ class MyDocument extends Document {
 }
 
 export default MyDocument;
-
 ```
 
 ### Setting up next-auth
