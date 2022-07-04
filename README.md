@@ -94,9 +94,9 @@ Layout.propTypes = {
 export default Layout;
 ```
 
-**/pages/_app.js**
+**/pages/\_app.js**
 
-**Note**: **_app.js** will need to have some additions made to it once **next-auth** is installed.
+**Note**: **\_app.js** will need to have some additions made to it once **next-auth** is installed.
 
 ```js
 import PropTypes from 'prop-types';
@@ -120,7 +120,7 @@ MyApp.propTypes = {
 export default MyApp;
 ```
 
-**/pages/_document.js**
+**/pages/\_document.js**
 
 ```js
 import Document, { Html, Head, Main, NextScript } from 'next/document';
@@ -146,6 +146,62 @@ class MyDocument extends Document {
 export default MyDocument;
 ```
 
-### Setting up next-auth
-
 ### Linting rules and style guide
+
+Because I didn't use **create-next-app** to create this app, I had to manually install **eslint**. First, I added this to **scripts** in **package.json**:
+
+```json
+"scripts": {
+    // ...
+    "lint": "next lint"
+},
+```
+
+I ran the **lint** script.
+
+```bash
+npm run lint
+```
+
+I then stepped through the eslint setup: - Select **Strict (recommended)** > **eslint** and **eslint-config-next** should have been installed as well as a default **.eslintrc.json**. But, for some reason the packages were not being installed automatically, so I had to install them manually.
+
+```bash
+npm i -D eslint eslint-config-next
+```
+
+The following was in the default **.eslintrc.json**:
+
+```json
+{
+    "extends": "next/core-web-vitals"
+}
+```
+
+This an example of what I've been including my **.eslintrc.json** files in a next apps:
+
+```json
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true,
+        "jest": true
+    },
+    "extends": ["eslint:recommended", "plugin:jsx-a11y/recommended", "next", "next/core-web-vitals"],
+    "rules": {
+        // my rules went here
+    }
+}
+```
+
+Extending **plugin:jsx-a11y/recommended** will improve accessibility rules.
+
+I then added my standard rules to **.eslintrc.json**.
+
+I changed the error to a warning about using the **next/image** component instead of the \<img> tag, add this to **.eslintrc.json** rules:
+
+```json
+"@next/next/no-img-element": "warn"
+```
+
+### Setting up next-auth
