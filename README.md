@@ -32,6 +32,12 @@ Install the **next.js** app:
 npm i next react react-dom
 ```
 
+It seems that **prop-types** is no longer a core component of **React** and it needs to be installed as a stand alone package.
+
+```bash
+npm i prop-types
+```
+
 Add some things to **scripts** property in **package.json**... so it looks like this:
 
 ```json
@@ -74,9 +80,7 @@ const Layout = ({ children }) => {
         <>
             <Header />
 
-            <main className="main-container">
-                {children}
-            </main>
+            <main className="main-container">{children}</main>
 
             <Footer />
         </>
@@ -92,20 +96,19 @@ export default Layout;
 
 **/pages/_app.js**
 
+**Note**: **_app.js** will need to have some additions made to it once **next-auth** is installed.
+
 ```js
 import PropTypes from 'prop-types';
-import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/Layout';
 
 import '../styles/globals.css';
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+function MyApp({ Component, pageProps }) {
     return (
-        <SessionProvider session={session}>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
-        </SessionProvider>
+        <Layout>
+            <Component {...pageProps} />
+        </Layout>
     );
 }
 
