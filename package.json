@@ -21,7 +21,9 @@
     },
     "homepage": "https://github.com/mike14747/next-with-auth#readme",
     "dependencies": {
+        "mongodb": "^4.7.0",
         "next": "^12.2.0",
+        "next-auth": "^4.8.0",
         "prop-types": "^15.8.1",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"

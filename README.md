@@ -146,6 +146,20 @@ class MyDocument extends Document {
 export default MyDocument;
 ```
 
+The **Header** and **Footer** are just basic functional components that output "This is the xxx component." text... eg:
+
+```js
+export default function Header() {
+    return (
+        <>
+            <p>This is the Header component.</p>
+        </>
+    );
+}
+```
+
+I haven't added my custom **ScrollTop** component to this app, but it could easily be included, then imported into Layout.js so it would be part of each page.
+
 ### Linting rules and style guide
 
 Because I didn't use **create-next-app** to create this app, I had to manually install **eslint**. First, I added this to **scripts** in **package.json**:
@@ -198,10 +212,23 @@ Extending **plugin:jsx-a11y/recommended** will improve accessibility rules.
 
 I then added my standard rules to **.eslintrc.json**.
 
-I changed the error to a warning about using the **next/image** component instead of the \<img> tag, add this to **.eslintrc.json** rules:
+I changed the error to a warning about using the **next/image** component instead of the \<img> tag (since I won't be using it), by adding this to **.eslintrc.json** rules:
 
 ```json
 "@next/next/no-img-element": "warn"
 ```
 
-### Setting up next-auth
+### Setting up next-auth and a database
+
+I opted for and installed **mongodb** along with **next-auth** instead of going with an sql database because hosting a remote database on Atlas is free for a low usage app like this one.
+
+```bash
+npm i next-auth mongodb
+```
+
+Setting up the database on **Atlas** and adding that connection info to my **.env** (as MONGODB_URI and MONGODB_DB values) was next up.
+
+Then there was the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
+
+### I forgot my login info
+
