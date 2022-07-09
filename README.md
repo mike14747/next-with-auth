@@ -210,7 +210,7 @@ This an example of what I've been including my **.eslintrc.json** files in a nex
 
 Extending **plugin:jsx-a11y/recommended** will improve accessibility rules.
 
-I then added my standard rules to **.eslintrc.json**.
+My standard rules were added to **.eslintrc.json**.
 
 I changed the error to a warning about using the **next/image** component instead of the \<img> tag (since I won't be using it), by adding this to **.eslintrc.json** rules:
 
@@ -228,7 +228,9 @@ npm i next-auth mongodb
 
 Setting up the database on **Atlas** and adding that connection info to my **.env** (as MONGODB_URI and MONGODB_DB values) was next up.
 
-Then there was the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
+Then there is the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
+
+
 
 ### I forgot my login info
 
