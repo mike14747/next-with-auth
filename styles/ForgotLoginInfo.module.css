@@ -1,0 +1,40 @@
+.container {
+    margin: 4rem auto 0 auto;
+}
+
+.upper {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.lower {
+    padding-top: 1rem;
+    border-top: 1px var(--mg-gray-4) solid;
+}
+
+.lower > h3 {
+    font-size: 1.2rem;
+    font-size: var(--step-1);
+    color: var(--mg-orange);
+}
+
+.btnContainer {
+    display: block;
+}
+
+.divider {
+    display: none;
+    color: var(--mg-orange);
+    font-size: 1.2rem;
+    font-size: var(--step-1);
+}
+
+@media (min-width: 768px) {
+    .btnContainer {
+        display: inline-block;
+    }
+
+    .divider {
+        display: inline;
+    }
+}

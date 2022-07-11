@@ -1,0 +1,63 @@
+.currentContainer {
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px var(--mg-gray-5) solid;
+}
+
+.currentHeading,
+.updateHeading {
+    font-size: 1.44rem;
+    font-size: var(--step-2);
+}
+
+.currentHeading {
+    color: var(--theme-color-green);
+    margin-bottom: 2rem;
+}
+
+.updateHeading {
+    color: var(--theme-color-red);
+}
+
+.note {
+    margin-bottom: 2rem;
+}
+
+.description {
+    font-size: 0.833rem;
+    font-size: var(--step--1);
+    color: var(--mg-gray-5);
+}
+
+/* .profileItem {
+    font-size: 1.2rem;
+    font-size: var(--step-1);
+} */
+
+.updateGroup {
+    margin: 0 0 2rem 0;
+    border-bottom: 1px var(--mg-gray-5) solid;
+    padding: 0 0 2rem 0;
+}
+
+.updateGroup:last-of-type {
+    border: 0;
+    padding: 0;
+}
+
+.success {
+    font-size: 0.833rem;
+    font-size: var(--step--1);
+    color: var(--mg-green);
+}
+
+.error {
+    font-size: 0.833rem;
+    font-size: var(--step--1);
+    color: var(--mg-red);
+}
+
+.resetPageHeading {
+    font-size: 1.44rem;
+    font-size: var(--step-2);
+}

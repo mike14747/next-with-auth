@@ -1,0 +1,115 @@
+button.btn {
+    --bg-img-lighten: linear-gradient(rgba(255, 255, 255, 0.1) 100%, transparent 100%);
+    --bg-img-darken: linear-gradient(rgba(0, 0, 0, 0.1) 100%, transparent 100%);
+    cursor: pointer;
+    border: 0;
+    border-radius: 0.1rem;
+    transition: 0.3s;
+}
+
+button.btn:focus {
+    outline: 1px var(--mg-gray-4) dashed;
+}
+
+button.btn:not(.text):focus {
+    outline-offset: 0.5rem;
+}
+
+button.contained.primary {
+    color: #ffffff;
+    background-color: var(--mg-green);
+}
+
+button.contained.secondary {
+    color: #ffffff;
+    background-color: var(--mg-orange);
+}
+
+button.contained.danger {
+    color: #ffffff;
+    background-color: var(--mg-red);
+}
+
+button.outlined.primary {
+    color: var(--mg-green);
+    background-color: #ffffff;
+    border: 1px var(--mg-green) solid;
+}
+
+button.outlined.secondary {
+    color: var(--mg-orange);
+    background-color: #ffffff;
+    border: 1px var(--mg-orange) solid;
+}
+
+button.outlined.danger {
+    color: var(--mg-red);
+    background-color: #ffffff;
+    border: 1px var(--mg-red) solid;
+}
+
+button.text {
+    color: var(--mg-blue);
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+button.special {
+    color: #ffffff;
+    background-color: var(--mg-dark);
+    padding: 0 0.25rem 0.25rem 0.25rem;
+    margin: 0;
+    border: 0;
+}
+
+button.small {
+    font-size: var(--step-0);
+    padding: 0.25rem 0.75rem;
+}
+
+button.medium {
+    font-size: var(--step-1);
+    padding: 0.5rem 1rem;
+}
+
+button.large {
+    font-size: var(--step-2);
+    padding: 0.75rem 1.5rem;
+}
+
+button.specialSize {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+button.small.contained:hover {
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 2px var(--mg-dark), 3px 3px 6px 2px var(--mg-gray-5);
+    background-image: var(--bg-img-darken);
+}
+
+button:not(.small).contained:hover {
+    box-shadow: 0 0 0 1px #ffffff, 0 0 0 2px var(--mg-dark), 4px 4px 8px 2px var(--mg-gray-5);
+    background-image: var(--bg-img-darken);
+}
+
+button.small.outlined:hover {
+    box-shadow: 1px 1px 3px 1px var(--mg-gray-3);
+    background-image: var(--bg-img-darken);
+}
+
+button:not(.small).outlined:hover {
+    box-shadow: 2px 2px 4px 2px var(--mg-gray-3);
+    background-image: var(--bg-img-darken);
+}
+
+button.text:hover {
+    color: var(--mg-orange);
+    outline: 1px var(--mg-gray-3) dashed;
+}
+
+button.special:hover {
+    cursor: pointer;
+    filter: invert();
+}
