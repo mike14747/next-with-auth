@@ -134,7 +134,7 @@ const Profile = () => {
             <>
                 <Head>
                     <title>
-                        Biking Log - Profile
+                        Profile
                     </title>
                 </Head>
 

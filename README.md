@@ -230,7 +230,45 @@ Setting up the database on **Atlas** and adding that connection info to my **.en
 
 Then there is the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
 
+I wrapped a session provider around the Layout component in **_app.js**.
 
+```js
+import PropTypes from 'prop-types';
+import { SessionProvider } from 'next-auth/react';
+import Layout from '../components/Layout';
+
+import '../styles/globals.css';
+
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
+    return (
+        <SessionProvider session={session}>
+            <Layout>
+                <Component {...pageProps} />
+            </Layout>
+        </SessionProvider>
+    );
+}
+
+MyApp.propTypes = {
+    Component: PropTypes.func,
+    pageProps: PropTypes.any,
+};
+
+export default MyApp;
+```
+
+I added my standard **login**, **register** and **profile** pages.
+
+Since an attempt to access a protected page would lead to a redirect to the login page, I've set the login page to monitor for a url query parameter. That way, if the login is successful, the browser would redirect to the page the user was trying to go to in the first place.
+
+There is also an array of possible url query parameters that are bypassed upon a successful login. Those include: **reset-password-success**, **register** and the **login** page itself. If any of these page are passed as a query parameter, the successful login redirect will send the user to the **homepage**.
+
+```js
+const router = useRouter();
+let redirectUrl = router.query.url || '/';
+const notRedirectable = ['/reset-password-success', '/register', '/login'];
+if (notRedirectable.indexOf(redirectUrl) > -1) redirectUrl = '/';
+```
 
 ### I forgot my login info
 

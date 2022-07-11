@@ -46,7 +46,7 @@ export default function Register() {
         <>
             <Head>
                 <title>
-                    Biking Log - Register
+                    Register
                 </title>
             </Head>
 

@@ -42,7 +42,7 @@ const Login = () => {
         <>
             <Head>
                 <title>
-                    Biking Log - Login
+                    Login
                 </title>
             </Head>
 
