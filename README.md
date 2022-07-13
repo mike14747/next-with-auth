@@ -230,7 +230,59 @@ Setting up the database on **Atlas** and adding that connection info to my **.en
 
 Then there is the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
 
-I wrapped a session provider around the Layout component in **_app.js**.
+One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is where you set up your auth providers. In this app, I'm only using a **credentials provider** with a **username** and **password**. For this app, the file looks like this:
+
+```js
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+
+import { getUserForSignin } from '../../../lib/api';
+
+export default NextAuth({
+    providers: [
+        Credentials({
+            name: 'username/password',
+            credentials: {
+                username: { label: 'Username', type: 'text' },
+                password: { label: 'Password', type: 'password' },
+            },
+            async authorize(credentials) {
+                const user = await getUserForSignin(credentials.username, credentials.password);
+                return user ? { _id: user._id, name: user.username, role: user.role } : null;
+            },
+        }),
+    ],
+    session: {
+        jwt: true,
+        maxAge: 30 * 24 * 60 * 60, // 30 * 24 * 60 * 60 is 30 days
+    },
+    jwt: {
+        signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    },
+    secret: process.env.JWT_SECRET,
+    callbacks: {
+        async jwt({ token, user }) {
+            if (user?._id) token._id = user._id;
+            if (user?.role) token.role = user.role;
+            return token;
+        },
+        async session({ session, token }) {
+            if (token?._id) session.user._id = token._id;
+            if (token?.role) session.user.role = token.role;
+            return session;
+        },
+    },
+});
+```
+
+If I planned on using a sql database to store my users, I would change all references to **_id** to **id**. But, since mongodb uses _id, I just stuck to their protocol.
+
+Some things to note with the next-auth file:
+
+-   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session).
+-   You can have more providers (eg: email or OAuth). They would get added to the **providers** array.
+
+I wrapped a session provider around the Layout component in **_app.js**. Doing this makes the logged in status available to all components and pages. But, you could only wrap certain components or pages if you'd like.
 
 ```js
 import PropTypes from 'prop-types';
