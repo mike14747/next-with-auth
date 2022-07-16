@@ -226,9 +226,39 @@ I opted for and installed **mongodb** along with **next-auth** instead of going 
 npm i next-auth mongodb
 ```
 
-Setting up the database on **Atlas** and adding that connection info to my **.env** (as MONGODB_URI and MONGODB_DB values) was next up.
+Setting up the database on **Atlas** and adding that connection info to my **.env** (as MONGODB_URI and MONGODB_DB values) was next up. I created 2 users in the initial database... one with **user** privileges and one with **admin** privileges.
 
 Then there is the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
+
+You'll need to create some properties in your .env file for next-auth to use.
+
+To generate a key, you'll need to install an npm package globally.
+
+```bash
+npm install -g node-jose-tools
+```
+
+Then generate the new key.
+
+```bash
+jose newkey -s 256 -t oct -a HS512
+```
+
+You can generate a JWT secret like this:
+
+```bash
+openssl rand -base64 32
+```
+
+I create a very complex SALT with 12 characters. There are a lot of websites that can do it or you can just pick some random characters.
+
+Here are some sample values just to show what the values should look like (these are not used in this or any app):
+
+```text
+JWT_SIGNING_PRIVATE_KEY='{"kty":"oct","kid":"w5AqKB5z0kyyX-THqwJ7AHmhqcfg1BiPziqr3MlJXsg","alg":"HS512","k":"Hvw6gokTv7CMN1HRXkuFiQC6GNiLKlL9jwpjSBpjDjw"}'
+JWT_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
+SALT='Cb+7[=lGapCq'
+```
 
 One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is where you set up your auth providers. In this app, I'm only using a **credentials provider** with a **username** and **password**. For this app, the file looks like this:
 
