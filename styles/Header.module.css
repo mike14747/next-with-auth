@@ -1,8 +1,21 @@
 .header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    border-bottom: 2px var(--mg-green) solid;
     background-color: var(--mg-gray-1);
     padding: 0.5rem;
 }
 
-.header > p {
+.leftDiv > p:last-of-type {
     margin-bottom: 0;
+}
+
+.leftDiv,
+.rightDiv {
+    padding: 0.25rem;
+}
+
+.rightDiv {
+    text-align: right;
 }
