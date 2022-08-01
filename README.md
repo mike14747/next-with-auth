@@ -305,14 +305,14 @@ export default NextAuth({
 });
 ```
 
-If I planned on using a sql database to store my users, I would change all references to **_id** to **id**. But, since mongodb uses _id, I just stuck to their protocol.
+If I planned on using a sql database to store my users, I would change all references to **\_id** to **id**. But, since mongodb uses \_id, I just stuck to their protocol.
 
 Some things to note with the next-auth file:
 
 -   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session).
 -   You can have more providers (eg: email or OAuth). They would get added to the **providers** array.
 
-I wrapped a session provider around the Layout component in **_app.js**. Doing this makes the logged in status available to all components and pages. But, you could only wrap certain components or pages if you'd like.
+I wrapped a session provider around the Layout component in **\_app.js**. Doing this makes the logged in status available to all components and pages. But, you could only wrap certain components or pages if you'd like.
 
 ```js
 import PropTypes from 'prop-types';
@@ -354,3 +354,10 @@ if (notRedirectable.indexOf(redirectUrl) > -1) redirectUrl = '/';
 
 ### I forgot my login info
 
+### Pages
+
+There are 3 types of pages in this app.
+
+1.  Public pages that can be viewed by anyone regardless of whether they are logged in. The homepage and public pages are examples of this type of page.
+2.  Protected pages that can only be viewed by a logged in user. The protected and profile pages are examples of this type of page.
+3.  Admin pages that can only be viewed by a user logged in with a role of admin. The admin page is an example of this type of page.
