@@ -8,6 +8,8 @@ It includes public and protected api routes.
 
 It even has different levels of access for the private routes (user vs admin).
 
+---
+
 ### Starting this project
 
 Create a new project at github. Be sure the include a **Node .gitignore** file and a **README.md** file.
@@ -62,6 +64,8 @@ cd ../../styles && touch globals.css Home.module.css Header.module.css Footer.mo
 ```
 
 Some of the above created files will need to be populated with code before this app will work. That will follow in subsequent sections.
+
+---
 
 ### Populating the newly created files
 
@@ -160,6 +164,8 @@ export default function Header() {
 
 I haven't added my custom **ScrollTop** component to this app, but it could easily be included, then imported into Layout.js so it would be part of each page.
 
+---
+
 ### Linting rules and style guide
 
 Because I didn't use **create-next-app** to create this app, I had to manually install **eslint**. First, I added this to **scripts** in **package.json**:
@@ -217,6 +223,8 @@ I changed the error to a warning about using the **next/image** component instea
 ```json
 "@next/next/no-img-element": "warn"
 ```
+
+---
 
 ### Setting up next-auth and a database
 
@@ -352,7 +360,11 @@ const notRedirectable = ['/reset-password-success', '/register', '/login'];
 if (notRedirectable.indexOf(redirectUrl) > -1) redirectUrl = '/';
 ```
 
+---
+
 ### I forgot my login info
+
+---
 
 ### Pages
 
@@ -361,3 +373,8 @@ There are 3 types of pages in this app.
 1.  **Public** pages that can be viewed by anyone regardless of whether they are logged in. The homepage and public pages are examples of this type of page.
 2.  **Protected** pages that can only be viewed by a logged in user. The protected and profile pages are examples of this type of page.
 3.  **Admin** pages that can only be viewed by a user logged in with a role of admin. The admin page is an example of this type of page.
+
+---
+
+### Protected pages
+

@@ -34,7 +34,7 @@ const Profile = () => {
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + session.user.id + '/update-username', {
+        const res = await fetch('/api/users/' + session.user._id + '/update-username', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -59,7 +59,7 @@ const Profile = () => {
     const handleUpdateEmailSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + session.user.id + '/update-email', {
+        const res = await fetch('/api/users/' + session.user._id + '/update-email', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -83,7 +83,7 @@ const Profile = () => {
     const handleUpdatePasswordSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + session.user.id + '/update-password', {
+        const res = await fetch('/api/users/' + session.user._id + '/update-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -108,7 +108,7 @@ const Profile = () => {
         if (session) {
             setIsLoading(true);
             const fetchData = async () => {
-                const data = await fetch('/api/users/' + session.user.id)
+                const data = await fetch('/api/users/' + session.user._id)
                     .then(res => res.json())
                     .catch(error => console.error(error));
                 if (data?.length === 1) {
