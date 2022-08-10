@@ -374,7 +374,8 @@ There are 3 types of pages in this app.
 2.  **Protected** pages that can only be viewed by a logged in user. The protected and profile pages are examples of this type of page.
 3.  **Admin** pages that can only be viewed by a user logged in with a role of admin. The admin page is an example of this type of page.
 
----
+**Protected pages**
 
-### Protected pages
+```js
 
+```

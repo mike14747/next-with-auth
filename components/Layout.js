@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import SkipToMain from './SkipToMain';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -6,9 +7,10 @@ import Footer from './Footer';
 const Layout = ({ children }) => {
     return (
         <>
+            <SkipToMain />
             <Header />
 
-            <main className="main-container">
+            <main id="main" className="main-container">
                 {children}
             </main>
 

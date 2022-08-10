@@ -753,6 +753,37 @@ h2.page-heading {
     margin-bottom: 2rem;
 }
 
+.skip-to-main {
+    position: absolute;
+    left: 1rem;
+    background-color: var(--mg-light);
+    font-size: 1rem;
+    font-size: var(--step-0);
+    margin: 0;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    transform: translateY(-120%);
+    transition: transform 0.3s ease-in;
+}
+
+.skip-to-main:focus {
+    transform: translateY(0);
+    outline: 1px var(--mg-gray-4) dashed;
+    outline-offset: 0rem;
+}
+
+.mw-75ch {
+    max-width: 75ch;
+    margin: 0 auto;
+}
+
+.mw-90ch {
+    max-width: 90ch;
+    margin: 0 auto;
+}
+
+/* end site-wide custom css */
+
 /* start global <form> css */
 
 .form {
@@ -816,8 +847,6 @@ h2.page-heading {
 }
 
 /* end global <form> css */
-
-/* end site-wide custom css */
 
 @media (min-width: 480px) {
 }
