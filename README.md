@@ -379,3 +379,92 @@ There are 3 types of pages in this app.
 ```js
 
 ```
+
+---
+
+### API Routes
+
+There are 3 types of API routes in this app.
+
+1.  **Public** routes that can be accessed by anyone regardless of whether they are logged in.
+2.  **Protected** routes that can only be accessed by a logged in user (or in some cases, a specific logged in user... eg: update email, password and username routes).
+3.  **Admin** routes that can only be accessed by a user logged in with a role of admin.
+
+**Standard API route**
+
+**Protected API route**
+
+Inside the async function are checks to make sure the following conditions are true (with a 401 status code being returned if they aren't):
+
+1.  Check that the proper crud method is being used.
+2.  Check that the user is logged via a session.
+
+**Note**: the use of an explicit _return_ must be used with the response and status code if there is code that could still be run in the event that the above conditions are not met.
+
+Only if the above conditions are met, the serverless function is called.
+
+This is a sample of my typical protected API route.
+
+```js
+import { getSession } from 'next-auth/react';
+import { getProtectedData } from '../../lib/api';
+
+export default async function directory(req, res) {
+    // the only crud method allowed on this route is GET
+    if (req.method !== 'GET') return res.status(401).end();
+
+    // make sure a user is signed in, so check for a session
+    const session = await getSession({ req });
+    // respond with status code 401 if there's no session
+    if (!session) return res.status(401).end();
+
+    try {
+        // access a serverless function to retrieve data
+        const response = await getProtectedData();
+        // if the data cannot be fetched respond with a status code of 500
+        response ? res.status(200).json(response) : res.status(500).end();
+    } catch (error) {
+        console.error(error);
+        res.status(500).end();
+    }
+}
+```
+
+Special protected API routes.
+
+Some of my API routes required not only that a user is logged in, but that a certain user is logged in. The user.\_id in the session must match the query parameter user id.
+
+This is an example of one of these special API routes (used to update a user's username).
+
+```js
+// /pages/api/users/
+
+import { getSession } from 'next-auth/react';
+import { updateUserUsername } from '../../../../lib/api';
+
+export default async function user(req, res) {
+    // the only crud method allowed on this route is PUT
+    if (req.method !== 'PUT') return res.status(401).end();
+
+    // make sure a user is signed in, so check for a session
+    const session = await getSession({ req });
+    // respond with status code 401 if there's no session
+    if (!session) return res.status(401).end();
+
+    // make sure the user's id is present as a query parameter and that body of the PUT request containes a new username
+    if (!req.query._id || !req.body.username) return res.status(400).end();
+
+    // make sure the user._id in the session matches the query parameter user id
+    if (session.user?._id !== parseInt(req.query._id)) return res.status(401).end();
+
+    try {
+        // access the serverless function to update their username
+        const response = await updateUserUsername(parseInt(req.query._id), req.body.username);
+        if (!response) return res.status(500).end();
+        response?.changedRows === 1 ? res.status(200).json(response) : res.status(400).end();
+    } catch (error) {
+        console.error(error);
+        res.status(500).end();
+    }
+}
+```
