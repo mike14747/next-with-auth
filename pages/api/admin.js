@@ -1,7 +1,7 @@
 import { getSession } from 'next-auth/react';
 import { getAdminData } from '../../lib/api';
 
-export default async function directory(req, res) {
+export default async function adminRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 

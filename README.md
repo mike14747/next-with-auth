@@ -392,12 +392,12 @@ There are 3 types of API routes in this app.
 
 **Note**: the use of an explicit _return_ must be used with the response and status code if there is code that could still be run in the event that the above conditions are not met.
 
-**Standard API route**
+**Public API route**
 
 ```js
 import { getUnprotectedData } from '../../lib/api';
 
-export default async function directory(req, res) {
+export default async function publicRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 
@@ -428,7 +428,7 @@ This is a sample of my typical protected API route.
 import { getSession } from 'next-auth/react';
 import { getProtectedData } from '../../lib/api';
 
-export default async function directory(req, res) {
+export default async function protectedRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 
@@ -461,7 +461,7 @@ This is an example of one of these special API routes (used to update a user's u
 import { getSession } from 'next-auth/react';
 import { updateUserUsername } from '../../../../lib/api';
 
-export default async function user(req, res) {
+export default async function userRoute(req, res) {
     // the only crud method allowed on this route is PUT
     if (req.method !== 'PUT') return res.status(401).end();
 
@@ -496,7 +496,7 @@ This is an example of an admin api route where a user must be signed in and have
 import { getSession } from 'next-auth/react';
 import { getAdminData } from '../../lib/api';
 
-export default async function directory(req, res) {
+export default async function adminRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 

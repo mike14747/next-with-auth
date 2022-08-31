@@ -1,7 +1,62 @@
+import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import Loading from '../components/Loading';
+
 export default function Public() {
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const abortController = new AbortController();
+
+        fetch('/api/public', { signal: abortController.signal })
+            .then(res => res.json())
+            .then(data => {
+                setData(data);
+                setError(null);
+            })
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    console.error('Data fetching was aborted!');
+                } else {
+                    console.error(error);
+                    setData(null);
+                    setError('An error occurred fetching data.');
+                }
+            })
+            .finally(() => setIsLoading(false));
+
+        return () => abortController.abort();
+    }, []);
+
     return (
-        <p>
-            This is a public page that can be viewed by anyone without being logged in.
-        </p>
+        <>
+            <Head>
+                <title>
+                    Public Page
+                </title>
+            </Head>
+
+            <article>
+                <h2 className="page-heading">
+                    Public Page
+                </h2>
+
+                {error && <p className="error">{error}</p>}
+
+                {isLoading && <Loading />}
+
+                {data?.length > 0 &&
+                    <ul>
+                        {data.map((item, index) => (
+                            <li key={index}>
+                                {item.name}
+                            </li>
+                        ))}
+                    </ul>
+                }
+            </article>
+        </>
     );
 }
