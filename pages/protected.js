@@ -6,8 +6,6 @@ import Loading from '../components/Loading';
 
 const Protected = () => {
     const { data: session, status } = useSession();
-    const loading = status === 'loading';
-
     const router = useRouter();
 
     const [data, setData] = useState(null);
@@ -43,9 +41,9 @@ const Protected = () => {
         return () => abortController.abort();
     }, [session]);
 
-    if (loading) return <Loading />;
+    if (status === 'loading') return <Loading />;
 
-    if (!session) router.push('/login?url=/protected');
+    if (status === 'unauthenticated') router.push('/login?url=/protected');
 
     if (session) {
         return (
