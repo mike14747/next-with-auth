@@ -15,7 +15,7 @@ const Protected = () => {
     useEffect(() => {
         const abortController = new AbortController();
 
-        if (session) {
+        if (status === 'authenticated') {
             setIsLoading(true);
 
             fetch('/api/protected', { signal: abortController.signal })
@@ -39,13 +39,13 @@ const Protected = () => {
         }
 
         return () => abortController.abort();
-    }, [session]);
+    }, [status]);
 
     if (status === 'loading') return <Loading />;
 
     if (status === 'unauthenticated') router.push('/login?url=/protected');
 
-    if (session) {
+    if (status === 'authenticated') {
         return (
             <>
                 <Head>

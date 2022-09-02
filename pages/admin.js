@@ -6,8 +6,6 @@ import Loading from '../components/Loading';
 
 const Admin = () => {
     const { data: session, status } = useSession();
-    const loading = status === 'loading';
-
     const router = useRouter();
 
     const [data, setData] = useState(null);
@@ -17,7 +15,7 @@ const Admin = () => {
     useEffect(() => {
         const abortController = new AbortController();
 
-        if (session?.user?.role === 'admin') {
+        if (status === 'authenticated' && session?.user?.role === 'admin') {
             setIsLoading(true);
 
             fetch('/api/admin', { signal: abortController.signal })
@@ -41,13 +39,13 @@ const Admin = () => {
         }
 
         return () => abortController.abort();
-    }, [session]);
+    }, [status, session]);
 
-    if (loading) return <Loading />;
+    if (status === 'loading') return <Loading />;
 
-    if (!session?.user?.role || session.user.role !== 'admin') router.push('/login?url=/admin');
+    if (status === 'unauthenticated') router.push('/login?url=/admin');
 
-    if (session?.user?.role === 'admin') {
+    if (status === 'authenticated') {
         return (
             <>
                 <Head>
@@ -61,19 +59,32 @@ const Admin = () => {
                         Admin Page
                     </h2>
 
-                    {error && <p className="error">{error}</p>}
+                    {session?.user?.role !== 'admin' &&
+                        <>
+                            <p className="error">You are logged in, but do not have the proper credentials to view this page.</p>
 
-                    {isLoading && <Loading />}
-
-                    {data?.length > 0 &&
-                        <ul>
-                            {data.map((item, index) => (
-                                <li key={index}>
-                                    {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
-                                </li>
-                            ))}
-                        </ul>
+                            <p className="error">Log out, then log back in as a user with the proper credentials to view this page.</p>
+                        </>
                     }
+
+                    {session?.user?.role === 'admin' &&
+                        <>
+                            {error && <p className="error">{error}</p>}
+
+                            {isLoading && <Loading />}
+
+                            {data?.length > 0 &&
+                                <ul>
+                                    {data.map((item, index) => (
+                                        <li key={index}>
+                                            {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
+                                        </li>
+                                    ))}
+                                </ul>
+                            }
+                        </>
+                    }
+
                 </article>
             </>
         );

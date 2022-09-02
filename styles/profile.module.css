@@ -11,12 +11,12 @@
 }
 
 .currentHeading {
-    color: var(--theme-color-green);
+    color: var(--mg-green);
     margin-bottom: 2rem;
 }
 
 .updateHeading {
-    color: var(--theme-color-red);
+    color: var(--mg-red);
 }
 
 .note {
