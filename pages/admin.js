@@ -13,6 +13,8 @@ const Admin = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (status !== 'authenticated' || !session?.user?.role || session.user.role !== 'admin') return;
+
         const abortController = new AbortController();
 
         if (status === 'authenticated' && session?.user?.role === 'admin') {
@@ -45,7 +47,7 @@ const Admin = () => {
 
     if (status === 'unauthenticated') router.push('/login?url=/admin');
 
-    if (status === 'authenticated') {
+    if (status === 'authenticated' && session?.user?.role === 'admin') {
         return (
             <>
                 <Head>

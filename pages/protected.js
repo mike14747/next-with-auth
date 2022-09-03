@@ -13,12 +13,15 @@ const Protected = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (status !== 'authenticated') return;
+
         const abortController = new AbortController();
 
         if (status === 'authenticated') {
             setIsLoading(true);
 
             fetch('/api/protected', { signal: abortController.signal })
+            // fetch('/api/protected')
                 .then(res => res.json())
                 .then(data => {
                     setData(data);

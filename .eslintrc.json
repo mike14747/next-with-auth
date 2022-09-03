@@ -92,6 +92,7 @@
             "error",
             4
         ],
+        "react/no-unknown-property": [1, { "ignore": ["key"] }],
         "react/prop-types": "error",
         "react/react-in-jsx-scope": "off",
         "react/require-default-props": "off",
