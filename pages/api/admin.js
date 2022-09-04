@@ -8,7 +8,7 @@ export default async function adminRoute(req, res) {
     // make sure a user is signed in, so check for a session
     const session = await getSession({ req });
     // respond with status code 401 if there's no session or the user does not have a role of admin
-    if (!session?.user?.role || session.user.role !== 'admin') return res.status(401).end();
+    if (session?.user?.role !== 'admin') return res.status(401).end();
 
     try {
         // access a serverless function to retrieve data

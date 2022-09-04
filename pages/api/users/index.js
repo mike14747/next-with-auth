@@ -8,7 +8,7 @@ import { getInfoForAllUsers, checkForAvailableUsername, registerNewUser } from '
 export default async function users(req, res) {
     if (req.method === 'GET') {
         const session = await getSession({ req });
-        if (!session?.user?.role || session.user.role !== 'admin') return res.status(401).end();
+        if (session?.user?.role !== 'admin') return res.status(401).end();
 
         try {
             const response = await getInfoForAllUsers();

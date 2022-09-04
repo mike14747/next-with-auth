@@ -47,7 +47,7 @@ const Admin = () => {
 
     if (status === 'unauthenticated') router.push('/login?url=/admin');
 
-    if (status === 'authenticated' && session?.user?.role === 'admin') {
+    if (status === 'authenticated') {
         return (
             <>
                 <Head>
