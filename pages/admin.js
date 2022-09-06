@@ -13,7 +13,7 @@ const Admin = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (status !== 'authenticated' || !session?.user?.role || session.user.role !== 'admin') return;
+        if (status !== 'authenticated' || session?.user?.role !== 'admin') return;
 
         const abortController = new AbortController();
 

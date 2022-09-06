@@ -69,12 +69,13 @@ Some of the above created files will need to be populated with code before this 
 
 ### Populating the newly created files
 
-For starters, let's populate just the files necessary to run the app.
+For starters, let's populate just the files necessary to run the app. I've included my custom **SkipTpMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section.
 
 **/components/Layout.js**
 
 ```js
 import PropTypes from 'prop-types';
+import SkipToMain from './SkipToMain';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -82,9 +83,12 @@ import Footer from './Footer';
 const Layout = ({ children }) => {
     return (
         <>
+            <SkipToMain />
             <Header />
 
-            <main className="main-container">{children}</main>
+            <main id="main" className="main-container">
+                {children}
+            </main>
 
             <Footer />
         </>
@@ -395,6 +399,8 @@ There are 3 types of API routes in this app.
 **Public API route**
 
 ```js
+// /pages/api/public.js
+
 import { getUnprotectedData } from '../../lib/api';
 
 export default async function publicRoute(req, res) {
@@ -425,6 +431,8 @@ Only if the above conditions are met, the serverless function is called.
 This is a sample of my typical protected API route.
 
 ```js
+// /pages/api/protected.js
+
 import { getSession } from 'next-auth/react';
 import { getProtectedData } from '../../lib/api';
 
@@ -456,7 +464,7 @@ Some of my API routes required not only that a user is logged in, but that a cer
 This is an example of one of these special API routes (used to update a user's username).
 
 ```js
-// /pages/api/users/
+// /pages/api/users/index.js
 
 import { getSession } from 'next-auth/react';
 import { updateUserUsername } from '../../../../lib/api';
@@ -493,6 +501,8 @@ export default async function userRoute(req, res) {
 This is an example of an admin api route where a user must be signed in and have the role of "admin".
 
 ```js
+// /pages/api/admin.js
+
 import { getSession } from 'next-auth/react';
 import { getAdminData } from '../../lib/api';
 
@@ -503,7 +513,7 @@ export default async function adminRoute(req, res) {
     // make sure a user is signed in, so check for a session
     const session = await getSession({ req });
     // respond with status code 401 if there's no session or the user does not have a role of admin
-    if (!session?.user?.role || session.user.role !== 'admin') return res.status(401).end();
+    if (session?.user?.role !== 'admin') return res.status(401).end();
 
     try {
         // access a serverless function to retrieve data
@@ -516,3 +526,36 @@ export default async function adminRoute(req, res) {
     }
 }
 ```
+
+---
+
+This is how I'm testing my conditions using Quokka in VS Code:
+
+```js
+const session1 = null;
+
+const session2 = {
+    user: {
+        username: 'user',
+        role: 'user',
+    },
+};
+
+const session3 = {
+    user: {
+        username: 'admin',
+        role: 'admin',
+    },
+};
+
+const status1 = 'loading';
+const status2 = 'unauthenticated';
+const status3 = 'authenticated';
+
+const session = session1;
+const status = status3;
+
+console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
+```
+
+---
