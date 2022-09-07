@@ -7,3 +7,11 @@
 .footer > p {
     margin-bottom: 0;
 }
+
+.copyright {
+    color: var(--mg-gray-6);
+    text-align: center;
+    font-size: 0.833rem;
+    font-size: var(--step--1);
+    margin: 0;
+}

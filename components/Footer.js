@@ -4,7 +4,7 @@ export default function Footer() {
     return (
         // to make the footer full width, just omit the container class
         <div className={styles.footer + ' container'}>
-            <p>This is the Footer component.</p>
+            <p className={styles.copyright}>&copy; 2022 next-with-auth</p>
         </div>
     );
 }

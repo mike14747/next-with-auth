@@ -154,19 +154,53 @@ class MyDocument extends Document {
 export default MyDocument;
 ```
 
-The **Header** and **Footer** are just basic functional components that output "This is the xxx component." text... eg:
+The initial **Header** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, so for now it's just commented out.
 
 ```js
+import Link from 'next/link';
+// import Authbar from './Authbar';
+
+import styles from '../styles/Header.module.css';
+
 export default function Header() {
     return (
-        <>
-            <p>This is the Header component.</p>
-        </>
+        // to make the header full width, just omit the container class
+        <div className={styles.header + ' container'}>
+            <div className={styles.leftDiv}>
+                <p>This is the Header component.</p>
+
+                <p>
+                    <Link href="/">
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <a>
+                            Home
+                        </a>
+                    </Link>
+                </p>
+            </div>
+
+            {/* <div className={styles.rightDiv}>
+                <Authbar />
+            </div> */}
+        </div>
     );
 }
 ```
 
-I haven't added my custom **ScrollTop** component to this app, but it could easily be included, then imported into Layout.js so it would be part of each page.
+...and
+
+```js
+import styles from '../styles/Footer.module.css';
+
+export default function Footer() {
+    return (
+        // to make the footer full width, just omit the container class
+        <div className={styles.footer + ' container'}>
+            <p className={styles.copyright}>&copy; 2022 next-with-auth</p>
+        </div>
+    );
+}
+```
 
 ---
 
@@ -377,6 +411,75 @@ There are 3 types of pages in this app.
 1.  **Public** pages that can be viewed by anyone regardless of whether they are logged in. The homepage and public pages are examples of this type of page.
 2.  **Protected** pages that can only be viewed by a logged in user. The protected and profile pages are examples of this type of page.
 3.  **Admin** pages that can only be viewed by a user logged in with a role of admin. The admin page is an example of this type of page.
+
+**Public pages**
+
+There's nothing unusual about my public pages. The following is a basic public page that does client side data fetching, though most public pages would likely be either server-side rendered or would be static pages.
+
+```js
+import { useState, useEffect } from 'react';
+import Head from 'next/head';
+import Loading from '../components/Loading';
+
+export default function Public() {
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const abortController = new AbortController();
+
+        fetch('/api/public', { signal: abortController.signal })
+            .then(res => res.json())
+            .then(data => {
+                setData(data);
+                setError(null);
+            })
+            .catch(error => {
+                if (error.name === 'AbortError') {
+                    console.error('Data fetching was aborted!');
+                } else {
+                    console.error(error);
+                    setData(null);
+                    setError('An error occurred fetching data.');
+                }
+            })
+            .finally(() => setIsLoading(false));
+
+        return () => abortController.abort();
+    }, []);
+
+    return (
+        <>
+            <Head>
+                <title>
+                    Public Page
+                </title>
+            </Head>
+
+            <article>
+                <h2 className="page-heading">
+                    Public Page
+                </h2>
+
+                {error && <p className="error">{error}</p>}
+
+                {isLoading && <Loading />}
+
+                {data?.length > 0 &&
+                    <ul>
+                        {data.map((item, index) => (
+                            <li key={index}>
+                                {item.name}
+                            </li>
+                        ))}
+                    </ul>
+                }
+            </article>
+        </>
+    );
+}
+```
 
 **Protected pages**
 
