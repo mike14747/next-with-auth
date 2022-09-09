@@ -10,7 +10,7 @@ import Button from '../components/Button';
 
 import styles from '../styles/profile.module.css';
 
-const Profile = () => {
+export default function Profile() {
     const { data: session, status } = useSession();
     const loading = status === 'loading';
 
@@ -198,6 +198,4 @@ const Profile = () => {
     }
 
     return null;
-};
-
-export default Profile;
+}

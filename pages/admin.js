@@ -4,7 +4,8 @@ import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Loading from '../components/Loading';
 
-const Admin = () => {
+export default function Admin() {
+    // on this page we do need access to the session because in addition to knowing whether the user is sined in, we need to check whether the user's role is sufficient to access this page
     const { data: session, status } = useSession();
     const router = useRouter();
 
@@ -93,6 +94,4 @@ const Admin = () => {
     }
 
     return null;
-};
-
-export default Admin;
+}

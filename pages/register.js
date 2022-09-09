@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import PropTypes from 'prop-types';
 import Head from 'next/head';
 import FormInputForUsername from '../components/FormInputForUsername';
 import FormInputForNewPassword from '../components/FormInputForNewPassword';
@@ -9,8 +8,7 @@ import Button from '../components/Button';
 import Loading from '../components/Loading';
 
 export default function Register() {
-    const { data: session, status } = useSession();
-    const loading = status === 'loading';
+    const { status } = useSession();
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -50,49 +48,48 @@ export default function Register() {
                 </title>
             </Head>
 
-            <>
+            <article>
                 <h2 className="page-heading">
                     Register
                 </h2>
 
-                {loading &&
+                {status === 'loading' &&
                     <Loading />
                 }
 
-                {error &&
-                    <p className="validation-error">
-                        {error}
-                    </p>
-                }
-
-                {session &&
+                {status === 'authenticated' &&
                     <p className="validation-error">
                         You cannot register as a new user while you are currently logged in.
                     </p>
                 }
 
-                {!loading && status === 'unauthenticated' && !isSuccessful &&
-                    <form method="post" onSubmit={handleRegisterSubmit} className="form">
-                        <FormInputForUsername username={username} setUsername={setUsername} />
+                {status === 'unauthenticated' && !isSuccessful &&
+                    <>
+                        {error &&
+                            <p className="validation-error">
+                                {error}
+                            </p>
+                        }
 
-                        <FormInputForEmail email={email} setEmail={setEmail} />
+                        <form method="post" onSubmit={handleRegisterSubmit} className="form">
+                            <FormInputForUsername username={username} setUsername={setUsername} />
 
-                        <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
+                            <FormInputForEmail email={email} setEmail={setEmail} />
 
-                        <div className="btn-container">
-                            <Button type="submit" size="medium" variant="contained">Submit</Button>
-                        </div>
-                    </form>
+                            <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
+
+                            <div className="btn-container">
+                                <Button type="submit" size="medium" variant="contained">Submit</Button>
+                            </div>
+                        </form>
+                    </>
+
                 }
 
                 {isSuccessful &&
                     <p className="success-large">You have successfully registered!</p>
                 }
-            </>
+            </article>
         </>
     );
 }
-
-Register.propTypes = {
-    showSignin: PropTypes.bool,
-};
