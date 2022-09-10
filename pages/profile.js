@@ -12,7 +12,6 @@ import styles from '../styles/profile.module.css';
 
 export default function Profile() {
     const { data: session, status } = useSession();
-    const loading = status === 'loading';
 
     const router = useRouter();
 
@@ -105,14 +104,18 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        if (session) {
+        if (status !== 'authenticated') return;
+
+        const abortController = new AbortController();
+
+        if (session?.user?._id) {
             setIsLoading(true);
             const fetchData = async () => {
-                const data = await fetch('/api/users/' + session.user._id)
+                const data = await fetch('/api/users/' + session.user._id, { signal: abortController.signal })
                     .then(res => res.json())
                     .catch(error => console.error(error));
-                if (data?.length === 1) {
-                    setUser(data[0]);
+                if (data) {
+                    setUser(data);
                 } else {
                     setUser(null);
                     setProfileError('An error occurred fetching data.');
@@ -123,13 +126,15 @@ export default function Profile() {
         } else {
             setUser(null);
         }
-    }, [session, emailUpdateMsg]);
 
-    if (loading) return <Loading />;
+        return () => abortController.abort();
+    }, [status, session, emailUpdateMsg]);
 
-    if (!session) router.push('/login?url=/profile');
+    if (status === 'loading') return <Loading />;
 
-    if (session) {
+    if (status === 'unauthenticated') router.push('/login?url=/profile');
+
+    if (status === 'authenticated') {
         return (
             <>
                 <Head>

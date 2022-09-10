@@ -86,7 +86,7 @@ export default function Register() {
 
                 }
 
-                {isSuccessful &&
+                {status === 'unauthenticated' && isSuccessful &&
                     <p className="success-large">You have successfully registered!</p>
                 }
             </article>
