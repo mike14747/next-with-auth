@@ -1,4 +1,4 @@
-// this will get all users and their info (but not riding data) if the http method is GET... and only if the user is logged in with the role of admin
+// this will get all users and their info if the http method is GET... and only if the user is logged in with the role of admin
 
 // this route is also used for registering a new user... if the http method is POST
 
