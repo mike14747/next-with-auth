@@ -33,7 +33,7 @@ export default function Profile() {
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + session.user._id + '/update-username', {
+        const res = await fetch('/api/users/' + session.user._id + '/change-username', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -58,7 +58,7 @@ export default function Profile() {
     const handleUpdateEmailSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + session.user._id + '/update-email', {
+        const res = await fetch('/api/users/' + session.user._id + '/change-email', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -82,7 +82,7 @@ export default function Profile() {
     const handleUpdatePasswordSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + session.user._id + '/update-password', {
+        const res = await fetch('/api/users/' + session.user._id + '/change-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
