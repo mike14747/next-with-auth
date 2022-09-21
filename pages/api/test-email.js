@@ -1,4 +1,4 @@
-import { testEmail } from '../../lib/api';
+import { testEmail } from '../../lib/api/user';
 
 export default async function settings(req, res) {
     if (req.method !== 'GET') return res.status(401).end();

@@ -1,4 +1,4 @@
-import { resetPassword } from '../../../lib/api';
+import { resetPassword } from '../../../lib/api/user';
 
 export default async function user(req, res) {
     if (req.method !== 'POST') return res.status(401).end();

@@ -312,7 +312,7 @@ One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { getUserForSignin } from '../../../lib/api';
+import { getUserForSignin } from '../../../lib/api/user.js';
 
 export default NextAuth({
     providers: [
@@ -567,31 +567,27 @@ Some of my API routes required not only that a user is logged in, but that a cer
 This is an example of one of these special API routes (used to update a user's username).
 
 ```js
-// /pages/api/users/index.js
+// /pages/api/users/[_id]/change-username.js
 
 import { getSession } from 'next-auth/react';
-import { updateUserUsername } from '../../../../lib/api';
+import { checkForAvailableUsername, changeUsername } from '../../../../lib/api/user';
 
-export default async function userRoute(req, res) {
-    // the only crud method allowed on this route is PUT
+export default async function user(req, res) {
     if (req.method !== 'PUT') return res.status(401).end();
-
-    // make sure a user is signed in, so check for a session
     const session = await getSession({ req });
-    // respond with status code 401 if there's no session
     if (!session) return res.status(401).end();
-
-    // make sure the user's id is present as a query parameter and that body of the PUT request containes a new username
     if (!req.query._id || !req.body.username) return res.status(400).end();
-
-    // make sure the user._id in the session matches the query parameter user id
-    if (session.user?._id !== parseInt(req.query._id)) return res.status(401).end();
+    if (session.user?._id !== req.query._id) return res.status(401).end();
 
     try {
-        // access the serverless function to update their username
-        const response = await updateUserUsername(parseInt(req.query._id), req.body.username);
-        if (!response) return res.status(500).end();
-        response?.changedRows === 1 ? res.status(200).json(response) : res.status(400).end();
+        // first make sure the username isn't already in use
+        const usernameResult = await checkForAvailableUsername(req.body.username);
+        if (!usernameResult) return res.status(500).end();
+        if (usernameResult.length > 0) return res.status(409).end();
+
+        // since the username is not already in use, add the user's submission
+        const response = await changeUsername(req.query._id, req.body.username);
+        response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
         console.error(error);
         res.status(500).end();

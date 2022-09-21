@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/react';
-import { checkForAvailableUsername, changeUsername } from '../../../../lib/api';
+import { checkForAvailableUsername, changeUsername } from '../../../../lib/api/user';
 
 export default async function user(req, res) {
     if (req.method !== 'PUT') return res.status(401).end();

@@ -3,7 +3,7 @@
 // this route is also used for registering a new user... if the http method is POST
 
 import { getSession } from 'next-auth/react';
-import { getInfoForAllUsers, checkForAvailableUsername, registerNewUser } from '../../../lib/api';
+import { getInfoForAllUsers, checkForAvailableUsername, registerNewUser } from '../../../lib/api/user';
 
 export default async function users(req, res) {
     if (req.method === 'GET') {

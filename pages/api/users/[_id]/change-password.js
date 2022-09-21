@@ -1,5 +1,5 @@
 import { getSession } from 'next-auth/react';
-import { updateUserPassword } from '../../../../lib/api';
+import { changePassword } from '../../../../lib/api/user';
 
 export default async function user(req, res) {
     if (req.method !== 'PUT') return res.status(401).end();
@@ -10,9 +10,9 @@ export default async function user(req, res) {
     try {
         let response;
         if (session) {
-            response = await updateUserPassword(session.user._id, req.body.password);
+            response = await changePassword(session.user._id, req.body.password);
         } else if (req.body.userId && req.body.token) {
-            response = await updateUserPassword(parseInt(req.body.userId), req.body.password, req.body.token);
+            response = await changePassword(parseInt(req.body.userId), req.body.password, req.body.token);
         } else {
             return res.status(400).end();
         }

@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { getUserForSignin } from '../../../lib/api';
+import { getUserForSignin } from '../../../lib/api/user';
 
 export default NextAuth({
     providers: [

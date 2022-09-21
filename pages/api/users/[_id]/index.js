@@ -1,7 +1,7 @@
-// this route will get all user info for a single user (but not riding data) by id if the http method is GET
+// this route will get all user info for a single user by id if the http method is GET
 
 import { getSession } from 'next-auth/react';
-import { getUserProfile } from '../../../../lib/api';
+import { getUserProfile } from '../../../../lib/api/user';
 
 export default async function user(req, res) {
     if (req.method !== 'GET') return res.status(401).end();
