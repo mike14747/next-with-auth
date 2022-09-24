@@ -9,7 +9,7 @@ export default async function user(req, res) {
     if (session.user?._id !== req.query._id) return res.status(401).end();
 
     try {
-        // the changeUsername serverless function will first make sure the username isn't already in use... only then will it make the change
+        // the changeUsername serverless function will first make sure the username isn't already in use and then will make the change if it's not in use
         const response = await changeUsername(req.query._id, req.body.username);
         response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
