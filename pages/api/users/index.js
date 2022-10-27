@@ -22,7 +22,7 @@ export default async function users(req, res) {
         if (!req.body.username || !req.body.password || !req.body.email) return res.status(400).end();
 
         try {
-            // the changeUsername serverless function will first make sure the username isn't already in use... only then will it register the new user
+            // the registerNewUser serverless function will first make sure the username isn't already in use... only then will it register the new user
             const response = await registerNewUser(req.body.username, req.body.password, req.body.email);
             response?.code ? res.status(response.code).end() : res.status(500).end();
         } catch (error) {
