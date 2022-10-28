@@ -662,4 +662,5 @@ console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
 ### Todos
 
 -   The **registerNewUser** serverless function in user.js needs to be converted from mysql to mongodb.
--   Need to add the following serverless functions in user.js: **forgotUsername** and **resetPassword**.
+-   Need to add the following serverless functions in user.js: **forgotUsername** and **resetPassword**. (they have been added, but aren't working yet)
+-   Figure out the issue with nodemailer. I'm getting this error: "Error: invalid_grant: Bad Request".

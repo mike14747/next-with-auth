@@ -32,8 +32,9 @@ export default function ForgottenUsername() {
         setIsSubmitting(false);
 
         if (res.status !== 200) {
-            setError('An error occurred. Make sure you submitted your email address correctly.');
+            setError('An error occurred. Make sure you submitted your email address correctly and try again.');
         }
+
         if (res.status === 200) {
             setError(false);
             setSuccess(true);
