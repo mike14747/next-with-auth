@@ -172,9 +172,7 @@ export default function Header() {
                 <p>
                     <Link href="/">
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>
-                            Home
-                        </a>
+                        <a>Home</a>
                     </Link>
                 </p>
             </div>
@@ -430,12 +428,12 @@ export default function Public() {
         const abortController = new AbortController();
 
         fetch('/api/public', { signal: abortController.signal })
-            .then(res => res.json())
-            .then(data => {
+            .then((res) => res.json())
+            .then((data) => {
                 setData(data);
                 setError(null);
             })
-            .catch(error => {
+            .catch((error) => {
                 if (error.name === 'AbortError') {
                     console.error('Data fetching was aborted!');
                 } else {
@@ -452,29 +450,23 @@ export default function Public() {
     return (
         <>
             <Head>
-                <title>
-                    Public Page
-                </title>
+                <title>Public Page</title>
             </Head>
 
             <article>
-                <h2 className="page-heading">
-                    Public Page
-                </h2>
+                <h2 className="page-heading">Public Page</h2>
 
                 {error && <p className="error">{error}</p>}
 
                 {isLoading && <Loading />}
 
-                {data?.length > 0 &&
+                {data?.length > 0 && (
                     <ul>
                         {data.map((item, index) => (
-                            <li key={index}>
-                                {item.name}
-                            </li>
+                            <li key={index}>{item.name}</li>
                         ))}
                     </ul>
-                }
+                )}
             </article>
         </>
     );
@@ -662,5 +654,5 @@ console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
 ### Todos
 
 -   The **registerNewUser** serverless function in user.js needs to be converted from mysql to mongodb.
--   Need to add the following serverless functions in user.js: **forgotUsername** and **resetPassword**. (they have been added, but aren't working yet)
--   Figure out the issue with nodemailer. I'm getting this error: "Error: invalid_grant: Bad Request".
+-   Need to add a **api/user/update-password** route for using the reset password link.
+-   Fix the **/users/[_id.js]/change-password** route to not use a token. This means I'm going to need a separate serverless function for updating your password via the reset-password link and updating it from within your profile... plus I'll need to get the api route working that updates your password via the reset-password link.
