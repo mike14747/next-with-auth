@@ -654,5 +654,3 @@ console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
 ### Todos
 
 -   The **registerNewUser** serverless function in user.js needs to be converted from mysql to mongodb.
--   Need to add a **api/user/update-password** route for using the reset password link.
--   Fix the **/users/[_id.js]/change-password** route to not use a token. This means I'm going to need a separate serverless function for updating your password via the reset-password link and updating it from within your profile... plus I'll need to get the api route working that updates your password via the reset-password link.
