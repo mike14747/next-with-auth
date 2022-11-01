@@ -28,8 +28,8 @@ export default function Token() {
     const handleUpdatePasswordSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/user/update-password', {
-            method: 'POST',
+        const res = await fetch('/api/users/' + router.query.userId + '/change-password', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
@@ -37,9 +37,10 @@ export default function Token() {
         });
 
         if (res.status !== 200) {
+            console.log('the password change seems to have failed');
             res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
             res.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
-            res.status === 406 && setPasswordError('An error occurred. Reset token does not exist.');
+            res.status === 406 && setPasswordError('An error occurred. User or reset token do not exist.');
             res.status === 412 && setPasswordError('An error occurred. The reset token has expired.');
             res.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
         }

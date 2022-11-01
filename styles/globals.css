@@ -839,6 +839,14 @@ h2.page-heading {
     text-align: center;
 }
 
+.reset-password-success {
+    margin-top: 3rem;
+    font-size: 1.44rem;
+    font-size: var(--step-2);
+    color: var(--mg-green);
+    text-align: center;
+}
+
 .error {
     font-size: 1rem;
     font-size: var(--step-0);

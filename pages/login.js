@@ -14,9 +14,10 @@ export default function Login() {
     // get the redirect query parameter if there is one... if not, set the homepage as the redirect location
     let redirectUrl = router.query.url || '/';
     // set an array of query parameters that are not allowed to be redirected to
-    const notRedirectable = ['/reset-password-success', '/register', '/login'];
+    const notRedirectable = ['/reset-link', '/reset-password-success', '/register', '/login'];
     // if a resistricted query parameter is included, redirect to the homepage
-    if (notRedirectable.indexOf(redirectUrl) > -1) redirectUrl = '/';
+    const notRedirectableCheck = notRedirectable.filter(url => redirectUrl.startsWith(url));
+    if (notRedirectableCheck.length > 0) redirectUrl = '/';
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
