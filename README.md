@@ -154,6 +154,12 @@ class MyDocument extends Document {
 export default MyDocument;
 ```
 
+You can uncomment one of the favicon lines if you add a favicon to: **/public/images**. If you do that, you'll need to comment the line that disables them.
+
+```js
+<link rel="icon" href="data:," />
+```
+
 The initial **Header** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, so for now it's just commented out.
 
 ```js
@@ -270,7 +276,7 @@ I opted for and installed **mongodb** along with **next-auth** instead of going 
 npm i next-auth mongodb
 ```
 
-Setting up the database on **Atlas** and adding that connection info to my **.env** (as MONGODB_URI and MONGODB_DB values) was next up. I created 2 users in the initial database... one with **user** privileges and one with **admin** privileges.
+Setting up the database on **Atlas** and adding that connection info to my **.env** (as MONGODB_URI and MONGODB_DB values) was next up. I created 2 users in the initial database... one with **user** privileges and one with **admin** privileges (test-user and admin-user).
 
 Then there is the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
 
@@ -655,4 +661,4 @@ console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
 
 ### Todos
 
--
+-   Look into using **unstable_getServerSession()** instead of **getSession** on the server. Docs can be found [HERE](https://next-auth.js.org/tutorials/securing-pages-and-api-routes)... or try using **getToken**... info [HERE](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken).
