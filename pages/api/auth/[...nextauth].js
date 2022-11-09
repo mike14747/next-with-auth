@@ -7,10 +7,13 @@ export default NextAuth({
     providers: [
         Credentials({
             name: 'username/password',
+
+            // the credentials property is not needed since we are using a custom login page, but I've left it here anyway
             credentials: {
                 username: { label: 'Username', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
+
             async authorize(credentials) {
                 const user = await getUserForSignin(credentials.username, credentials.password);
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;
