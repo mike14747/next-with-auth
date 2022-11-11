@@ -294,7 +294,7 @@ Then generate the new key.
 jose newkey -s 256 -t oct -a HS512
 ```
 
-You can generate a JWT secret like this:
+You can generate a next-auth JWT secret like this:
 
 ```bash
 openssl rand -base64 32
@@ -306,7 +306,7 @@ Here are some sample values just to show what the values should look like (these
 
 ```text
 JWT_SIGNING_PRIVATE_KEY='{"kty":"oct","kid":"w5AqKB5z0kyyX-THqwJ7AHmhqcfg1BiPziqr3MlJXsg","alg":"HS512","k":"Hvw6gokTv7CMN1HRXkuFiQC6GNiLKlL9jwpjSBpjDjw"}'
-JWT_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
+NEXTAUTH_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
 SALT='Cb+7[=lGapCq'
 ```
 
@@ -322,10 +322,13 @@ export default NextAuth({
     providers: [
         Credentials({
             name: 'username/password',
+
+            // the credentials property is not needed since we are using a custom login page, but I've left it here anyway
             credentials: {
                 username: { label: 'Username', type: 'text' },
                 password: { label: 'Password', type: 'password' },
             },
+
             async authorize(credentials) {
                 const user = await getUserForSignin(credentials.username, credentials.password);
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;
@@ -339,7 +342,7 @@ export default NextAuth({
     jwt: {
         signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
-    secret: process.env.JWT_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({ token, user }) {
             if (user?._id) token._id = user._id;

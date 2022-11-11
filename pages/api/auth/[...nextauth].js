@@ -27,7 +27,7 @@ export default NextAuth({
     jwt: {
         signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
-    secret: process.env.JWT_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({ token, user }) {
             if (user?._id) token._id = user._id;
