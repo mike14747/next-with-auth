@@ -21,11 +21,15 @@ export default NextAuth({
         }),
     ],
     session: {
-        jwt: true,
+        strategy: 'jwt',
+        // jwt: true,
         maxAge: 30 * 24 * 60 * 60, // 30 * 24 * 60 * 60 is 30 days
     },
     jwt: {
         signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    },
+    pages: {
+        signIn: '/login',
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
