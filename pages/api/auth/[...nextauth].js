@@ -16,28 +16,28 @@ export default NextAuth({
 
             async authorize(credentials) {
                 const user = await getUserForSignin(credentials.username, credentials.password);
+
+                // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback ffunctions
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;
             },
         }),
     ],
     session: {
         strategy: 'jwt',
-        // jwt: true,
         maxAge: 30 * 24 * 60 * 60, // 30 * 24 * 60 * 60 is 30 days
-    },
-    jwt: {
-        signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
     pages: {
         signIn: '/login',
     },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
+        // I'm adding some extra properties to the jwt... this is where you must add them
         async jwt({ token, user }) {
             if (user?._id) token._id = user._id;
             if (user?.role) token.role = user.role;
             return token;
         },
+        // I'm adding some extra properties to the session... this is where you must add them
         async session({ session, token }) {
             if (token?._id) session.user._id = token._id;
             if (token?.role) session.user.role = token.role;
