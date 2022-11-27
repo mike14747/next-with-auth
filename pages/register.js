@@ -58,7 +58,7 @@ export default function Register() {
                 }
 
                 {status === 'authenticated' &&
-                    <p className="validation-error">
+                    <p className="error">
                         You cannot register as a new user while you are currently logged in.
                     </p>
                 }
@@ -66,7 +66,7 @@ export default function Register() {
                 {status === 'unauthenticated' && !isSuccessful &&
                     <>
                         {error &&
-                            <p className="validation-error">
+                            <p className="error">
                                 {error}
                             </p>
                         }
