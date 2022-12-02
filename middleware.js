@@ -1,14 +1,35 @@
-import { NextResponse } from 'next/server';
+// import { NextResponse } from 'next/server';
 
-export function middleware(req) {
-    console.log('inside the middleware file (' + req.nextUrl + ')');
+// export function middleware(req) {
+//     console.log('inside the middleware file (' + req.nextUrl + ')');
 
-    const url = req.nextUrl.clone();
-    url.pathname = '/protected';
+//     const url = req.nextUrl.clone();
+//     url.pathname = '/protected';
 
-    return NextResponse.rewrite(url);
-}
+//     return NextResponse.rewrite(url);
+// }
 
-export const config = {
-    matcher: '/public',
-};
+// export const config = {
+//     matcher: '/public',
+// };
+
+import { withAuth } from 'next-auth/middleware';
+
+export default withAuth(
+    function middleware(req) {
+        console.log('token:', req.nextauth.token);
+    },
+    {
+        callbacks: {
+            authorized: ({ token }) => token?.role === 'user',
+        },
+        pages: {
+            signIn: '/login',
+        },
+    },
+);
+
+export const config = { matcher: ['/protected2'] };
+
+// to protect every possible route:
+// export const config = { matcher: ['/:path*'] };
