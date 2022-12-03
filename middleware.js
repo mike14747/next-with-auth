@@ -17,11 +17,14 @@ import { withAuth } from 'next-auth/middleware';
 
 export default withAuth(
     function middleware(req) {
-        console.log('token:', req.nextauth.token);
+        // console.log('token:', req.nextauth.token);
     },
     {
         callbacks: {
-            authorized: ({ token }) => token?.role === 'user',
+            // authorized: ({ token }) => token?.role === 'user',
+            authorized({ req, token }) {
+                if (token) return true;
+            },
         },
         pages: {
             signIn: '/login',
@@ -30,6 +33,3 @@ export default withAuth(
 );
 
 export const config = { matcher: ['/protected2'] };
-
-// to protect every possible route:
-// export const config = { matcher: ['/:path*'] };

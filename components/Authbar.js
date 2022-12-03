@@ -17,7 +17,7 @@ const Authbar = () => {
 
             {!session && !loading &&
                 <p>
-                    <Link href={`/login?url=${router.pathname}`}>
+                    <Link href={`/login?callbackUrl=${router.pathname}`}>
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a>Login</a>
                     </Link>
@@ -43,7 +43,8 @@ const Authbar = () => {
                         </Link>
                     </p>
 
-                    <Button onClick={() => signOut({ redirect: false })} size="small" variant="text">Logout</Button>
+                    {/* <Button onClick={() => signOut({ redirect: false })} size="small" variant="text">Logout</Button> */}
+                    <Button onClick={() => signOut({ callbackUrl: '/' })} size="small" variant="text">Logout</Button>
                 </>
             }
         </div>

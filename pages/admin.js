@@ -46,7 +46,7 @@ export default function Admin() {
 
     if (status === 'loading') return <Loading />;
 
-    if (status === 'unauthenticated') router.push('/login?url=/admin');
+    if (status === 'unauthenticated') router.push('/login?callbackUrl=/admin');
 
     if (status === 'authenticated') {
         return (

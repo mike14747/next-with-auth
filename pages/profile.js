@@ -132,7 +132,7 @@ export default function Profile() {
 
     if (status === 'loading') return <Loading />;
 
-    if (status === 'unauthenticated') router.push('/login?url=/profile');
+    if (status === 'unauthenticated') router.push('/login?callbackUrl=/profile');
 
     if (status === 'authenticated') {
         return (

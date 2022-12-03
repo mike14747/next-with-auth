@@ -26,9 +26,9 @@ export default NextAuth({
         strategy: 'jwt',
         maxAge: 30 * 24 * 60 * 60, // 30 * 24 * 60 * 60 is 30 days
     },
-    // pages: {
-    //     signIn: '/login',
-    // },
+    pages: {
+        signIn: '/login',
+    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         // I'm adding some extra properties to the jwt... this is where you must add them

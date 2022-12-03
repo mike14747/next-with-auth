@@ -339,6 +339,10 @@ export default NextAuth({
         jwt: true,
         maxAge: 30 * 24 * 60 * 60, // 30 * 24 * 60 * 60 is 30 days
     },
+    // if using middleware to protect pages, it's necessary to specify the login page... otherwise it'll send you to the next-auth signIn page (/api/auth/signin)
+    pages: {
+        signIn: '/login',
+    },
     jwt: {
         signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
     },
@@ -400,7 +404,7 @@ There is also an array of possible url query parameters that are bypassed upon a
 
 ```js
 const router = useRouter();
-let redirectUrl = router.query.url || '/';
+let redirectUrl = router.query.callbackUrl || '/';
 const notRedirectable = ['reset-link', '/reset-password-success', '/register', '/login'];
 
 const notRedirectableCheck = notRedirectable.filter((url) => redirectUrl.startsWith(url));
@@ -662,6 +666,20 @@ console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
 
 ---
 
+### Using signOut()
+
+```js
+<Button onClick={() => signOut({ redirect: false })} size="small" variant="text">Logout</Button>
+
+// or with logging out always sending you to the homepage
+
+<Button onClick={() => signOut({ callbackUrl: '/' })} size="small" variant="text">Logout</Button>
+
+// redirecting to the homepage upon logout is useful when using middleware to protect a page because once you're on a protected page, the middleware won't be able to take you away from it upon logout
+```
+
+---
+
 ### Todos
 
--   Look into using **unstable_getServerSession()** instead of **getSession** on the server. Docs can be found [HERE](https://next-auth.js.org/tutorials/securing-pages-and-api-routes)... or try using **getToken**... info [HERE](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken).
+-   

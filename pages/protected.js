@@ -53,7 +53,7 @@ export default function Protected() {
     if (status === 'loading') return <Loading />;
 
     // unauthenticated: redirect to the login page with the query parameter set so the login page will send them back here if they successfully log in
-    if (status === 'unauthenticated') router.push('/login?url=/protected');
+    if (status === 'unauthenticated') router.push('/login?callbackUrl=/protected');
 
     // authenticated: render the page as intended
     // this doesn't have to have a condition attached to it since it's the only option remaining if the code gets this far, but it makes it easier to understand what's going on, so I've included it
