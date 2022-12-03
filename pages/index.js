@@ -34,6 +34,16 @@ export default function Home() {
                 </li>
 
                 <li>
+                    <Link href="/protected2">
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        <a>
+                            Protected by middleware page
+                        </a>
+
+                    </Link>
+                </li>
+
+                <li>
                     <Link href="/admin">
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                         <a>
