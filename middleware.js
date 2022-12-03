@@ -1,28 +1,24 @@
-// import { NextResponse } from 'next/server';
-
-// export function middleware(req) {
-//     console.log('inside the middleware file (' + req.nextUrl + ')');
-
-//     const url = req.nextUrl.clone();
-//     url.pathname = '/protected';
-
-//     return NextResponse.rewrite(url);
-// }
-
-// export const config = {
-//     matcher: '/public',
-// };
-
 import { withAuth } from 'next-auth/middleware';
+import { NextResponse } from 'next/server';
 
 export default withAuth(
     function middleware(req) {
         // console.log('token:', req.nextauth.token);
+        // console.log('req.nextUrl:', req.nextUrl);
+
+        // if a user is trying navigate to the /admin page without being logged in with a role of admin, redirect them to the homepage
+        if (req.nextUrl.pathname.startsWith('/admin')) {
+            // console.log('You are accessing the admin page');
+            if (req.nextauth.token.role !== 'admin') {
+                console.log('---You do not have permission to view the admin page!---');
+                return NextResponse.redirect(`${req.nextUrl.origin}/`);
+            }
+        }
     },
     {
         callbacks: {
             // authorized: ({ token }) => token?.role === 'user',
-            authorized({ req, token }) {
+            authorized({ token }) {
                 if (token) return true;
             },
         },
@@ -32,4 +28,4 @@ export default withAuth(
     },
 );
 
-export const config = { matcher: ['/protected2'] };
+export const config = { matcher: ['/protected2', '/admin'] };
