@@ -1,0 +1,22 @@
+.nav {
+    padding: 0.25rem;
+}
+
+.nav ul {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+.nav ul li {
+    list-style-type: disc;
+    margin: 0 1.5rem;
+}
+
+.nav ul li:first-of-type {
+    margin-left: 0.75rem;
+}
+
+.nav ul li:last-of-type {
+    margin-right: 0;
+}
