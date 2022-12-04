@@ -177,8 +177,9 @@ export default function Header() {
 
                 <p>
                     <Link href="/">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>Home</a>
+                        <a>
+                            Home
+                        </a>
                     </Link>
                 </p>
             </div>
@@ -270,6 +271,8 @@ I changed the error to a warning about using the **next/image** component instea
 
 ### Setting up next-auth and a database
 
+**Note**: As of 2022-12-03, next-auth middleware doesn't work with next v13. Use next v12.2 if you want to use middleware to secure pages.
+
 I opted for and installed **mongodb** along with **next-auth** instead of going with an sql database because hosting a remote database on Atlas is free for a low usage app like this one.
 
 ```bash
@@ -282,18 +285,6 @@ Then there is the database connection file (/lib/mongodb.js). This will be impor
 
 You'll need to create some properties in your .env file for next-auth to use.
 
-To generate a key, you'll need to install an npm package globally.
-
-```bash
-npm install -g node-jose-tools
-```
-
-Then generate the new key.
-
-```bash
-jose newkey -s 256 -t oct -a HS512
-```
-
 You can generate a next-auth JWT secret like this:
 
 ```bash
@@ -305,7 +296,6 @@ I create a very complex SALT with 12 characters. There are a lot of websites tha
 Here are some sample values just to show what the values should look like (these are not used in this or any app):
 
 ```text
-JWT_SIGNING_PRIVATE_KEY='{"kty":"oct","kid":"w5AqKB5z0kyyX-THqwJ7AHmhqcfg1BiPziqr3MlJXsg","alg":"HS512","k":"Hvw6gokTv7CMN1HRXkuFiQC6GNiLKlL9jwpjSBpjDjw"}'
 NEXTAUTH_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
 SALT='Cb+7[=lGapCq'
 ```
