@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="120" height="24" role="img" aria-label="by Mike Gullo">
+    <title>by Mike Gullo</title>
+    <g shape-rendering="crispEdges">
+        <rect x="0"  width="28" height="24" fill="#d3d3d3" />
+        <rect x="28" width="96" height="24" fill="#232323" />
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Segoe UI,Verdana,Geneva,sans-serif" text-rendering="geometricPrecision" font-size="12" letter-spacing="1">
+        <text x="14" y="17" fill="#000">by</text>
+        <text x="74" y="17" fill="#fff">Mike Gullo</text>
+    </g>
+</svg>

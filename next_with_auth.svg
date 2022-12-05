@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="132" height="32" role="img" aria-label="next-with-auth">
+    <title>next-with-auth</title>
+    <g shape-rendering="crispEdges">
+        <rect x="0" width="132" height="32" fill="#228b22" />
+    </g>
+    <g fill="#fff" text-anchor="middle" font-family="Segoe UI,Verdana,Geneva,sans-serif" text-rendering="geometricPrecision" font-size="20" letter-spacing="1">
+        <text x="66" y="23" textLength="100" lengthAdjust="spacingAndGlyphs">next-with-auth</text>
+    </g>
+</svg>

@@ -1,18 +1,25 @@
 # next-with-auth
 
+![Node](https://img.shields.io/badge/Node-339933?style=flat-square&logo=nodedotjs&logoColor=ffffff 'Node')
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=f5f5f5 'Next.js')
+![NextAuth](https://img.shields.io/badge/N-NextAuth-7C14D7.svg?style=flat-square&colorA=1BAFEF 'NextAuth')
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat-square&logo=mongodb&logoColor=ffffff 'MongoDB')
+![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=f5f5f5 'ESLint')
+![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=f5f5f5 'Vercel')
+
 This is my reference app for creating a next.js app using next-auth.
 
 It includes public and protected pages.
 
 It includes public and protected api routes.
 
-It even has different levels of access for the private routes (user vs admin).
+It even has different levels of access for the different private routes (user vs admin).
 
 ---
 
 ### Starting this project
 
-Create a new project at github. Be sure the include a **Node .gitignore** file and a **README.md** file.
+Create a new project at github. Be sure the include a _Node_ **.gitignore** file and a **README.md** file.
 
 Clone the project onto your local pc:
 
@@ -55,7 +62,7 @@ Install this folder/file structure (include the last blank line and you won't ha
 ```bash
 touch .env
 mkdir components lib pages public styles
-cd components && touch Header.js Footer.js Layout.js
+cd components && touch Header.js Navbar.js Footer.js Layout.js
 cd ../lib && mkdir api
 cd ../pages && mkdir api && touch _document.js _app.js 404.js index.js
 cd ../public && mkdir images
@@ -78,6 +85,7 @@ import PropTypes from 'prop-types';
 import SkipToMain from './SkipToMain';
 
 import Header from './Header';
+import Navbar from './Navbar';
 import Footer from './Footer';
 
 const Layout = ({ children }) => {
@@ -85,13 +93,14 @@ const Layout = ({ children }) => {
         <>
             <SkipToMain />
             <Header />
+            <Navbar />
 
             <main id="main" className="main-container">
                 {children}
             </main>
 
             <Footer />
-        </>
+        </Navbar>
     );
 };
 
@@ -160,7 +169,7 @@ You can uncomment one of the favicon lines if you add a favicon to: **/public/im
 <link rel="icon" href="data:," />
 ```
 
-The initial **Header** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, so for now it's just commented out.
+The initial **Header**, **Navbar** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, so for now it's just commented out.
 
 ```js
 import Link from 'next/link';
@@ -177,9 +186,7 @@ export default function Header() {
 
                 <p>
                     <Link href="/">
-                        <a>
-                            Home
-                        </a>
+                        <a>Home</a>
                     </Link>
                 </p>
             </div>
@@ -188,6 +195,22 @@ export default function Header() {
                 <Authbar />
             </div> */}
         </div>
+    );
+}
+```
+
+...and
+
+```js
+import styles from '../styles/Navbar.module.css';
+
+export default function Navbar() {
+    return (
+        <nav className={styles.nav + ' container'}>
+            <ul>
+                <li>{/* links to all the pages will go in these list items */}</li>
+            </ul>
+        </nav>
     );
 }
 ```
@@ -632,14 +655,14 @@ const session1 = null;
 
 const session2 = {
     user: {
-        username: 'user',
+        username: 'test-user',
         role: 'user',
     },
 };
 
 const session3 = {
     user: {
-        username: 'admin',
+        username: 'test-admin',
         role: 'admin',
     },
 };
@@ -658,18 +681,36 @@ console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
 
 ### Using signOut()
 
+The only place I'm using the next-auth **signOut()** is in the **Authbar** component.
+
+Normally, I don't redirect upon signing out because my pages are protected client-side and will automatically redirect to the login page if you're on a protected page when you sign out.
+
+However, redirecting to the homepage upon signing out is useful when using middleware to protect a page because once you're on a protected page, the middleware by itself won't be able to take you away from it upon signing out.
+
 ```js
+// /components/Authbar.js
+
 <Button onClick={() => signOut({ redirect: false })} size="small" variant="text">Logout</Button>
 
 // or with logging out always sending you to the homepage
 
 <Button onClick={() => signOut({ callbackUrl: '/' })} size="small" variant="text">Logout</Button>
-
-// redirecting to the homepage upon logout is useful when using middleware to protect a page because once you're on a protected page, the middleware won't be able to take you away from it upon logout
 ```
 
 ---
 
 ### Todos
 
--   
+-   Document my protected page flow.
+
+---
+
+![next-with-auth](next_with_auth.svg "next-with-auth")
+![by Mike Gullo](author.svg "by Mike Gullo")
+
+-   Live version: (not currently on Vercel, but will be soon)
+-   This project's github repo: https://github.com/mike14747/next-with-auth
+-   Me on github: https://github.com/mike14747
+-   Contact me at: mgullo.dev@gmail.com
+
+![GitHub last commit](https://img.shields.io/github/last-commit/mike14747/next-with-auth?style=for-the-badge)
