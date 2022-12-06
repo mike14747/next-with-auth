@@ -11,16 +11,19 @@ export default function Public() {
         const abortController = new AbortController();
 
         fetch('/api/public', { signal: abortController.signal })
-            .then(res => res.json())
+            .then(res => {
+                if (!res.ok) throw new Error('An error occurred fetching data.');
+                return res.json();
+            })
             .then(data => {
                 setData(data);
                 setError(null);
             })
             .catch(error => {
                 if (error.name === 'AbortError') {
-                    console.error('Data fetching was aborted!');
+                    console.error(error.name + ': Data fetching was aborted!');
                 } else {
-                    console.error(error);
+                    console.error(error.name + ': ' + error.message);
                     setData(null);
                     setError('An error occurred fetching data.');
                 }

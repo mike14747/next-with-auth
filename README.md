@@ -456,16 +456,19 @@ export default function Public() {
         const abortController = new AbortController();
 
         fetch('/api/public', { signal: abortController.signal })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) throw new Error('An error occurred fetching data.');
+                return res.json();
+            })
             .then((data) => {
                 setData(data);
                 setError(null);
             })
             .catch((error) => {
                 if (error.name === 'AbortError') {
-                    console.error('Data fetching was aborted!');
+                    console.error(error.name + ': Data fetching was aborted!');
                 } else {
-                    console.error(error);
+                    console.error(error.name + ': ' + error.message);
                     setData(null);
                     setError('An error occurred fetching data.');
                 }
@@ -503,9 +506,242 @@ export default function Public() {
 
 **Protected pages**
 
-```js
+This is my standard client-side protected page. It only fetches data if a user is authenticated. If a user is not authenticated, the user is redirected to the login page.
 
+```js
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import Head from 'next/head';
+import Loading from '../components/Loading';
+
+export default function Protected() {
+    const { status } = useSession();
+
+    const router = useRouter();
+
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        // this short-circuits useEffect so it won't proceed if the status is loading, a user is not signed in while navigating to this page or a user signs out while on this page
+        if (status !== 'authenticated') return;
+
+        const abortController = new AbortController();
+
+        if (status === 'authenticated') {
+            setIsLoading(true);
+
+            fetch('/api/protected', { signal: abortController.signal })
+                .then((res) => {
+                    if (!res.ok) throw new Error('An error occurred fetching data.');
+                    return res.json();
+                })
+                .then((data) => {
+                    setData(data);
+                    setError(null);
+                })
+                .catch((error) => {
+                    if (error.name === 'AbortError') {
+                        console.error(error.name + ': Data fetching was aborted!');
+                    } else {
+                        console.error(error.name + ': ' + error.message);
+                        setData(null);
+                        setError('An error occurred fetching data.');
+                    }
+                })
+                .finally(() => setIsLoading(false));
+        } else {
+            setData(null);
+        }
+
+        return () => abortController.abort();
+    }, [status]);
+
+    // these are the possible outcomes of this page based upon the 3 possible values of status (loading, unauthenticated and authenticated)
+
+    // loading: display the Loading component
+    if (status === 'loading') return <Loading />;
+
+    // unauthenticated: redirect to the login page with the query parameter set so the login page will send them back here if they successfully log in
+    if (status === 'unauthenticated') router.push('/login?callbackUrl=/protected');
+
+    // authenticated: render the page as intended
+    // this doesn't have to have a condition attached to it since it's the only option remaining if the code gets this far, but it makes it easier to understand what's going on, so I've included it
+    if (status === 'authenticated') {
+        return (
+            <>
+                <Head>
+                    <title>Protected Page</title>
+                </Head>
+
+                <article>
+                    <h2 className="page-heading">Protected Page</h2>
+
+                    {error && <p className="error">{error}</p>}
+
+                    {isLoading && <Loading />}
+
+                    {data?.length > 0 && (
+                        <ul>
+                            {data.map((item, index) => (
+                                <li key={index}>{item.name + ' - age: ' + item.age}</li>
+                            ))}
+                        </ul>
+                    )}
+                </article>
+            </>
+        );
+    }
+
+    return null;
+}
 ```
+
+---
+
+**Pages protected by middleware**
+
+Pages that are protected by middleware are the same as the public pages. They don't require code that's any different from the public pages.
+
+The middleware does not allow anyone who is not authenticated to visit the page. The middleware in my use cases sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
+
+---
+
+**Admin pages**
+
+These pages are very similar to the client-side protected pages... with the following exception:
+
+-   I fully destructure the useSession() object because the session (more specifically the user's role) will be needed.
+
+```js
+const { data: session, status } = useSession();
+```
+
+-   Inside the useEffect() hook (and the very first line), data is not fetched unless a signed in user has a role of admin.
+
+```js
+if (status !== 'authenticated' || session?.user?.role !== 'admin') return;
+```
+
+````jsx
+{session?.user?.role !== 'admin' &&
+    <>
+        <p className="error">You are logged in, but do not have the proper credentials to view this page.</p>
+    </>
+}
+
+{session?.user?.role === 'admin' &&
+    <>
+        {/* display the normal admin page */}
+    </>
+}
+```
+
+```js
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
+import Head from 'next/head';
+import Loading from '../components/Loading';
+
+export default function Admin() {
+    // on this page we do need access to the session because in addition to knowing whether the user is sined in, we need to check whether the user's role is sufficient to access this page
+    const { data: session, status } = useSession();
+    const router = useRouter();
+
+    const [data, setData] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (status !== 'authenticated' || session?.user?.role !== 'admin') return;
+
+        const abortController = new AbortController();
+
+        if (status === 'authenticated' && session?.user?.role === 'admin') {
+            setIsLoading(true);
+
+            fetch('/api/admin', { signal: abortController.signal })
+                .then((res) => {
+                    if (!res.ok) throw new Error('An error occurred fetching data.');
+                    return res.json();
+                })
+                .then((data) => {
+                    setData(data);
+                    setError(null);
+                })
+                .catch((error) => {
+                    if (error.name === 'AbortError') {
+                        console.error(error.name + ': Data fetching was aborted!');
+                    } else {
+                        console.error(error.name + ': ' + error.message);
+                        setData(null);
+                        setError('An error occurred fetching data.');
+                    }
+                })
+                .finally(() => setIsLoading(false));
+        } else {
+            setData(null);
+        }
+
+        return () => abortController.abort();
+    }, [status, session]);
+
+    if (status === 'loading') return <Loading />;
+
+    if (status === 'unauthenticated') router.push('/login?callbackUrl=/admin');
+
+    if (status === 'authenticated') {
+        return (
+            <>
+                <Head>
+                    <title>Admin Page</title>
+                </Head>
+
+                <article>
+                    <h2 className="page-heading">Admin Page</h2>
+
+                    {session?.user?.role !== 'admin' && (
+                        <>
+                            <p className="error">
+                                You are logged in, but do not have the proper credentials to view this page.
+                            </p>
+
+                            <p className="error">
+                                Log out, then log back in as a user with the proper credentials to view this page.
+                            </p>
+                        </>
+                    )}
+
+                    {session?.user?.role === 'admin' && (
+                        <>
+                            {error && <p className="error">{error}</p>}
+
+                            {isLoading && <Loading />}
+
+                            {data?.length > 0 && (
+                                <ul>
+                                    {data.map((item, index) => (
+                                        <li key={index}>
+                                            {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </>
+                    )}
+                </article>
+            </>
+        );
+    }
+
+    return null;
+}
+````
+
+When the admin pages are protected by middleware, I tend to have the middleware redirect users to the homepage if they're signed in, but don't have the role of admin. Any user not signed in would obviously be redirected to the login page because they don't have a role at all yet.
 
 ---
 
@@ -701,12 +937,12 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 ### Todos
 
--   Document my protected page flow.
+-   Update the fetch calls in the profile page (and maybe others) to include a catch... then rework the res.status codes to be like the register page.
 
 ---
 
-![next-with-auth](next_with_auth.svg "next-with-auth")
-![by Mike Gullo](author.svg "by Mike Gullo")
+![next-with-auth](next_with_auth.svg 'next-with-auth')
+![by Mike Gullo](author.svg 'by Mike Gullo')
 
 -   Live version: (not currently on Vercel, but will be soon)
 -   This project's github repo: https://github.com/mike14747/next-with-auth

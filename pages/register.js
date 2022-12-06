@@ -26,17 +26,20 @@ export default function Register() {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ username, email, password }),
+        }).catch(error => {
+            console.error(error.name + ': ' + error.message);
+            setError('An error occurred sending the data.');
         });
 
-        if (res.status !== 201) {
+        if (res) {
+            if (res.status === 201) {
+                setIsSuccessful(true);
+                setError(null);
+            }
+
             res.status === 400 && setError('An error occurred. One or more of the fields are missing or not in the proper format.');
             res.status === 409 && setError('An error occurred. The username you submitted is already in use.');
             res.status === 500 && setError('A server error occurred. Please try your submission again.');
-        }
-
-        if (res.status === 201) {
-            setIsSuccessful(true);
-            setError(null);
         }
     };
 
