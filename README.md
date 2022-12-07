@@ -937,7 +937,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 ### Todos
 
--   Get this app hosted on vercel.
+-   Figure out why the middleware isn't working on vercel.
 -   Write tests.
 
 ---
