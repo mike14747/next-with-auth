@@ -39,19 +39,22 @@ export default function Profile() {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ username }),
+        }).catch(error => {
+            console.error(error.name + ': ' + error.message);
+            setUsernameError('An error occurred sending the data.');
         });
 
-        if (res.status !== 200) {
+        if (res) {
+            if (res.status === 200) {
+                signOut({ redirect: false });
+                setUsername('');
+                setUsernameError(null);
+            }
+
             res.status === 400 && setUsernameError('An error occurred. New username is not in the proper format.');
             res.status === 401 && setUsernameError('An error occurred. You do not have permission to make this update.');
             res.status === 409 && setUsernameError('An error occurred. The username you submitted is already in use.');
             res.status === 500 && setUsernameError('A server error occurred. Please try your update again.');
-        }
-
-        if (res.status === 200) {
-            signOut({ redirect: false });
-            setUsername('');
-            setUsernameError(null);
         }
     };
 
@@ -64,18 +67,24 @@ export default function Profile() {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ email }),
+        }).catch(error => {
+            console.error(error.name + ': ' + error.message);
+            setEmailError('An error occurred sending the data.');
         });
 
-        if (res.status !== 200) {
-            res.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
-            res.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
-            res.status === 500 && setEmailError('A server error occurred. Please try your update again.');
-            setEmailUpdateMsg('');
-        }
-        if (res.status === 200) {
-            setEmail('');
-            setEmailError(null);
-            setEmailUpdateMsg('Your email address has been successfully updated to: ' + email + '!');
+        if (res) {
+            if (res.status === 200) {
+                setEmail('');
+                setEmailError(null);
+                setEmailUpdateMsg('Your email address has been successfully updated to: ' + email + '!');
+            }
+
+            if (res.status !== 200) {
+                res.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
+                res.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
+                res.status === 500 && setEmailError('A server error occurred. Please try your update again.');
+                setEmailUpdateMsg('');
+            }
         }
     };
 
@@ -88,18 +97,22 @@ export default function Profile() {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ password }),
+        }).catch(error => {
+            console.error(error.name + ': ' + error.message);
+            setPasswordError('An error occurred sending the data.');
         });
 
-        if (res.status !== 200) {
+        if (res) {
+            if (res.status === 200) {
+                signOut({ redirect: false });
+                setPassword('');
+                setRepeatPassword('');
+                setPasswordError(null);
+            }
+
             res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
             res.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
             res.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
-        }
-        if (res.status === 200) {
-            signOut({ redirect: false });
-            setPassword('');
-            setRepeatPassword('');
-            setPasswordError(null);
         }
     };
 

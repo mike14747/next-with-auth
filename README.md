@@ -938,6 +938,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 ### Todos
 
 -   Update the fetch calls in the profile page (and maybe others) to include a catch... then rework the res.status codes to be like the register page.
+-   Get this app hosted on vercel.
 
 ---
 
