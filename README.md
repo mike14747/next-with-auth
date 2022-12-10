@@ -939,6 +939,8 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 -   Figure out why the middleware isn't working on vercel.
 -   Write tests.
+-   Add a Delete Account (with confirmation) to the profile page.
+-   Fix all instances of the Button component where I'm passing the prop *style* instead of *theme*.
 
 ---
 

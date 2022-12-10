@@ -1,11 +1,17 @@
-.currentContainer {
+.currentContainer,
+.updateContainer {
     padding-bottom: 1rem;
     margin-bottom: 2rem;
     border-bottom: 1px var(--mg-gray-5) solid;
 }
 
+.deleteContainer {
+    margin-bottom: 2rem;
+}
+
 .currentHeading,
-.updateHeading {
+.updateHeading,
+.deleteHeading {
     font-size: 1.44rem;
     font-size: var(--step-2);
 }
@@ -16,7 +22,11 @@
 }
 
 .updateHeading {
-    color: var(--mg-red);
+    color: var(--mg-orange);
+}
+
+.deleteHeading {
+    margin-bottom: 2rem;
 }
 
 .note {

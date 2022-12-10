@@ -30,6 +30,8 @@ export default function Profile() {
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
 
+    const [deleteCounter, setDeleteCounter] = useState(0);
+
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
 
@@ -116,6 +118,14 @@ export default function Profile() {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        if (deleteCounter === 0) {
+            setDeleteCounter(1);
+        } else if (deleteCounter > 0) {
+            console.log('Deletion has been confirmed!');
+        }
+    };
+
     useEffect(() => {
         if (status !== 'authenticated') return;
 
@@ -177,37 +187,51 @@ export default function Profile() {
                                 <p className={styles.profileItem}><span className={styles.description}>Email: </span>{user?.email}</p>
                             </div>
 
-                            <h3 className={styles.updateHeading}>Update your profile information:</h3>
+                            <div className={styles.updateContainer}>
+                                <h3 className={styles.updateHeading}>Update your profile information:</h3>
 
-                            <p className={styles.note}>
-                                <strong>Note:</strong> changing your username and/or password will log you out.
-                            </p>
+                                <p className={styles.note}>
+                                    <strong>Note:</strong> changing your username and/or password will log you out.
+                                </p>
 
-                            <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
-                                {usernameError && <p className={styles.error}>{usernameError}</p>}
+                                <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
+                                    {usernameError && <p className={styles.error}>{usernameError}</p>}
 
-                                <FormInputForUsername username={username} setUsername={setUsername} />
+                                    <FormInputForUsername username={username} setUsername={setUsername} />
 
-                                <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
-                            </form>
+                                    <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                                </form>
 
-                            <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
-                                {passwordError && <p className={styles.error}>{passwordError}</p>}
+                                <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
+                                    {passwordError && <p className={styles.error}>{passwordError}</p>}
 
-                                <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
+                                    <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
 
-                                <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
-                            </form>
+                                    <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                                </form>
 
-                            <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
-                                {emailError && <p className={styles.error}>{emailError}</p>}
+                                <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
+                                    {emailError && <p className={styles.error}>{emailError}</p>}
 
-                                {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
+                                    {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
 
-                                <FormInputForEmail email={email} setEmail={setEmail} />
+                                    <FormInputForEmail email={email} setEmail={setEmail} />
 
-                                <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
-                            </form>
+                                    <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                                </form>
+                            </div>
+
+                            <div className={styles.deleteContainer}>
+                                <h3 className={styles.deleteHeading}>Delete your account</h3>
+
+                                {deleteCounter > 0 &&
+                                    <p>
+                                        Are you sure?
+                                    </p>
+                                }
+
+                                <Button type="button" size={deleteCounter > 0 ? 'medium' : 'small'} variant="contained" theme="danger" onClick={handleDeleteAccount}>Delete Account</Button>
+                            </div>
                         </>
                     }
                 </article>
