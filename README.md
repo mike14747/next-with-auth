@@ -939,6 +939,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 -   Figure out why the middleware isn't working on vercel.
 -   Write tests.
+-   Update my crypto usage (100000+ iterations, 128 length, longer salt). Maybe use Scrypt instead of pbkdf2?. Use argon2 algorithm instead of sha512?
 
 ---
 
