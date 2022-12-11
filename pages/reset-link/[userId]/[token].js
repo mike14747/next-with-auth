@@ -86,7 +86,7 @@ export default function Token() {
 
                             <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
 
-                            <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                            <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
                         </form>
                     </>
                 }

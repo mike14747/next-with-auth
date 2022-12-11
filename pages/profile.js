@@ -22,6 +22,7 @@ export default function Profile() {
     const [usernameError, setUsernameError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [emailError, setEmailError] = useState(null);
+    const [deleteError, setDeleteError] = useState(null);
 
     const [emailUpdateMsg, setEmailUpdateMsg] = useState('');
 
@@ -48,9 +49,9 @@ export default function Profile() {
 
         if (res) {
             if (res.status === 200) {
-                signOut({ redirect: false });
                 setUsername('');
                 setUsernameError(null);
+                signOut({ callbackUrl: '/' });
             }
 
             res.status === 400 && setUsernameError('An error occurred. New username is not in the proper format.');
@@ -106,10 +107,10 @@ export default function Profile() {
 
         if (res) {
             if (res.status === 200) {
-                signOut({ redirect: false });
                 setPassword('');
                 setRepeatPassword('');
                 setPasswordError(null);
+                signOut({ callbackUrl: '/' });
             }
 
             res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
@@ -122,7 +123,24 @@ export default function Profile() {
         if (deleteCounter === 0) {
             setDeleteCounter(1);
         } else if (deleteCounter > 0) {
-            console.log('Deletion has been confirmed!');
+            const res = await fetch('/api/users/' + session.user._id + '/delete-account', {
+                method: 'DELETE',
+            }).catch(error => {
+                console.error(error.name + ': ' + error.message);
+                setPasswordError('An error occurred sending the data.');
+            });
+
+            if (res) {
+                if (res.status === 200) {
+                    setDeleteCounter(0);
+                    setDeleteError(null);
+                    signOut({ callbackUrl: '/' });
+                }
+
+                res.status === 400 && setDeleteError('An error occurred. A bad request was made.');
+                res.status === 401 && setDeleteError('An error occurred. You do not have permission to delete this account.');
+                res.status === 500 && setDeleteError('A server error occurred. Please try your update again.');
+            }
         }
     };
 
@@ -133,19 +151,27 @@ export default function Profile() {
 
         if (session?.user?._id) {
             setIsLoading(true);
-            const fetchData = async () => {
-                const data = await fetch('/api/users/' + session.user._id, { signal: abortController.signal })
-                    .then(res => res.json())
-                    .catch(error => console.error(error));
-                if (data) {
+
+            // I'm using plain old promise chaining here since it's inside a useEffect
+            // otherwise I'd have to write an async function, then call it to run to set the fetch call to a variable using async/await
+            fetch('/api/users/' + session.user._id, { signal: abortController.signal })
+                .then(res => {
+                    if (!res.ok) throw new Error('An error occurred fetching data.');
+                    return res.json();
+                })
+                .then(data => {
                     setUser(data);
-                } else {
-                    setUser(null);
-                    setProfileError('An error occurred fetching data.');
-                }
-                setIsLoading(false);
-            };
-            fetchData();
+                })
+                .catch(error => {
+                    if (error.name === 'AbortError') {
+                        console.error(error.name + ': Data fetching was aborted!');
+                    } else {
+                        console.error(error.name + ': ' + error.message);
+                        setUser(null);
+                        setProfileError('An error occurred fetching data.');
+                    }
+                })
+                .finally(() => setIsLoading(false));
         } else {
             setUser(null);
         }
@@ -180,11 +206,11 @@ export default function Profile() {
                             <div className={styles.currentContainer}>
                                 <h3 className={styles.currentHeading}>Current profile information:</h3>
 
-                                <p className={styles.profileItem}><span className={styles.description}>Username: </span>{user?.username}</p>
+                                <p><span className={styles.description}>Username: </span>{user?.username}</p>
 
-                                <p className={styles.profileItem}><span className={styles.description}>Password: </span>not visible for security reasons</p>
+                                <p><span className={styles.description}>Password: </span>************</p>
 
-                                <p className={styles.profileItem}><span className={styles.description}>Email: </span>{user?.email}</p>
+                                <p><span className={styles.description}>Email: </span>{user?.email}</p>
                             </div>
 
                             <div className={styles.updateContainer}>
@@ -199,7 +225,7 @@ export default function Profile() {
 
                                     <FormInputForUsername username={username} setUsername={setUsername} />
 
-                                    <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                                    <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
                                 </form>
 
                                 <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
@@ -207,7 +233,7 @@ export default function Profile() {
 
                                     <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
 
-                                    <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                                    <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
                                 </form>
 
                                 <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
@@ -217,12 +243,14 @@ export default function Profile() {
 
                                     <FormInputForEmail email={email} setEmail={setEmail} />
 
-                                    <Button type="submit" size="medium" variant="contained" style="primary">Apply</Button>
+                                    <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
                                 </form>
                             </div>
 
                             <div className={styles.deleteContainer}>
                                 <h3 className={styles.deleteHeading}>Delete your account</h3>
+
+                                {deleteError && <p className={styles.error}>{deleteError}</p>}
 
                                 {deleteCounter > 0 &&
                                     <p>

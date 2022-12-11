@@ -36,13 +36,8 @@
 .description {
     font-size: 0.833rem;
     font-size: var(--step--1);
-    color: var(--mg-gray-5);
+    color: var(--mg-blue);
 }
-
-/* .profileItem {
-    font-size: 1.2rem;
-    font-size: var(--step-1);
-} */
 
 .updateGroup {
     margin: 0 0 2rem 0;

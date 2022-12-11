@@ -411,9 +411,9 @@ export default MyApp;
 
 I added my standard **login**, **register** and **profile** pages.
 
-Since an attempt to access a protected page would lead to a redirect to the login page, I've set the login page to monitor for a url query parameter. That way, if the login is successful, the browser would redirect to the page the user was trying to go to in the first place.
+Since an attempt to access a protected page would lead to a redirect to the login page, I've set the login page to monitor for a callbackUrl query parameter. That way, if the login is successful, the browser would redirect to the page the user was trying to go to in the first place.
 
-There is also an array of possible url query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as a query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
+There is also an array of possible callbackUrl query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as a query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
 
 ```js
 const router = useRouter();
@@ -939,8 +939,6 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 -   Figure out why the middleware isn't working on vercel.
 -   Write tests.
--   Add a Delete Account (with confirmation) to the profile page.
--   Fix all instances of the Button component where I'm passing the prop *style* instead of *theme*.
 
 ---
 
