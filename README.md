@@ -314,13 +314,11 @@ You can generate a next-auth JWT secret like this:
 openssl rand -base64 32
 ```
 
-I create a very complex SALT with 12 characters. There are a lot of websites that can do it or you can just pick some random characters.
-
-Here are some sample values just to show what the values should look like (these are not used in this or any app):
+Here are sample values just to show what it should look like (these are not used in this or any app):
 
 ```text
+NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
-SALT='Cb+7[=lGapCq'
 ```
 
 One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is where you set up your auth providers. In this app, I'm only using a **credentials provider** with a **username** and **password**. For this app, the file looks like this:
@@ -939,7 +937,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 -   Figure out why the middleware isn't working on vercel.
 -   Write tests.
--   Update my crypto usage (100000+ iterations, 128 length, longer salt). Maybe use Scrypt instead of pbkdf2?. Use argon2 algorithm instead of sha512?
+-   Finish updating the user serverless functions so they all use my new hash/salt system.
 
 ---
 
