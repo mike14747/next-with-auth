@@ -316,7 +316,7 @@ openssl rand -base64 32
 
 Here are sample values just to show what it should look like (these are not used in this or any app):
 
-```text
+```txt
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
 ```
