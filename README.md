@@ -933,6 +933,14 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 ---
 
+### Deploying to vercel
+
+I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page.
+
+My solution was to remove the **NEXTAUTH_URL** environment variable. Then it worked just fine. Vercel must populate this itself.
+
+---
+
 ### Todos
 
 -   Figure out why the middleware isn't working on vercel... even with next version 12.2. I just removed the NEXTAUTH_URL environment variable... let's see if that fixes the problem.
@@ -944,7 +952,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 ![next-with-auth](next_with_auth.svg 'next-with-auth')
 ![by Mike Gullo](author.svg 'by Mike Gullo')
 
--   Live version: (not currently on Vercel, but will be soon)
+-   Live version: https://next-with-auth.vercel.app/
 -   This project's github repo: https://github.com/mike14747/next-with-auth
 -   Me on github: https://github.com/mike14747
 -   Contact me at: mgullo.dev@gmail.com
