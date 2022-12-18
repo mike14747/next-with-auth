@@ -79,7 +79,7 @@ export default function Profile() {
             if (res.status === 200) {
                 setEmail('');
                 setEmailError(null);
-                setEmailUpdateMsg('Your email address has been successfully updated to: ' + email + '!');
+                setEmailUpdateMsg('Your email address has been successfully updated!');
             }
 
             if (res.status !== 200) {

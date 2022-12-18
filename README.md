@@ -935,9 +935,9 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 ### Todos
 
--   Figure out why the middleware isn't working on vercel.
+-   Figure out why the middleware isn't working on vercel... even with next version 12.2.
 -   Write tests.
--   Finish updating the user serverless functions so they all use my new hash/salt system.
+-   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 
 ---
 
