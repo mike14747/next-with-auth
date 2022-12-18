@@ -935,7 +935,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 ### Todos
 
--   Figure out why the middleware isn't working on vercel... even with next version 12.2.
+-   Figure out why the middleware isn't working on vercel... even with next version 12.2. I just removed the NEXTAUTH_URL environment variable... let's see if that fixes the problem.
 -   Write tests.
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 
