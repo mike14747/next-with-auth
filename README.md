@@ -943,7 +943,7 @@ I removed the **NEXTAUTH_URL** environment variable and I at first thought that 
 
 ### Todos
 
--   Figure out why the middleware isn't working on vercel... even with next version 12.2. I just removed the NEXTAUTH_URL environment variable... let's see if that fixes the problem.
+-   Figure out why the middleware isn't working on vercel... even with next version 12.2. I think it might have something to do with the callbackUrl on the login page. It does seem to work after a page refresh.
 -   Write tests.
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?)
