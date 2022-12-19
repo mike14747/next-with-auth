@@ -10,7 +10,7 @@ import Loading from '../components/Loading';
 export default function Login() {
     const { status } = useSession();
 
-    console.log({ status });
+    // console.log({ status });
 
     const router = useRouter();
     // get the redirect query parameter if there is one... if not, set the homepage as the redirect location
