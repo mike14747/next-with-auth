@@ -937,7 +937,7 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page.
 
-My solution was to remove the **NEXTAUTH_URL** environment variable. Then it worked just fine. Vercel must populate this itself.
+I removed the **NEXTAUTH_URL** environment variable and I at first thought that fixed the problem (vercel must populate this itself)... but it didn't.
 
 ---
 
