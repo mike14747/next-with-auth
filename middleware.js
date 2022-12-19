@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export default withAuth(
     function middleware(req) {
-        console.log('token:', req.nextauth.token);
+        // console.log('token:', req.nextauth.token);
         // console.log('req.nextUrl:', req.nextUrl);
 
         // if a user is trying navigate to the /admin page without being logged in with a role of admin, redirect them to the homepage
@@ -16,7 +16,7 @@ export default withAuth(
         callbacks: {
             // authorized: ({ token }) => token?.role === 'user',
             authorized({ token }) {
-                // console.log({ token });
+                console.log({ token });
                 if (token) return true;
             },
         },
