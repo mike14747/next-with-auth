@@ -948,6 +948,7 @@ I had an issue with my middleware not working when I deployed this app to vercel
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?)
 -   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**?
+-   Now that I'm passing the callbackUrl to the signIn function on the login page, I need to come up with a way to parse the actual page of the redirect so I can filter the non-redirectable pages and send them to the homepage.
 
 ---
 
