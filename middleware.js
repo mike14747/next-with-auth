@@ -17,12 +17,12 @@ export default withAuth(
             // authorized: ({ token }) => token?.role === 'user',
             authorized({ token }) {
                 // console.log({ token });
-                if (token) return true;
+                return !!token;
             },
         },
-        pages: {
-            signIn: '/login',
-        },
+        // pages: {
+        //     signIn: '/login',
+        // },
     },
 );
 

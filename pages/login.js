@@ -10,6 +10,8 @@ import Loading from '../components/Loading';
 export default function Login() {
     const { status } = useSession();
 
+    // console.log({ status });
+
     const router = useRouter();
     // get the redirect query parameter if there is one... if not, set the homepage as the redirect location
     let redirectUrl = router.query.callbackUrl || '/';
@@ -31,7 +33,8 @@ export default function Login() {
 
         // use the built-in signIn function of next-auth to try to sign in a user
         const loginStatus = await signIn('credentials', {
-            redirect: false,
+            // redirect: false,
+            callbackUrl: redirectUrl,
             username: username,
             password: password,
         });
@@ -44,7 +47,9 @@ export default function Login() {
 
     if (status === 'loading') return <Loading />;
 
-    if (status === 'authenticated') router.push(redirectUrl);
+    // if (status === 'authenticated') router.push(redirectUrl);
+
+    if (status === 'authenticated') return null;
 
     if (status === 'unauthenticated') {
         return (

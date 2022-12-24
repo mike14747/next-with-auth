@@ -935,18 +935,20 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 ### Deploying to vercel
 
-I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page.
+There were warnings in the build process on vercel concerning the node version needing to be v12, v14 or v16 and by default vercel uses v18. So, I downgraded vercel's node version to v16 and the warnings went away.
 
-My solution was to remove the **NEXTAUTH_URL** environment variable. Then it worked just fine. Vercel must populate this itself.
+I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page. If you refreshed the page, you could get out of the error loop and the middleware protected pages would work. I removed the **NEXTAUTH_URL** environment variable and I at first thought that fixed the problem (vercel must populate this itself)... but it didn't. **Note:** I don't have this issue on my local computer.
 
 ---
 
 ### Todos
 
--   Figure out why the middleware isn't working on vercel... even with next version 12.2. I just removed the NEXTAUTH_URL environment variable... let's see if that fixes the problem.
+-   Figure out why the middleware isn't working on vercel... even with next version 12.2. I think it might have something to do with the callbackUrl on the login page. It does seem to work after a page refresh.
 -   Write tests.
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine.
+-   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**?
+-   Now that I'm passing the callbackUrl to the signIn function on the login page, I need to come up with a way to parse the actual page of the redirect so I can filter the non-redirectable pages and send them to the homepage.
 
 ---
 
