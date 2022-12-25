@@ -10,8 +10,6 @@ import Loading from '../components/Loading';
 export default function Login() {
     const { status } = useSession();
 
-    // console.log({ status });
-
     const router = useRouter();
     // get the redirect query parameter if there is one... if not, set the homepage as the redirect location
     let redirectUrl = router.query.callbackUrl || '/';
@@ -20,11 +18,9 @@ export default function Login() {
     const notRedirectable = ['/reset-link', '/reset-password-success', '/register', '/login'];
 
     // check to see whether the query parameter is on the not allowed list
-    const notRedirectableCheck = notRedirectable.filter(url => redirectUrl.startsWith(url));
+    const notRedirectableCheck = notRedirectable.filter(url => redirectUrl.endsWith(url));
     // if a resistricted query parameter is included, redirect to the homepage
     if (notRedirectableCheck.length > 0) redirectUrl = '/';
-
-    console.log({ redirectUrl });
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -41,8 +37,6 @@ export default function Login() {
             password: password,
         });
 
-        console.log({ loginStatus });
-
         // if the user did not successfully log in, set the error that will be displayed
         if (!loginStatus?.ok || loginStatus?.status !== 200) {
             setError('Login Failed... check your credentials and try again.');
@@ -52,8 +46,6 @@ export default function Login() {
     if (status === 'loading') return <Loading />;
 
     if (status === 'authenticated') router.push(redirectUrl);
-
-    // if (status === 'authenticated') return null;
 
     if (status === 'unauthenticated') {
         return (

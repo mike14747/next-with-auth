@@ -1,14 +1,15 @@
-import { getSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 import { getProtectedData } from '../../lib/api';
 
 export default async function protectedRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 
-    // make sure a user is signed in, so check for a session
-    const session = await getSession({ req });
-    // respond with status code 401 if there's no session
-    if (!session) return res.status(401).end();
+    // make sure a user is signed in, so check for a token
+    const token = await getToken({ req });
+
+    // respond with status code 401 if there's no token
+    if (!token) return res.status(401).end();
 
     try {
         // access a serverless function to retrieve data

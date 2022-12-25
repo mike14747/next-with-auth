@@ -413,6 +413,8 @@ Since an attempt to access a protected page would lead to a redirect to the logi
 
 There is also an array of possible callbackUrl query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as a query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
 
+**Note**: the **callbackUrl** has to either be an **absolute url from the same domain** or a **relative url starting with a "/"**.
+
 ```js
 const router = useRouter();
 let redirectUrl = router.query.callbackUrl || '/';
@@ -603,7 +605,7 @@ export default function Protected() {
 
 Pages that are protected by middleware are the same as the public pages. They don't require code that's any different from the public pages.
 
-The middleware does not allow anyone who is not authenticated to visit the page. The middleware in my use cases sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
+The middleware does not allow anyone who is not authenticated to visit the page. The middleware in this app sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
 
 ---
 
@@ -949,6 +951,7 @@ I had an issue with my middleware not working when I deployed this app to vercel
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine.
 -   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**?
 -   Now that I'm passing the callbackUrl to the signIn function on the login page, I need to come up with a way to parse the actual page of the redirect so I can filter the non-redirectable pages and send them to the homepage.
+-   It seems like my infinite loop issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
 
 ---
 
