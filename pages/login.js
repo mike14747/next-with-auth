@@ -24,6 +24,8 @@ export default function Login() {
     // if a resistricted query parameter is included, redirect to the homepage
     if (notRedirectableCheck.length > 0) redirectUrl = '/';
 
+    console.log({ redirectUrl });
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -39,6 +41,8 @@ export default function Login() {
             password: password,
         });
 
+        console.log({ loginStatus });
+
         // if the user did not successfully log in, set the error that will be displayed
         if (!loginStatus?.ok || loginStatus?.status !== 200) {
             setError('Login Failed... check your credentials and try again.');
@@ -47,9 +51,9 @@ export default function Login() {
 
     if (status === 'loading') return <Loading />;
 
-    // if (status === 'authenticated') router.push(redirectUrl);
+    if (status === 'authenticated') router.push(redirectUrl);
 
-    if (status === 'authenticated') return null;
+    // if (status === 'authenticated') return null;
 
     if (status === 'unauthenticated') {
         return (

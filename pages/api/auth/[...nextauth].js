@@ -43,5 +43,12 @@ export default NextAuth({
             if (token?.role) session.user.role = token.role;
             return session;
         },
+        // async redirect({ url, baseUrl }) {
+        //     console.log({ url, baseUrl });
+        //     if (url.startsWith(baseUrl)) return url;
+        //     // Allows relative callback URLs
+        //     if (url.startsWith('/')) return new URL(url, baseUrl).toString();
+        //     return baseUrl;
+        // },
     },
 });
