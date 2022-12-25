@@ -35,8 +35,8 @@ export default function Login() {
 
         // use the built-in signIn function of next-auth to try to sign in a user
         const loginStatus = await signIn('credentials', {
-            // redirect: false,
-            callbackUrl: redirectUrl,
+            redirect: false,
+            // callbackUrl: redirectUrl,
             username: username,
             password: password,
         });
