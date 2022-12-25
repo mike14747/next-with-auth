@@ -164,7 +164,7 @@ export default function Profile() {
                 })
                 .catch(error => {
                     if (error.name === 'AbortError') {
-                        console.error(error.name + ': Data fetching was aborted!');
+                        console.error(error.name + ': Data fetching was aborted.');
                     } else {
                         console.error(error.name + ': ' + error.message);
                         setUser(null);

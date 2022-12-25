@@ -113,7 +113,7 @@ export default Layout;
 
 **/pages/\_app.js**
 
-**Note**: **\_app.js** will need to have some additions made to it once **next-auth** is installed.
+**NOTE**: **\_app.js** will need to have some additions made to it once **next-auth** is installed.
 
 ```js
 import PropTypes from 'prop-types';
@@ -294,7 +294,7 @@ I changed the error to a warning about using the **next/image** component instea
 
 ### Setting up next-auth and a database
 
-**Note**: As of 2022-12-03, next-auth middleware doesn't work with next v13. Use next v12.2 if you want to use middleware to secure pages.
+**NOTE**: As of 2022-12-03, next-auth middleware doesn't work with next v13. Use next v12.2 if you want to use middleware to secure pages.
 
 I opted for and installed **mongodb** along with **next-auth** instead of going with an sql database because hosting a remote database on Atlas is free for a low usage app like this one.
 
@@ -413,7 +413,7 @@ Since an attempt to access a protected page would lead to a redirect to the logi
 
 There is also an array of possible callbackUrl query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as a query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
 
-**Note**: the **callbackUrl** has to either be an **absolute url from the same domain** or a **relative url starting with a "/"**.
+**NOTE**: the **callbackUrl** has to either be an **absolute url from the same domain** or a **relative url starting with a "/"**.
 
 ```js
 const router = useRouter();
@@ -466,7 +466,7 @@ export default function Public() {
             })
             .catch((error) => {
                 if (error.name === 'AbortError') {
-                    console.error(error.name + ': Data fetching was aborted!');
+                    console.error(error.name + ': Data fetching was aborted.');
                 } else {
                     console.error(error.name + ': ' + error.message);
                     setData(null);
@@ -544,7 +544,7 @@ export default function Protected() {
                 })
                 .catch((error) => {
                     if (error.name === 'AbortError') {
-                        console.error(error.name + ': Data fetching was aborted!');
+                        console.error(error.name + ': Data fetching was aborted.');
                     } else {
                         console.error(error.name + ': ' + error.message);
                         setData(null);
@@ -625,17 +625,17 @@ const { data: session, status } = useSession();
 if (status !== 'authenticated' || session?.user?.role !== 'admin') return;
 ```
 
-````jsx
-{session?.user?.role !== 'admin' &&
-    <>
-        <p className="error">You are logged in, but do not have the proper credentials to view this page.</p>
-    </>
+```jsx
+{
+    session?.user?.role !== 'admin' && (
+        <>
+            <p className="error">You are logged in, but do not have the proper credentials to view this page.</p>
+        </>
+    );
 }
 
-{session?.user?.role === 'admin' &&
-    <>
-        {/* display the normal admin page */}
-    </>
+{
+    session?.user?.role === 'admin' && <>{/* display the normal admin page */}</>;
 }
 ```
 
@@ -674,7 +674,7 @@ export default function Admin() {
                 })
                 .catch((error) => {
                     if (error.name === 'AbortError') {
-                        console.error(error.name + ': Data fetching was aborted!');
+                        console.error(error.name + ': Data fetching was aborted.');
                     } else {
                         console.error(error.name + ': ' + error.message);
                         setData(null);
@@ -739,7 +739,7 @@ export default function Admin() {
 
     return null;
 }
-````
+```
 
 When the admin pages are protected by middleware, I tend to have the middleware redirect users to the homepage if they're signed in, but don't have the role of admin. Any user not signed in would obviously be redirected to the login page because they don't have a role at all yet.
 
@@ -753,7 +753,7 @@ There are 3 types of API routes in this app.
 2.  **Protected** routes that can only be accessed by a logged in user (or in some cases, a specific logged in user... eg: update email, password and username routes).
 3.  **Admin** routes that can only be accessed by a user logged in with a role of admin.
 
-**Note**: the use of an explicit _return_ must be used with the response and status code if there is code that could still be run in the event that the above conditions are not met.
+**NOTE**: the use of an explicit _return_ must be used with the response and status code if there is code that could still be run in the event that the above conditions are not met.
 
 **Public API route**
 
@@ -792,17 +792,18 @@ This is a sample of my typical protected API route.
 ```js
 // /pages/api/protected.js
 
-import { getSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 import { getProtectedData } from '../../lib/api';
 
 export default async function protectedRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 
-    // make sure a user is signed in, so check for a session
-    const session = await getSession({ req });
-    // respond with status code 401 if there's no session
-    if (!session) return res.status(401).end();
+    // make sure a user is signed in, so check for a token
+    const token = await getToken({ req });
+
+    // respond with status code 401 if there's no token
+    if (!token) return res.status(401).end();
 
     try {
         // access a serverless function to retrieve data
@@ -825,23 +826,18 @@ This is an example of one of these special API routes (used to update a user's u
 ```js
 // /pages/api/users/[_id]/change-username.js
 
-import { getSession } from 'next-auth/react';
-import { checkForAvailableUsername, changeUsername } from '../../../../lib/api/user';
+import { getToken } from 'next-auth/jwt';
+import { changeUsername } from '../../../../lib/api/user';
 
 export default async function user(req, res) {
     if (req.method !== 'PUT') return res.status(401).end();
-    const session = await getSession({ req });
-    if (!session) return res.status(401).end();
+    const token = await getToken({ req });
+    if (!token) return res.status(401).end();
     if (!req.query._id || !req.body.username) return res.status(400).end();
-    if (session.user?._id !== req.query._id) return res.status(401).end();
+    if (token?._id !== req.query._id) return res.status(401).end();
 
     try {
-        // first make sure the username isn't already in use
-        const usernameResult = await checkForAvailableUsername(req.body.username);
-        if (!usernameResult) return res.status(500).end();
-        if (usernameResult.length > 0) return res.status(409).end();
-
-        // since the username is not already in use, add the user's submission
+        // the changeUsername serverless function will first make sure the username isn't already in use and then will make the change if it's not in use
         const response = await changeUsername(req.query._id, req.body.username);
         response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
@@ -858,17 +854,20 @@ This is an example of an admin api route where a user must be signed in and have
 ```js
 // /pages/api/admin.js
 
-import { getSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 import { getAdminData } from '../../lib/api';
 
 export default async function adminRoute(req, res) {
     // the only crud method allowed on this route is GET
     if (req.method !== 'GET') return res.status(401).end();
 
-    // make sure a user is signed in, so check for a session
-    const session = await getSession({ req });
-    // respond with status code 401 if there's no session or the user does not have a role of admin
-    if (session?.user?.role !== 'admin') return res.status(401).end();
+    // make sure a user is signed in, so check for a token
+    const token = await getToken({ req });
+
+    console.log({ token });
+
+    // respond with status code 401 if there's no token or the user does not have a role of admin
+    if (token?.role !== 'admin') return res.status(401).end();
 
     try {
         // access a serverless function to retrieve data
@@ -921,7 +920,7 @@ The only place I'm using the next-auth **signOut()** is in the **Authbar** compo
 
 Normally, I don't redirect upon signing out because my pages are protected client-side and will automatically redirect to the login page if you're on a protected page when you sign out.
 
-However, redirecting to the homepage upon signing out is useful when using middleware to protect a page because once you're on a protected page, the middleware by itself won't be able to take you away from it upon signing out.
+However, redirecting to the homepage upon signing out is useful when using middleware to protect a page because once you're on a protected page, the middleware by itself won't be able to take you away from it upon signing out. I'll revert this back to the previous functionality if I can come up with a good solution to this.
 
 ```js
 // /components/Authbar.js
@@ -939,7 +938,9 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 There were warnings in the build process on vercel concerning the node version needing to be v12, v14 or v16 and by default vercel uses v18. So, I downgraded vercel's node version to v16 and the warnings went away.
 
-I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page. If you refreshed the page, you could get out of the error loop and the middleware protected pages would work. I removed the **NEXTAUTH_URL** environment variable and I at first thought that fixed the problem (vercel must populate this itself)... but it didn't. **Note:** I don't have this issue on my local computer.
+I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page. If you refreshed the page, you could get out of the error loop and the middleware protected pages would work. **UPDATE**: I'm not sure how or why, but this issue seems to have been resolved.
+
+You need the **NEXTAUTH_URL** environment variable locally, but it's not needed if you deploy to vercel. Vercel will populate it itself as **VERCEL_URL**.
 
 ---
 
@@ -949,9 +950,10 @@ I had an issue with my middleware not working when I deployed this app to vercel
 -   Write tests.
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine.
--   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**?
+-   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**? **UPDATE**: getToken() seems to work fine.
 -   Now that I'm passing the callbackUrl to the signIn function on the login page, I need to come up with a way to parse the actual page of the redirect so I can filter the non-redirectable pages and send them to the homepage.
 -   It seems like my infinite loop issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
+-   In the change-password api route, I'm using token as a variable and also as a property of the req.body. I should make that a little less ambiguous.
 
 ---
 

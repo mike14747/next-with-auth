@@ -2,13 +2,13 @@
 
 // this route is also used for registering a new user... if the http method is POST
 
-import { getSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 import { getInfoForAllUsers, registerNewUser } from '../../../lib/api/user';
 
 export default async function users(req, res) {
     if (req.method === 'GET') {
-        const session = await getSession({ req });
-        if (session?.user?.role !== 'admin') return res.status(401).end();
+        const token = await getToken({ req });
+        if (token?.role !== 'admin') return res.status(401).end();
 
         try {
             const response = await getInfoForAllUsers();
