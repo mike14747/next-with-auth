@@ -18,7 +18,7 @@ export default function Login() {
     const notRedirectable = ['/reset-link', '/reset-password-success', '/register', '/login'];
 
     // check to see whether the query parameter is on the not allowed list
-    const notRedirectableCheck = notRedirectable.filter(url => redirectUrl.endsWith(url));
+    const notRedirectableCheck = notRedirectable.filter(url => redirectUrl.includes(url));
     // if a resistricted query parameter is included, redirect to the homepage
     if (notRedirectableCheck.length > 0) redirectUrl = '/';
 

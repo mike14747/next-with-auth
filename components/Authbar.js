@@ -12,7 +12,7 @@ const Authbar = () => {
     const router = useRouter();
 
     return (
-        <div className={styles.authbarContainer}>
+        <section className={styles.authbarContainer}>
             {loading && <>Loading...</>}
 
             {!session && !loading &&
@@ -47,7 +47,7 @@ const Authbar = () => {
                     <Button onClick={() => signOut({ callbackUrl: '/' })} size="small" variant="text">Logout</Button>
                 </>
             }
-        </div>
+        </section>
     );
 };
 

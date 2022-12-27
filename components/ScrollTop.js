@@ -52,9 +52,7 @@ const ScrollTop = () => {
                     }
 
                     .scrollBtn:hover {
-                        color: #ff7518;
-                        border: 1px #ff7518 solid;
-                        border-right: 0;
+                        background-color: rgba(35, 35, 35, 0.90);
                         transition: .3s;
                     }
             `}</style>

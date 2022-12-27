@@ -300,6 +300,8 @@ I changed the error to a warning about using the **next/image** component instea
 
 **NOTE**: As of 2022-12-03, next-auth middleware doesn't work with next v13. Use next v12.2 if you want to use middleware to secure pages.
 
+I'm only using the database to store user data... not sessions. JWT sessions are being implemented.
+
 I opted for and installed **mongodb** along with **next-auth** instead of going with an sql database because hosting a remote database on Atlas is free for a low usage app like this one.
 
 ```bash
@@ -310,9 +312,9 @@ Setting up the database on **Atlas** and adding that connection info to my **.en
 
 Then there is the database connection file (/lib/mongodb.js). This will be imported by any serverless function that needs to query the remote database.
 
-You'll need to create some properties in your .env file for next-auth to use.
+You'll need to create some properties in your **.env file** for next-auth to use.
 
-You can generate a next-auth JWT secret like this:
+You can generate a next-auth secret like this:
 
 ```bash
 openssl rand -base64 32
@@ -331,7 +333,7 @@ One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
-import { getUserForSignin } from '../../../lib/api/user.js';
+import { getUserForSignin } from '../../../lib/api/user';
 
 export default NextAuth({
     providers: [
@@ -346,28 +348,28 @@ export default NextAuth({
 
             async authorize(credentials) {
                 const user = await getUserForSignin(credentials.username, credentials.password);
+
+                // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback ffunctions
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;
             },
         }),
     ],
     session: {
-        jwt: true,
-        maxAge: 30 * 24 * 60 * 60, // 30 * 24 * 60 * 60 is 30 days
+        strategy: 'jwt',
+        maxAge: 90 * (24 * 60 * 60), // 24 * 60 * 60 is 1 day
     },
-    // if using middleware to protect pages, it's necessary to specify the login page... otherwise it'll send you to the next-auth signIn page (/api/auth/signin)
     pages: {
         signIn: '/login',
     },
-    jwt: {
-        signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
-    },
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
+        // I'm adding some extra properties to the jwt... this is where you must add them
         async jwt({ token, user }) {
             if (user?._id) token._id = user._id;
             if (user?.role) token.role = user.role;
             return token;
         },
+        // I'm adding some extra properties to the session... this is where you must add them
         async session({ session, token }) {
             if (token?._id) session.user._id = token._id;
             if (token?.role) session.user.role = token.role;
@@ -431,6 +433,14 @@ if (notRedirectableCheck.length > 0) redirectUrl = '/';
 ---
 
 ### I forgot my login info
+
+On the login page, I've imported a **ForgotLoginInfo** component which allows users to retrieve their username or get a reset password link via email.
+
+I've implemented NodeMailer to handle the emails. The configuration for NodeMailer is in: /lib/nodemailerConfig.js and also in the .env file.
+
+A user can have all usernames associated with the email address they enter emailed to them.
+
+To receive a password reset link in an email, users need to enter both their username and email address. If both of these match a valid user, a resetPasswordToken field is created or updated in the database... along with a resetPasswordExpires field. Each request is valid for 60 minutes.
 
 ---
 
@@ -944,19 +954,17 @@ There were warnings in the build process on vercel concerning the node version n
 
 I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page. If you refreshed the page, you could get out of the error loop and the middleware protected pages would work. **UPDATE**: I'm not sure how or why, but this issue seems to have been resolved.
 
-You need the **NEXTAUTH_URL** environment variable locally, but it's not needed if you deploy to vercel. Vercel will populate it itself as **VERCEL_URL**.
+You need the **NEXTAUTH_URL** environment variable locally, but it's not needed if you deploy to vercel. Vercel will populate it itself as **VERCEL_URL**. You do need to make sure **Settings > Environment Variables > Automatically expose System Environment Variables** is checked.
 
 ---
 
 ### Todos
 
--   Figure out why the middleware isn't working on vercel... even with next version 12.2. It does seem to work after a page refresh.
 -   Write tests.
--   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
--   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine.
--   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**? **UPDATE**: getToken() seems to work fine.
--   Now that I'm passing the callbackUrl to the signIn function on the login page, I need to come up with a way to parse the actual page of the redirect so I can filter the non-redirectable pages and send them to the homepage.
--   It seems like my infinite loop issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
+-   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware.
+-   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine. **UPDATE**: it seems like this issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
+-   This doesn't really have anything to do with this app specifically, but I'd like to come up with a way to clear button and nav focus on next/link page transition.
+-   Add an h1 tag to each page.
 
 ---
 

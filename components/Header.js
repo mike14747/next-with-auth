@@ -6,9 +6,9 @@ import styles from '../styles/Header.module.css';
 export default function Header() {
     return (
         // to make the header full width, just omit the container class
-        <div className={styles.header + ' container'}>
+        <header className={styles.header}>
             <div className={styles.leftDiv}>
-                <p>This is the Header component.</p>
+                <h1 className={styles.h1} >next-with-auth</h1>
 
                 <p>
                     <Link href="/">
@@ -23,6 +23,6 @@ export default function Header() {
             <div className={styles.rightDiv}>
                 <Authbar />
             </div>
-        </div>
+        </header>
     );
 }

@@ -8,7 +8,7 @@ button.btn {
 }
 
 button.btn:focus {
-    outline: 1px var(--mg-gray-4) dashed;
+    outline: 2px var(--mg-gray-4) dotted;
 }
 
 button.btn:not(.text):focus {
@@ -17,7 +17,7 @@ button.btn:not(.text):focus {
 
 button.contained.primary {
     color: #ffffff;
-    background-color: var(--mg-green);
+    background-color: var(--mg-green-dark);
 }
 
 button.contained.secondary {
@@ -31,9 +31,9 @@ button.contained.danger {
 }
 
 button.outlined.primary {
-    color: var(--mg-green);
+    color: var(--mg-green-dark);
     background-color: #ffffff;
-    border: 1px var(--mg-green) solid;
+    border: 1px var(--mg-green-dark) solid;
 }
 
 button.outlined.secondary {

@@ -15,6 +15,7 @@
     --mg-cream: #fffdd0;
     --mg-dark: #232323;
     --mg-green: #228b22; /* html forestgreen */
+    --mg-green-dark: #008000; /* html green */
     --mg-gray: #808080; /* html gray */
     --mg-gray-1: #f5f5f5; /* html whitesmoke */
     --mg-gray-2: #d3d3d3; /* html lightgray */
@@ -25,6 +26,7 @@
     --mg-gray-7: #232323;
     --mg-light: #ffffff;
     --mg-orange: #ff7518; /* html pumpkin */
+    --mg-orange-dark: #ec5800; /* html persimmon */
     --mg-orange-soft: #fcd581;
     --mg-purple: #6f42c1;
     --mg-red: #dc143c; /* html crimson */
@@ -309,7 +311,7 @@ a:visited {
 }
 
 a:focus {
-    outline: 1px var(--mg-gray-2) dashed;
+    outline: 2px var(--mg-gray-4) dotted;
     outline-offset: 0.25rem;
     -webkit-transition: 0.3s;
     -o-transition: 0.3s;
@@ -768,7 +770,7 @@ h2.page-heading {
 
 .skip-to-main:focus {
     transform: translateY(0);
-    outline: 1px var(--mg-gray-4) dashed;
+    outline: 2px var(--mg-gray-4) dotted;
     outline-offset: 0rem;
 }
 
@@ -780,6 +782,18 @@ h2.page-heading {
 .mw-90ch {
     max-width: 90ch;
     margin: 0 auto;
+}
+
+.error {
+    font-size: 1rem;
+    font-size: var(--step-0);
+    color: var(--mg-red);
+    text-align: center;
+}
+
+.error::before {
+    content: '\26D4';
+    padding-right: 0.50rem;
 }
 
 /* end site-wide custom css */
@@ -800,6 +814,11 @@ h2.page-heading {
     font-size: var(--step--1);
     color: var(--mg-red);
     text-align: center;
+}
+
+.validation-error::before {
+    content: '\26D4';
+    padding-right: 0.50rem;
 }
 
 .warning {
@@ -844,13 +863,6 @@ h2.page-heading {
     font-size: 1.44rem;
     font-size: var(--step-2);
     color: var(--mg-green);
-    text-align: center;
-}
-
-.error {
-    font-size: 1rem;
-    font-size: var(--step-0);
-    color: var(--mg-red);
     text-align: center;
 }
 
