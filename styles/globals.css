@@ -67,10 +67,6 @@
 }
 
 /*
-::-moz-selection {
-    background-color: var(--mg-dark);
-    color: var(--mg-light);
-}
 
 ::selection {
     background-color: var(--mg-dark);
@@ -540,15 +536,10 @@ select {
     word-wrap: normal;
 }
 
-[list]::-webkit-calendar-picker-indicator {
-    display: none;
-}
-
 button,
 [type='button'],
 [type='reset'],
 [type='submit'] {
-    -webkit-appearance: button;
     padding: 0 0.25rem;
 }
 
@@ -557,18 +548,6 @@ button:not(:disabled),
 [type='reset']:not(:disabled),
 [type='submit']:not(:disabled) {
     cursor: pointer;
-}
-
-::-moz-focus-inner {
-    padding: 0;
-    border-style: none;
-}
-
-input[type='date'],
-input[type='time'],
-input[type='datetime-local'],
-input[type='month'] {
-    -webkit-appearance: textfield;
 }
 
 textarea {
@@ -604,27 +583,8 @@ progress {
     vertical-align: baseline;
 }
 
-::-webkit-datetime-edit {
-    overflow: visible;
-    line-height: 0;
-}
-
 [type='search'] {
     outline-offset: -2px;
-    -webkit-appearance: textfield;
-}
-
-::-webkit-search-decoration {
-    -webkit-appearance: none;
-}
-
-::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-
-::-webkit-file-upload-button {
-    font: inherit;
-    -webkit-appearance: button;
 }
 
 output {
