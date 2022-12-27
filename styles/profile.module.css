@@ -17,7 +17,7 @@
 }
 
 .currentHeading {
-    color: var(--mg-green);
+    color: var(--mg-green-dark);
     margin-bottom: 2rem;
 }
 
@@ -53,7 +53,7 @@
 .success {
     font-size: 0.833rem;
     font-size: var(--step--1);
-    color: var(--mg-green);
+    color: var(--mg-green-dark);
 }
 
 .error {
