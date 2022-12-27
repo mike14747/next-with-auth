@@ -15,6 +15,10 @@ It includes public and protected api routes.
 
 It even has different levels of access for the different private routes (user vs admin).
 
+I'm using client-side authentication on some secure pages, but am using middleware to secure the protected2 and admin pages. Actually, the admin page is using both.
+
+Right now the only type of sign in is using **Credentials**. I'd like to add a few other types of options at some point.
+
 ---
 
 ### Starting this project
@@ -946,14 +950,13 @@ You need the **NEXTAUTH_URL** environment variable locally, but it's not needed 
 
 ### Todos
 
--   Figure out why the middleware isn't working on vercel... even with next version 12.2. I think it might have something to do with the callbackUrl on the login page. It does seem to work after a page refresh.
+-   Figure out why the middleware isn't working on vercel... even with next version 12.2. It does seem to work after a page refresh.
 -   Write tests.
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine.
 -   Figure out whether a server-side alternative to getSession() is needed. If it is needed, which is better: **getToken()** or **unstable_getServerSession()**? **UPDATE**: getToken() seems to work fine.
 -   Now that I'm passing the callbackUrl to the signIn function on the login page, I need to come up with a way to parse the actual page of the redirect so I can filter the non-redirectable pages and send them to the homepage.
 -   It seems like my infinite loop issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
--   In the change-password api route, I'm using token as a variable and also as a property of the req.body. I should make that a little less ambiguous.
 
 ---
 

@@ -8,7 +8,7 @@ import Button from '../../../components/Button';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function Token() {
+export default function ResetPasswordToken() {
     const { data: session } = useSession();
 
     const router = useRouter();
@@ -33,15 +33,15 @@ export default function Token() {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
-            body: JSON.stringify({ userId: router.query.userId, token: router.query.token, password }),
+            body: JSON.stringify({ userId: router.query.userId, resetPasswordToken: router.query.resetPasswordToken, password }),
         });
 
         if (res.status !== 200) {
             console.log('the password change seems to have failed');
             res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
             res.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
-            res.status === 406 && setPasswordError('An error occurred. User or reset token do not exist.');
-            res.status === 412 && setPasswordError('An error occurred. The reset token has expired.');
+            res.status === 406 && setPasswordError('An error occurred. User or reset password token do not exist.');
+            res.status === 412 && setPasswordError('An error occurred. The reset password token has expired.');
             res.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
         }
         if (res.status === 200) {
