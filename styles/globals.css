@@ -26,11 +26,10 @@
     --mg-gray-7: #232323;
     --mg-light: #ffffff;
     --mg-orange: #ff7518; /* html pumpkin */
-    --mg-orange-dark: #ec5800; /* html persimmon */
+    --mg-orange-dark: #C75000;
     --mg-orange-soft: #fcd581;
     --mg-purple: #6f42c1;
-    --mg-red: #dc143c; /* html crimson */
-    --mg-red-dark: #b22222; /* html firebrick */
+    --mg-red: #b71c1c;
     --mg-yellow: #fff44f; /* html lemon */
     --mg-yellow-pale: #ffffd5;
 
@@ -315,7 +314,7 @@ a:focus {
 }
 
 a:hover {
-    color: var(--mg-orange);
+    color: var(--mg-orange-dark);
     /* text-decoration: none; */
     text-decoration: underline;
     -webkit-transition: color 0.3s;
@@ -324,7 +323,7 @@ a:hover {
 }
 
 a:active {
-    color: var(--mg-orange);
+    color: var(--mg-orange-dark);
     /* text-decoration: none; */
     text-decoration: underline;
 }
@@ -355,14 +354,14 @@ a[href]::after {
 a[href]:hover::after {
     width: 100%;
     left: 0;
-    background-color: var(--mg-orange);
+    background-color: var(--mg-orange-dark);
     -webkit-transition: width 0.3s, left 0.3s, background-color 1s;
     -o-transition: width 0.3s, left 0.3s, background-color 1s;
     transition: width 0.3s, left 0.3s, background-color 1s;
 }
 
 a[href]:active::after {
-    background-color: var(--mg-orange);
+    background-color: var(--mg-orange-dark);
     -webkit-transition: background-color 1s;
     -o-transition: background-color 1s;
     transition: background-color 1s;
@@ -396,7 +395,7 @@ a[href]:active::after {
 }
 
 .link:hover {
-    color: var(--mg-orange);
+    color: var(--mg-orange-dark);
     -webkit-transition: 0.3s;
     -o-transition: 0.3s;
     transition: 0.3s;
@@ -406,7 +405,7 @@ a[href]:active::after {
 .link:hover::after {
     width: 100%;
     left: 0;
-    background-color: var(--mg-orange);
+    background-color: var(--mg-orange-dark);
     -webkit-transition: width 0.3s, left 0.3s, background-color 1s;
     -o-transition: width 0.3s, left 0.3s, background-color 1s;
     transition: width 0.3s, left 0.3s, background-color 1s;

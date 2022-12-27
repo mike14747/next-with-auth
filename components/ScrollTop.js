@@ -3,12 +3,14 @@ import { useState, useEffect } from 'react';
 const ScrollTop = () => {
     const [showTop, setShowTop] = useState(false);
 
-    const checkScrollTop = () => window.pageYOffset > 800 ? setShowTop(true) : setShowTop(false);
+    const checkScrollTop = () => window.pageYOffset > 100 ? setShowTop(true) : setShowTop(false);
 
     const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
     useEffect(() => {
         window.addEventListener('scroll', checkScrollTop);
+
+        return () => window.removeEventListener('scroll', checkScrollTop);
     }, []);
 
     return (

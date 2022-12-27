@@ -233,7 +233,7 @@ export default function Profile() {
 
                                     <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
 
-                                    <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
+                                    <Button type="submit" size="medium" variant="contained" theme="secondary">Apply</Button>
                                 </form>
 
                                 <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
