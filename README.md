@@ -964,7 +964,6 @@ You need the **NEXTAUTH_URL** environment variable locally, but it's not needed 
 -   When next-auth middleware is supported in next version 13, update next to that version and implement the middleware.
 -   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine. **UPDATE**: it seems like this issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
 -   This doesn't really have anything to do with this app specifically, but I'd like to come up with a way to clear button and nav focus on next/link page transition.
--   Add an h1 tag to each page.
 
 ---
 
