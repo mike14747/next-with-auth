@@ -28,7 +28,7 @@ const ScrollTop = () => {
                     .scrollBtn {
                         position: fixed;
                         left: auto;
-                        right: -60px;
+                        right: -65px;
                         top: auto;
                         bottom: 2rem;
                         width: 3rem;
@@ -56,7 +56,7 @@ const ScrollTop = () => {
                     }
 
                     .slideIn {
-                        transform: translateX(-60px);
+                        transform: translateX(-65px);
                         background-color: rgba(23, 23, 23, 0.70);
                         outline: 2px rgba(23, 23, 23, 0.25) solid;
                     }
