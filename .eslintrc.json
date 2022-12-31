@@ -119,6 +119,7 @@
             "error",
             "never"
         ],
+        "space-infix-ops": ["error", { "int32Hint": false }],
         "space-unary-ops": [
             2,
             {

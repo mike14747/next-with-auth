@@ -17,7 +17,7 @@ export default NextAuth({
             async authorize(credentials) {
                 const user = await getUserForSignin(credentials.username, credentials.password);
 
-                // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback ffunctions
+                // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback functions
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;
             },
         }),

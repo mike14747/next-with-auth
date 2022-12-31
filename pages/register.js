@@ -33,6 +33,9 @@ export default function Register() {
 
         if (res) {
             if (res.status === 201) {
+                setUsername(null);
+                setPassword(null);
+                setRepeatPassword(null);
                 setIsSuccessful(true);
                 setError(null);
             }
