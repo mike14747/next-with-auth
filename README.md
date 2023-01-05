@@ -965,8 +965,7 @@ You need the **NEXTAUTH_URL** environment variable locally, but it's not needed 
 
 **Finished**:
 
--   When next-auth middleware is supported in next.js version 13, update next to that version and implement the middleware. **UPDATE**: I tried using middleware with next.js version 13 in another app and it is working after all.
--   This doesn't work on vercel: https://next-with-auth.vercel.app/login?callbackUrl=%2Fprotected2 (infinite loop?) until you do a page refresh, but (http://localhost:3000/login?callbackUrl=%2Fprotected2) works locally just fine. **UPDATE**: it seems like this issue has been fixed... even when setting the signIn redirect to false. I'm not sure why. Maybe it was fixed in a next-auth patch?
+-   When next-auth middleware is supported in next.js version 13, update next to that version and implement the middleware. **UPDATE**: I tried using middleware with next.js version 13 in another app and it is working after all. Further testing seems to show that some combinations of next and next-auth versions have issues. I can confirm that next v13.0.5 is ok with next-auth v4.17.0. Also, next v13.1.1 is ok with next-auth v4.18.7. But, when I first went to next v13.1.1 it wasn't working with next-auth v4.10.3. Sometimes it seems like it might work locally, but not on vercel... other times the bad combos don't work on either.
 
 ---
 
