@@ -6,9 +6,8 @@ import { getUserForSignin } from '../../../lib/api/user';
 export default NextAuth({
     providers: [
         Credentials({
+            // the name and credentials properties are not needed since we are using a custom login page, but I've left it here anyway
             name: 'username/password',
-
-            // the credentials property is not needed since we are using a custom login page, but I've left it here anyway
             credentials: {
                 username: { label: 'Username', type: 'text' },
                 password: { label: 'Password', type: 'password' },
