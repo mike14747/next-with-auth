@@ -12,10 +12,7 @@ export default function Header() {
 
                     <p>
                         <Link href="/">
-                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                            <a>
-                                Home
-                            </a>
+                            Home
                         </Link>
                     </p>
                 </div>

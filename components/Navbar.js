@@ -8,51 +8,31 @@ export default function Navbar() {
             <ul>
                 <li>
                     <Link href="/public">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>
-                            Public page
-                        </a>
-
+                        Public page
                     </Link>
                 </li>
 
                 <li>
                     <Link href="/protected">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>
-                            Protected page
-                        </a>
-
+                        Protected page
                     </Link>
                 </li>
 
                 <li>
                     <Link href="/protected2">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>
-                            Protected by middleware page
-                        </a>
-
+                        Protected by middleware page
                     </Link>
                 </li>
 
                 <li>
                     <Link href="/admin">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>
-                            Admin page
-                        </a>
-
+                        Admin page
                     </Link>
                 </li>
 
                 <li>
                     <Link href="/register">
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>
-                            Register
-                        </a>
-
+                        Register
                     </Link>
                 </li>
             </ul>

@@ -18,15 +18,13 @@ const Authbar = () => {
             {!session && !loading &&
                 <p>
                     <Link href={`/login?callbackUrl=${router.pathname}`}>
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>Login</a>
+                        Login
                     </Link>
 
                     <span>&nbsp;/&nbsp;</span>
 
                     <Link href={'/register'}>
-                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                        <a>Register</a>
+                        Register
                     </Link>
                 </p>
             }
@@ -36,10 +34,7 @@ const Authbar = () => {
                     <p className={styles.username}>
                         <>User: </>
                         <Link href="/profile">
-                            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                            <a>
-                                {session.user.name}
-                            </a>
+                            {session.user.name}
                         </Link>
                     </p>
 
