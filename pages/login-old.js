@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button';
-import ForgotLoginInfo from '../components/ForgotLoginInfo';
+import ForgotLoginInfo from '../app/login/ForgotLoginInfo';
 import Loading from '../components/Loading';
 
 export default function Login() {

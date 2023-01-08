@@ -958,6 +958,39 @@ You need the **NEXTAUTH_URL** environment variable locally, but it's not needed 
 
 ---
 
+### next/navigation
+
+In next.js v13, **next/navigation** replaces **next/router** in the **/app** folder. You can still use _next/router_ in the _/pages_ folder.
+
+```js
+'use client';
+
+import { useRouter } from 'next/navigation';
+
+const router = useRouter();
+
+// ...
+
+if (status === 'unauthenticated') router.push('/login?callbackUrl=/protected');
+```
+
+```js
+import { useSearchParams } from 'next/navigation';
+
+export default async function CheckoutPage() {
+    const searchParams = useSearchParams();
+
+    return (
+        <div>
+            <h1>Checkout </h1>
+            <p>{searchParams.toString()}</p>
+        </div>
+    );
+}
+```
+
+---
+
 ### Todos
 
 -   Write tests.

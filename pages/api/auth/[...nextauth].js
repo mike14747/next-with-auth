@@ -6,15 +6,17 @@ import { getUserForSignin } from '../../../lib/api/user';
 export default NextAuth({
     providers: [
         Credentials({
-            // the name and credentials properties are not needed since we are using a custom login page, but I've left it here anyway
-            name: 'username/password',
-            credentials: {
-                username: { label: 'Username', type: 'text' },
-                password: { label: 'Password', type: 'password' },
-            },
+            // the name and credentials properties are not needed since we are using a custom login page
+            // I've commented them out but kept them in here in case they become needed.
+            // name: 'username/password',
+            // credentials: {
+            //     username: { label: 'Username', type: 'text' },
+            //     password: { label: 'Password', type: 'password' },
+            // },
 
             async authorize(credentials) {
-                const user = await getUserForSignin(credentials.username, credentials.password);
+                const { username, password } = credentials;
+                const user = await getUserForSignin(username, password);
 
                 // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback functions
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;

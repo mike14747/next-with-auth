@@ -1,10 +1,12 @@
-import { useState } from 'react';
-import FormInputForUsername from '../../components/FormInputForUsername';
-import FormInputForEmail from '../../components/FormInputForEmail';
-import Button from '../../components/Button';
-import Loading from '../../components/Loading';
+'use client';
 
-import styles from '../styles/ForgotLoginInfo.module.css';
+import { useState } from 'react';
+import FormInputForUsername from '../shared/FormInputForUsername';
+import FormInputForEmail from '../shared/FormInputForEmail';
+import Button from '../shared/Button';
+import Loading from '../shared/Loading';
+
+import styles from '../../styles/ForgotLoginInfo.module.css';
 
 export default function ForgottenUsername() {
     const [username, setUsername] = useState('');

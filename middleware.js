@@ -23,4 +23,4 @@ export default withAuth(
     },
 );
 
-export const config = { matcher: ['/protected2', '/admin'] };
+export const config = { matcher: ['/protected', '/protected2', '/admin'] };

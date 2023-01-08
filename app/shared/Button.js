@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import styles from '../styles/Button.module.css';
+import styles from '../../styles/Button.module.css';
 
 const sizes = ['small', 'medium', 'large', 'specialSize'];
 const variants = ['outlined', 'text', 'contained', 'special'];
