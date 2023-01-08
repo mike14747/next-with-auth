@@ -19,12 +19,6 @@ export default function Navbar() {
                 </li>
 
                 <li>
-                    <Link href="/protected2">
-                        Protected by middleware page
-                    </Link>
-                </li>
-
-                <li>
                     <Link href="/admin">
                         Admin page
                     </Link>

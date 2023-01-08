@@ -1,13 +1,14 @@
+'use client';
+
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import Head from 'next/head';
-import FormInputForUsername from '../components/FormInputForUsername';
-import FormInputForNewPassword from '../components/FormInputForNewPassword';
-import FormInputForEmail from '../components/FormInputForEmail';
-import Button from '../components/Button';
-import Loading from '../components/Loading';
+import FormInputForUsername from '../shared/FormInputForUsername';
+import FormInputForNewPassword from '../shared/FormInputForNewPassword';
+import FormInputForEmail from '../shared/FormInputForEmail';
+import Button from '../shared/Button';
+import Loading from '../shared/Loading';
 
-export default function Register() {
+export default function Page() {
     const { status } = useSession();
 
     const [username, setUsername] = useState('');
@@ -48,12 +49,6 @@ export default function Register() {
 
     return (
         <>
-            <Head>
-                <title>
-                    Register
-                </title>
-            </Head>
-
             <article>
                 <h2 className="page-heading">
                     Register

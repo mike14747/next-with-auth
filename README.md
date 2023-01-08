@@ -995,6 +995,10 @@ export default async function CheckoutPage() {
 
 -   Write tests.
 -   This doesn't really have anything to do with this app specifically, but I'd like to come up with a way to clear button and nav focus on next/link page transition.
+-   Decide what to name the page.js components (Page vs the name of the route folder).
+-   Switch over from client fetch to swr?
+-   Do server component data fetching on pages?
+-   There is still a login redirect bug in middleware protected pages.
 
 **Finished**:
 

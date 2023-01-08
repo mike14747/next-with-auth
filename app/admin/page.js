@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import Head from 'next/head';
-import Loading from '../components/Loading';
+'use client';
 
-export default function Admin() {
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Loading from './../shared/Loading';
+
+export default function Page() {
     // on this page we do need access to the session because in addition to knowing whether the user is sined in, we need to check whether the user's role is sufficient to access this page
     const { data: session, status } = useSession();
     const router = useRouter();
@@ -54,12 +55,6 @@ export default function Admin() {
     if (status === 'authenticated') {
         return (
             <>
-                <Head>
-                    <title>
-                        Admin Page
-                    </title>
-                </Head>
-
                 <article>
                     <h2 className="page-heading">
                         Admin Page

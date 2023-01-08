@@ -1,6 +1,5 @@
 'use client';
 
-// import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import Button from './shared/Button';
@@ -11,15 +10,12 @@ const Authbar = () => {
     const { data: session, status } = useSession();
     const loading = status === 'loading';
 
-    // const router = useRouter();
-
     return (
         <section className={styles.authbarContainer}>
             {loading && <>Loading...</>}
 
             {!session && !loading &&
                 <p>
-                    {/* <Link href={`/login?callbackUrl=${router.pathname}`}> */}
                     <Link href="/login?callbackUrl=/">
                         Login
                     </Link>
@@ -41,7 +37,6 @@ const Authbar = () => {
                         </Link>
                     </p>
 
-                    {/* <Button onClick={() => signOut({ redirect: false })} size="small" variant="text">Logout</Button> */}
                     <Button onClick={() => signOut({ callbackUrl: '/' })} size="small" variant="text">Logout</Button>
                 </>
             }

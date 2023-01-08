@@ -1,16 +1,17 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import Head from 'next/head';
-import Loading from '../components/Loading';
-import FormInputForUsername from '../components/FormInputForUsername';
-import FormInputForNewPassword from '../components/FormInputForNewPassword';
-import FormInputForEmail from '../components/FormInputForEmail';
-import Button from '../components/Button';
+import Loading from '../shared/Loading';
+import FormInputForUsername from '../shared/FormInputForUsername';
+import FormInputForNewPassword from '../shared/FormInputForNewPassword';
+import FormInputForEmail from '../shared/FormInputForEmail';
+import Button from '../shared/Button';
 
-import styles from '../styles/profile.module.css';
+import styles from '../../styles/profile.module.css';
 
-export default function Profile() {
+export default function Page() {
     const { data: session, status } = useSession();
 
     const router = useRouter();
@@ -186,12 +187,6 @@ export default function Profile() {
     if (status === 'authenticated') {
         return (
             <>
-                <Head>
-                    <title>
-                        Profile
-                    </title>
-                </Head>
-
                 <article className="mw-75ch">
                     <h2 className="page-heading">
                         Profile

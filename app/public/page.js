@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Loading from '../components/Loading';
+'use client';
 
-export default function Protected2() {
+import { useState, useEffect } from 'react';
+import Loading from '../shared/Loading';
+
+export default function Page() {
     const [data, setData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -10,9 +11,7 @@ export default function Protected2() {
     useEffect(() => {
         const abortController = new AbortController();
 
-        setIsLoading(true);
-
-        fetch('/api/protected', { signal: abortController.signal })
+        fetch('/api/public', { signal: abortController.signal })
             .then(res => {
                 if (!res.ok) throw new Error('An error occurred fetching data.');
                 return res.json();
@@ -37,15 +36,9 @@ export default function Protected2() {
 
     return (
         <>
-            <Head>
-                <title>
-                    Protected by Middleware Page
-                </title>
-            </Head>
-
             <article>
                 <h2 className="page-heading">
-                    Protected by Middleware Page
+                    Public Page
                 </h2>
 
                 {error && <p className="error">{error}</p>}
@@ -56,7 +49,7 @@ export default function Protected2() {
                     <ul>
                         {data.map((item, index) => (
                             <li key={index}>
-                                {item.name + ' - age: ' + item.age}
+                                {item.name}
                             </li>
                         ))}
                     </ul>

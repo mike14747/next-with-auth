@@ -1,12 +1,6 @@
-import Head from 'next/head';
-
 const NoMatch = () => {
     return (
         <>
-            <Head>
-                <title>Page Not Found</title>
-            </Head>
-
             <article id="no-match">
                 <h2 className="error">
                     Error 404!

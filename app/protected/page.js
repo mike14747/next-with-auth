@@ -1,7 +1,6 @@
 'use client';
 
 import useSWR from 'swr';
-import Head from 'next/head';
 import Loading from '../shared/Loading';
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
@@ -11,12 +10,6 @@ export default function Page() {
 
     return (
         <>
-            <Head>
-                <title>
-                    Protected Page
-                </title>
-            </Head>
-
             <article>
                 <h2 className="page-heading">
                     Protected Page

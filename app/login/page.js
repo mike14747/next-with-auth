@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Head from 'next/head';
 import FormInput from '../shared/FormInput';
 import Button from '../shared/Button';
 import ForgotLoginInfo from './ForgotLoginInfo';
@@ -61,12 +60,6 @@ export default function Login() {
     if (status === 'unauthenticated') {
         return (
             <>
-                <Head>
-                    <title>
-                        Login
-                    </title>
-                </Head>
-
                 <article>
                     <h2 className="page-heading">
                         Login
