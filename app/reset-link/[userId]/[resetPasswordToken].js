@@ -1,12 +1,13 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import FormInputForNewPassword from '../../../components/FormInputForNewPassword';
-import Button from '../../../components/Button';
+import FormInputForNewPassword from '../../shared/FormInputForNewPassword';
+import Button from '../../shared/Button';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '../../profile/profile.module.css';
 
 export default function ResetPasswordToken() {
     const { data: session } = useSession();
@@ -54,12 +55,6 @@ export default function ResetPasswordToken() {
 
     return (
         <>
-            <Head>
-                <title>
-                    Reset your password
-                </title>
-            </Head>
-
             <article className="mw-75ch">
                 <h2 className={'page-heading ' + styles.resetPageHeading}>
                     Reset your password

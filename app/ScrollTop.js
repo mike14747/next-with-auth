@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from 'react';
 
-const ScrollTop = () => {
+export default function ScrollTop() {
     const [showTop, setShowTop] = useState(false);
 
     const checkScrollTop = () => window.pageYOffset > 600 ? setShowTop(true) : setShowTop(false);
@@ -69,6 +69,4 @@ const ScrollTop = () => {
             `}</style>
         </>
     );
-};
-
-export default ScrollTop;
+}

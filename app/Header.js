@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Authbar from './Authbar';
 
-import styles from '../styles/Header.module.css';
+import styles from './Header.module.css';
 
 export default function Header() {
     return (

@@ -1,12 +1,26 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { getProtectedData } from '../../lib/api/index';
+// eslint-disable-next-line camelcase
+import { unstable_getServerSession } from 'next-auth/next';
+// import { authOptions } from '../../pages/api/auth/[...nextauth]';
 
-import useSWR from 'swr';
-import Loading from '../shared/Loading';
+async function getData() {
+    const res = await getProtectedData().catch(error => console.log(error.message));
+    return res;
+}
 
-const fetcher = (url) => fetch(url).then((res) => res.json());
-
-export default function Page() {
-    const { data, error, isLoading } = useSWR('/api/protected', fetcher);
+export default async function Page() {
+    // doing this will return the session in the form of a token... including the expiry date
+    const session = await unstable_getServerSession({
+        callbacks: { session: ({ token }) => token },
+    });
+    console.log({ session });
+    // doing this will get the session, but with the expiry date stripped out
+    // const session = await unstable_getServerSession(authOptions);
+    if (!session) {
+        redirect('/login?callbackUrl=/protected');
+    }
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
         <>
@@ -15,9 +29,13 @@ export default function Page() {
                     Protected Page
                 </h2>
 
-                {error && <p className="error">An error occurred fetching data.</p>}
+                <p>
+                    This page is getting data on the server-side, right in the component.
+                </p>
 
-                {isLoading && <Loading />}
+                {/* {error && <p className="error">{error}</p>}
+
+                {isLoading && <Loading />} */}
 
                 {data?.length > 0 &&
                     <ul>

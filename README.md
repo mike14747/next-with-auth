@@ -999,6 +999,8 @@ export default async function CheckoutPage() {
 -   Switch over from client fetch to swr?
 -   Do server component data fetching on pages?
 -   There is still a login redirect bug in middleware protected pages.
+-   Why aren't my pages full height?
+-   Should css files be moved out of the /styles folder and into the folders where they're being used?
 
 **Finished**:
 

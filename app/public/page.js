@@ -9,9 +9,7 @@ export default function Page() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const abortController = new AbortController();
-
-        fetch('/api/public', { signal: abortController.signal })
+        fetch('/api/public')
             .then(res => {
                 if (!res.ok) throw new Error('An error occurred fetching data.');
                 return res.json();
@@ -21,17 +19,11 @@ export default function Page() {
                 setError(null);
             })
             .catch(error => {
-                if (error.name === 'AbortError') {
-                    console.error(error.name + ': Data fetching was aborted.');
-                } else {
-                    console.error(error.name + ': ' + error.message);
-                    setData(null);
-                    setError('An error occurred fetching data.');
-                }
+                console.error(error.name + ': ' + error.message);
+                setData(null);
+                setError('An error occurred fetching data.');
             })
             .finally(() => setIsLoading(false));
-
-        return () => abortController.abort();
     }, []);
 
     return (

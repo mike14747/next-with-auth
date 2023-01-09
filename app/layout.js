@@ -8,7 +8,7 @@ import Footer from './Footer';
 import ScrollTop from './ScrollTop';
 import SkipToMain from './SkipToMain';
 
-import '../styles/globals.css';
+import './globals.css';
 
 export default function RootLayout({ children, session }) {
     return (

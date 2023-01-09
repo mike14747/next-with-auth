@@ -9,7 +9,7 @@ import FormInputForNewPassword from '../shared/FormInputForNewPassword';
 import FormInputForEmail from '../shared/FormInputForEmail';
 import Button from '../shared/Button';
 
-import styles from '../../styles/profile.module.css';
+import styles from './profile.module.css';
 
 export default function Page() {
     const { data: session, status } = useSession();

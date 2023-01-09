@@ -1,4 +1,6 @@
-const NoMatch = () => {
+'use client';
+
+export default function NotFound() {
     return (
         <>
             <article id="no-match">
@@ -27,6 +29,4 @@ const NoMatch = () => {
             </article>
         </>
     );
-};
-
-export default NoMatch;
+}

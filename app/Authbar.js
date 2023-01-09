@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import Button from './shared/Button';
 
-import styles from '../styles/Authbar.module.css';
+import styles from './Authbar.module.css';
 
 const Authbar = () => {
     const { data: session, status } = useSession();

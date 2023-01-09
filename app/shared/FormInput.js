@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import styles from '../../styles/FormInput.module.css';
+import styles from './FormInput.module.css';
 
 const sizes = ['small', 'normal'];
 

@@ -1,4 +1,4 @@
-const Loading = () => {
+export default function Loading() {
     return (
         <div id="loading">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -11,6 +11,4 @@ const Loading = () => {
             `}</style>
         </div>
     );
-};
-
-export default Loading;
+}
