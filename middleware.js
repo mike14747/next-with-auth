@@ -26,8 +26,4 @@ export default withAuth(
     },
 );*/
 
-<<<<<<< HEAD
 export const config = { matcher: ['/protected'] };
-=======
-export const config = { matcher: [] };
->>>>>>> 5a73f72f7c24234751e5e7b393423f8d8b6d06cf
