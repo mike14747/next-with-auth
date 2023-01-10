@@ -1190,10 +1190,7 @@ export default async function CheckoutPage() {
 -   There is still a login redirect bug in middleware protected pages.
 -   Why aren't my pages full height?
 -   Should css files be moved out of the /styles folder and into the folders where they're being used?
-
-**Finished**:
-
--   When next-auth middleware is supported in next.js version 13, update next to that version and implement the middleware. **UPDATE**: I tried using middleware with next.js version 13 in another app and it is working after all. Further testing seems to show that some combinations of next and next-auth versions have issues. I can confirm that next v13.0.5 is ok with next-auth v4.17.0. Also, next v13.1.1 is ok with next-auth v4.18.7. But, when I first went to next v13.1.1 it wasn't working with next-auth v4.10.3. Sometimes it seems like it might work locally, but not on vercel... other times the bad combos don't work on either.
+-   Figure out why the form input fields are always showing the validation errors.
 
 ---
 
