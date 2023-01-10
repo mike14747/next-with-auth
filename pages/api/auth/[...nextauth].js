@@ -8,11 +8,11 @@ export default NextAuth({
         Credentials({
             // the name and credentials properties are not needed since we are using a custom login page
             // I've commented them out but kept them in here in case they become needed.
-            // name: 'username/password',
-            // credentials: {
-            //     username: { label: 'Username', type: 'text' },
-            //     password: { label: 'Password', type: 'password' },
-            // },
+            name: 'username/password',
+            credentials: {
+                username: { label: 'Username', type: 'text' },
+                password: { label: 'Password', type: 'password' },
+            },
 
             async authorize(credentials) {
                 const { username, password } = credentials;
