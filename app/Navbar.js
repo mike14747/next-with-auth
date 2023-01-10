@@ -7,12 +7,6 @@ export default function Navbar() {
         <nav className={styles.nav + ' container'}>
             <ul>
                 <li>
-                    <Link href="/test">
-                        Test
-                    </Link>
-                </li>
-
-                <li>
                     <Link href="/public">
                         Public page
                     </Link>

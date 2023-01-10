@@ -1,30 +1,11 @@
-'use client';
+import { getUnprotectedData } from '../../lib/api/index';
 
-import { useState, useEffect } from 'react';
-import Loading from '../shared/Loading';
+async function getData() {
+    return await getUnprotectedData().catch(error => console.log(error.message));
+}
 
-export default function Page() {
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        fetch('/api/public')
-            .then(res => {
-                if (!res.ok) throw new Error('An error occurred fetching data.');
-                return res.json();
-            })
-            .then(data => {
-                setData(data);
-                setError(null);
-            })
-            .catch(error => {
-                console.error(error.name + ': ' + error.message);
-                setData(null);
-                setError('An error occurred fetching data.');
-            })
-            .finally(() => setIsLoading(false));
-    }, []);
+export default async function Page() {
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
         <>
@@ -33,9 +14,9 @@ export default function Page() {
                     Public Page
                 </h2>
 
-                {error && <p className="error">{error}</p>}
-
-                {isLoading && <Loading />}
+                <p>
+                    This page is getting data on the server-side, right in the component.
+                </p>
 
                 {data?.length > 0 &&
                     <ul>
