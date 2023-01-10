@@ -15,7 +15,9 @@ It includes public and protected api routes.
 
 It even has different levels of access for the different private routes (user vs admin).
 
-I'm using client-side authentication on some secure pages, but am using middleware to secure the protected2 and admin pages. Actually, the admin page is using both.
+I was using client-side authentication on secure pages, then chose to use middleware to secure the protected pages. But, now that I've upgraded the app to next.js version 13, I'm using what I think is the current best way to secure those pages... checking for a session in Server Components.
+
+I'm hopeful that middleware will be the ultimate solution, but I've found the **withAuth** functionality in middleware to currently be too buggy to trust. It will sometimes return a token as null if when a user is signed in. Then it's an infinite loop going back and forth from the login page (which correctly knows the user is signed in). Sometimes a page refresh fixes the problem, sometimes not.
 
 Right now the only type of sign in is using **Credentials**. I'd like to add a few other types of options at some point.
 
@@ -76,11 +78,27 @@ cd ../../styles && touch globals.css Home.module.css Header.module.css Footer.mo
 
 Some of the above created files will need to be populated with code before this app will work. That will follow in subsequent sections.
 
+I added **.env** to my **.gitignore** file, because by default the github node .gitignore file only includes .env.local.
+
+**UPDATE**: I've upgraded this app to use next.js version 13, so the initial folder/file structure I listed above is now longer valid. This is the current setup which I've changed to:
+
+```bash
+touch .env
+mkdir app lib pages public
+cd app && mkdir shared && touch page.js layout.js head.js Header.js Navbar.js Footer.js Layout.js globals.css Home.module.css Header.module.css Navbar.module.css Footer.module.css
+cd ../lib && mkdir api
+cd ../pages && mkdir api
+cd ../public && mkdir images
+
+```
+
 ---
 
 ### Populating the newly created files
 
 For starters, let's populate just the files necessary to run the app. I've included my custom **SkipTpMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section.
+
+**UPDATE**: the **Layout** component is no longer used in next.js version 13.
 
 **/components/Layout.js**
 
@@ -119,6 +137,8 @@ export default Layout;
 
 **NOTE**: **\_app.js** will need to have some additions made to it once **next-auth** is installed.
 
+**UPDATE**: the **\_app.js** page is no longer used in next.js version 13.
+
 ```js
 import PropTypes from 'prop-types';
 import Layout from '../components/Layout';
@@ -142,6 +162,8 @@ export default MyApp;
 ```
 
 **/pages/\_document.js**
+
+**UPDATE**: the **\document.js** page is no longer used in next.js version 13.
 
 ```js
 import Document, { Html, Head, Main, NextScript } from 'next/document';
@@ -176,28 +198,27 @@ You can uncomment one of the favicon lines if you add a favicon to: **/public/im
 The initial **Header**, **Navbar** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, so for now it's just commented out.
 
 ```js
-import Link from 'next/link';
-// import Authbar from './Authbar';
+// /app/Header.js
 
-import styles from '../styles/Header.module.css';
+import Link from 'next/link';
+// import Authbar from './Authbar'; // this path was changed now that I'm using next.js version 13
+
+import styles from './Header.module.css'; // this path was changed now that I'm using next.js version 13
 
 export default function Header() {
     return (
-        // to make the header full width, just omit the container class
-        <div className={styles.header + ' container'}>
-            <div className={styles.leftDiv}>
-                <p>This is the Header component.</p>
+        <div className={styles.headerContainer}>
+            <header className={styles.header + ' container'}>
+                <div className={styles.leftDiv}>
+                    <h1 className={styles.h1}>next-with-auth</h1>
 
-                <p>
-                    <Link href="/">
-                        <a>Home</a>
-                    </Link>
-                </p>
-            </div>
+                    <p>
+                        <Link href="/">Home</Link>
+                    </p>
+                </div>
 
-            {/* <div className={styles.rightDiv}>
-                <Authbar />
-            </div> */}
+                <div className={styles.rightDiv}>{/* <Authbar /> */}</div>
+            </header>
         </div>
     );
 }
@@ -206,13 +227,17 @@ export default function Header() {
 ...and
 
 ```js
-import styles from '../styles/Navbar.module.css';
+// /app/Navbar.js
+
+import Link from 'next/link';
+
+import styles from './Navbar.module.css'; // this path was changed now that I'm using next.js version 13
 
 export default function Navbar() {
     return (
         <nav className={styles.nav + ' container'}>
             <ul>
-                <li>{/* links to all the pages will go in these list items */}</li>
+                <li>{/* links to all the pages will go in these list items using the Link component */}</li>
             </ul>
         </nav>
     );
@@ -222,7 +247,9 @@ export default function Navbar() {
 ...and
 
 ```js
-import styles from '../styles/Footer.module.css';
+// /app/Footer.js
+
+import styles from './Footer.module.css'; // this path was changed now that I'm using next.js version 13
 
 export default function Footer() {
     return (
@@ -298,8 +325,6 @@ I changed the error to a warning about using the **next/image** component instea
 
 ### Setting up next-auth and a database
 
-**NOTE**: As of 2022-12-03, next-auth middleware doesn't work with next v13. Use next v12.2 if you want to use middleware to secure pages.
-
 I'm only using the database to store user data... not sessions. JWT sessions are being implemented.
 
 I opted for and installed **mongodb** along with **next-auth** instead of going with an sql database because hosting a remote database on Atlas is free for a low usage app like this one.
@@ -330,6 +355,8 @@ NEXTAUTH_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
 One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is where you set up your auth providers. In this app, I'm only using a **credentials provider** with a **username** and **password**. For this app, the file looks like this:
 
 ```js
+// /page/api/auth/[...nextauth]
+
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
@@ -338,13 +365,13 @@ import { getUserForSignin } from '../../../lib/api/user';
 export default NextAuth({
     providers: [
         Credentials({
-            name: 'username/password',
-
-            // the credentials property is not needed since we are using a custom login page, but I've left it here anyway
-            credentials: {
-                username: { label: 'Username', type: 'text' },
-                password: { label: 'Password', type: 'password' },
-            },
+            // the name and credentials properties are not needed since we are using a custom login page
+            // I've commented them out but kept them in here in case they become needed
+            // name: 'username/password',
+            // credentials: {
+            //     username: { label: 'Username', type: 'text' },
+            //     password: { label: 'Password', type: 'password' },
+            // },
 
             async authorize(credentials) {
                 const user = await getUserForSignin(credentials.username, credentials.password);
@@ -388,7 +415,11 @@ Some things to note with the next-auth file:
 
 I wrapped a session provider around the Layout component in **\_app.js**. Doing this makes the logged in status available to all components and pages. But, you could only wrap certain components or pages if you'd like.
 
+**UPDATE**: the **\_app.js** page is no longer used in next.js version 13.
+
 ```js
+// /pages/_app.js
+
 import PropTypes from 'prop-types';
 import { SessionProvider } from 'next-auth/react';
 import Layout from '../components/Layout';
@@ -423,10 +454,16 @@ There is also an array of possible callbackUrl query parameters that are bypasse
 
 ```js
 const router = useRouter();
-let redirectUrl = router.query.callbackUrl || '/';
-const notRedirectable = ['reset-link', '/reset-password-success', '/register', '/login'];
+const searchParams = useSearchParams();
+// get the redirect query parameter if there is one... if not, set the homepage as the redirect location
+let redirectUrl = searchParams.get('callbackUrl') || '/';
 
-const notRedirectableCheck = notRedirectable.filter((url) => redirectUrl.startsWith(url));
+// set an array of query parameters that are not allowed to be redirected to
+const notRedirectable = ['/reset-link', '/reset-password-success', '/register', '/login'];
+
+// check to see whether the query parameter is on the not allowed list
+const notRedirectableCheck = notRedirectable.filter((url) => redirectUrl.includes(url));
+// if a resistricted query parameter is included, redirect to the homepage
 if (notRedirectableCheck.length > 0) redirectUrl = '/';
 ```
 
@@ -455,6 +492,8 @@ There are 3 types of pages in this app.
 **Public pages**
 
 There's nothing unusual about my public pages. The following is a basic public page that does client side data fetching, though most public pages would likely be either server-side rendered or would be static pages.
+
+**UPDATE**: now that I've upgraded to next.js version 13, I'm using the new **/app** folder for all my pages and am taking advantage of their new Server Components as much as possible. As of 2023-01-09, his is an example of my old method of page construction. See below for the new method.
 
 ```js
 import { useState, useEffect } from 'react';
@@ -518,9 +557,45 @@ export default function Public() {
 }
 ```
 
+This is my new way of using public pages that don't have any user interaction.
+
+Notice that I'm calling a serverless function directly in my page file. This is possible because all pages are now Server Components by default.
+
+```js
+import { getUnprotectedData } from '../../lib/api/index';
+
+async function getData() {
+    return await getUnprotectedData().catch((error) => console.log(error.message));
+}
+
+export default async function Page() {
+    const data = await getData().catch((error) => console.log(error.message));
+
+    return (
+        <>
+            <article>
+                <h2 className="page-heading">Public Page</h2>
+
+                <p>This page is getting data on the server-side, right in the component.</p>
+
+                {data?.length > 0 && (
+                    <ul>
+                        {data.map((item, index) => (
+                            <li key={index}>{item.name}</li>
+                        ))}
+                    </ul>
+                )}
+            </article>
+        </>
+    );
+}
+```
+
 **Protected pages**
 
 This is my standard client-side protected page. It only fetches data if a user is authenticated. If a user is not authenticated, the user is redirected to the login page.
+
+**UPDATE**: now that I've upgraded to next.js version 13, I'm using the new **/app** folder for all my pages and am taking advantage of their new Server Components as much as possible. As of 2023-01-09, his is an example of my old method of page construction. See below for the new method.
 
 ```js
 import { useState, useEffect } from 'react';
@@ -613,13 +688,61 @@ export default function Protected() {
 }
 ```
 
+This is my new way of using public pages that don't have any user interaction.
+
+Notice that I'm calling a serverless function directly in my page file. This is possible because all pages are now Server Components by default.
+
+```js
+import { redirect } from 'next/navigation';
+import { getProtectedData } from '../../lib/api/index';
+// eslint-disable-next-line camelcase
+import { unstable_getServerSession } from 'next-auth/next';
+
+async function getData() {
+    return await getProtectedData().catch((error) => console.log(error.message));
+}
+
+export default async function Page() {
+    // doing this will return the session in the form of a token... including the expiry date
+    const session = await unstable_getServerSession({
+        callbacks: { session: ({ token }) => token },
+    });
+    // doing this will get the session, but with the expiry date stripped out
+    // const session = await unstable_getServerSession(authOptions);
+    if (!session) {
+        redirect('/login?callbackUrl=/protected');
+    }
+    const data = await getData().catch((error) => console.log(error.message));
+
+    return (
+        <>
+            <article>
+                <h2 className="page-heading">Protected Page</h2>
+
+                <p>This page is getting data on the server-side, right in the component.</p>
+
+                {data?.length > 0 && (
+                    <ul>
+                        {data.map((item, index) => (
+                            <li key={index}>{item.name + ' - age: ' + item.age}</li>
+                        ))}
+                    </ul>
+                )}
+            </article>
+        </>
+    );
+}
+```
+
 ---
 
 **Pages protected by middleware**
 
 Pages that are protected by middleware are the same as the public pages. They don't require code that's any different from the public pages.
 
-The middleware does not allow anyone who is not authenticated to visit the page. The middleware in this app sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
+The middleware does not allow anyone who is not authenticated to visit the page. The middleware sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
+
+**NOTE**: I'm currently not using middleware to protect any pages, because as I said above, I feel next-auth is too buggy with middleware.
 
 ---
 
@@ -752,6 +875,73 @@ export default function Admin() {
     }
 
     return null;
+}
+```
+
+This is my new way of using admin pages that don't have any user interaction.
+
+Notice that I'm calling a serverless function directly in my page file. This is possible because all pages are now Server Components by default.
+
+```js
+import { redirect } from 'next/navigation';
+import { getAdminData } from '../../lib/api/index';
+// eslint-disable-next-line camelcase
+import { unstable_getServerSession } from 'next-auth/next';
+// import { authOptions } from '../../pages/api/auth/[...nextauth]';
+
+async function getData() {
+    return await getAdminData().catch((error) => console.log(error.message));
+}
+
+export default async function Page() {
+    // doing this will return the session in the form of a token... including the expiry date
+    const session = await unstable_getServerSession({
+        callbacks: { session: ({ token }) => token },
+    });
+    
+    if (!session) {
+        redirect('/login?callbackUrl=/admin');
+    }
+
+    let data = null;
+    if (session.role === 'admin') {
+        data = await getData().catch((error) => console.log(error.message));
+        console.log({ data });
+    }
+
+    return (
+        <>
+            <article>
+                <h2 className="page-heading">Admin Page</h2>
+
+                {session?.role !== 'admin' && (
+                    <>
+                        <p className="error">
+                            You are logged in, but do not have the proper credentials to view this page.
+                        </p>
+
+                        <p className="error">
+                            Log out, then log back in as a user with the proper credentials to view this page.
+                        </p>
+                    </>
+                )}
+
+                {session?.role === 'admin' && (
+                    <>
+                        {data?.length > 0 && (
+                            <ul>
+                                {data.map((item, index) => (
+                                    <li key={index}>
+                                        {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </>
+                )}
+            </article>
+        </>
+    );
 }
 ```
 
@@ -997,7 +1187,6 @@ export default async function CheckoutPage() {
 -   This doesn't really have anything to do with this app specifically, but I'd like to come up with a way to clear button and nav focus on next/link page transition.
 -   Decide what to name the page.js components (Page vs the name of the route folder).
 -   Switch over from client fetch to swr?
--   Do server component data fetching on pages?
 -   There is still a login redirect bug in middleware protected pages.
 -   Why aren't my pages full height?
 -   Should css files be moved out of the /styles folder and into the folders where they're being used?

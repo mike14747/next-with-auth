@@ -7,7 +7,7 @@ export default NextAuth({
     providers: [
         Credentials({
             // the name and credentials properties are not needed since we are using a custom login page
-            // I've commented them out but kept them in here in case they become needed.
+            // I've commented them out but kept them in here in case they become needed
             // name: 'username/password',
             // credentials: {
             //     username: { label: 'Username', type: 'text' },

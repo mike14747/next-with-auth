@@ -5,8 +5,7 @@ import { unstable_getServerSession } from 'next-auth/next';
 // import { authOptions } from '../../pages/api/auth/[...nextauth]';
 
 async function getData() {
-    const res = await getProtectedData().catch(error => console.log(error.message));
-    return res;
+    return await getProtectedData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
