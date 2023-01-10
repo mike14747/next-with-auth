@@ -8,7 +8,9 @@ async function getData() {
     return await getProtectedData().catch(error => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Page({ params, searchParams }) {
+    // console.log({ searchParams });
+
     // doing this will return the session in the form of a token... including the expiry date
     const session = await unstable_getServerSession({
         callbacks: { session: ({ token }) => token },

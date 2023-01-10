@@ -1,8 +1,6 @@
-'use client';
-
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
-import Button from './shared/Button';
+import Button from '../shared/Button';
 
 import styles from './Authbar.module.css';
 

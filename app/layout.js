@@ -2,11 +2,11 @@
 
 import PropTypes from 'prop-types';
 import { SessionProvider } from 'next-auth/react';
-import Header from './Header';
-import Navbar from './Navbar';
-import Footer from './Footer';
-import ScrollTop from './ScrollTop';
-import SkipToMain from './SkipToMain';
+import Header from './components/Header';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import ScrollTop from './components/ScrollTop';
+import SkipToMain from './components/SkipToMain';
 
 import './globals.css';
 
