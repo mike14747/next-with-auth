@@ -18,7 +18,7 @@ export default withAuth(
         callbacks: {
             // authorized: ({ token }) => token?.role === 'user',
             authorized({ token }) {
-                console.log({ token });
+                // console.log({ token });
                 return !!token;
             },
         },
