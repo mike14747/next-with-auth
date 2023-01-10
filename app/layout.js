@@ -15,18 +15,20 @@ export default function RootLayout({ children, session }) {
         <html lang='en'>
             <head />
             <body>
-                <SessionProvider session={session}>
-                    <SkipToMain />
-                    <Header />
-                    <Navbar />
+                <div id="__wrapper">
+                    <SessionProvider session={session}>
+                        <SkipToMain />
+                        <Header />
+                        <Navbar />
 
-                    <main id="main" className="main-container">
-                        {children}
-                        <ScrollTop />
-                    </main>
+                        <main id="main" className="main-container">
+                            {children}
+                            <ScrollTop />
+                        </main>
 
-                    <Footer />
-                </SessionProvider>
+                        <Footer />
+                    </SessionProvider>
+                </div>
             </body>
         </html>
     );

@@ -898,7 +898,7 @@ export default async function Page() {
     const session = await unstable_getServerSession({
         callbacks: { session: ({ token }) => token },
     });
-    
+
     if (!session) {
         redirect('/login?callbackUrl=/admin');
     }
@@ -1203,7 +1203,7 @@ fetch(URL, { next: { revalidate: 20 } });
 -   Decide what to name the page.js components (Page vs the name of the route folder).
 -   Switch over from client fetch to swr?
 -   There is still a login redirect bug in middleware protected pages.
--   Why aren't my pages full height?
+-   Why aren't my pages full height? **UPDATE**: I fixed this (permanently?) by added a **__wrapper** div to /app/layout.js since the **__next** id is no longer in use in next.js v13.
 -   Should css files be moved out of the /styles folder and into the folders where they're being used?
 -   Figure out why the form input fields are always showing the validation errors.
 
