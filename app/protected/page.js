@@ -13,7 +13,7 @@ export default async function Page() {
     const session = await unstable_getServerSession({
         callbacks: { session: ({ token }) => token },
     });
-    console.log({ session });
+    // console.log({ session });
     // doing this will get the session, but with the expiry date stripped out
     // const session = await unstable_getServerSession(authOptions);
     if (!session) {

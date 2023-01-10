@@ -1,9 +1,8 @@
-// import { withAuth } from 'next-auth/middleware';
-// import { NextResponse } from 'next/server';
+import { withAuth } from 'next-auth/middleware';
+import { NextResponse } from 'next/server';
 
-export { default } from 'next-auth/middleware';
+// export { default } from 'next-auth/middleware';
 
-/*
 export default withAuth(
     function middleware(req) {
         // console.log('token:', req.nextauth.token);
@@ -19,11 +18,11 @@ export default withAuth(
         callbacks: {
             // authorized: ({ token }) => token?.role === 'user',
             authorized({ token }) {
-                // console.log({ token });
+                console.log({ token });
                 return !!token;
             },
         },
     },
-);*/
+);
 
-export const config = { matcher: ['/protected'] };
+export const config = { matcher: ['/protected2'] };
