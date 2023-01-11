@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import Loading from '../shared/Loading';
-import FormInputForUsername from '../shared/FormInputForUsername';
-import FormInputForNewPassword from '../shared/FormInputForNewPassword';
-import FormInputForEmail from '../shared/FormInputForEmail';
-import Button from '../shared/Button';
+import Loading from '../components/Loading';
+import FormInputForUsername from '../components/FormInputForUsername';
+import FormInputForNewPassword from '../components/FormInputForNewPassword';
+import FormInputForEmail from '../components/FormInputForEmail';
+import Button from '../components/Button';
 
-import styles from './profile.module.css';
+import styles from '../../styles/profile.module.css';
 
 export default function Page() {
     const { data: session, status } = useSession();

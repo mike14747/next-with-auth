@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import FormInputForUsername from '../shared/FormInputForUsername';
-import FormInputForNewPassword from '../shared/FormInputForNewPassword';
-import FormInputForEmail from '../shared/FormInputForEmail';
-import Button from '../shared/Button';
-import Loading from '../shared/Loading';
+import FormInputForUsername from '../components/FormInputForUsername';
+import FormInputForNewPassword from '../components/FormInputForNewPassword';
+import FormInputForEmail from '../components/FormInputForEmail';
+import Button from '../components/Button';
+import Loading from '../components/Loading';
 
 export default function Page() {
     const { status } = useSession();

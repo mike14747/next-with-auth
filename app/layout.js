@@ -8,27 +8,25 @@ import Footer from './components/Footer';
 import ScrollTop from './components/ScrollTop';
 import SkipToMain from './components/SkipToMain';
 
-import './globals.css';
+import '../styles/globals.css';
 
 export default function RootLayout({ children, session }) {
     return (
         <html lang='en'>
             <head />
-            <body>
-                <div id="__wrapper">
-                    <SessionProvider session={session}>
-                        <SkipToMain />
-                        <Header />
-                        <Navbar />
+            <body id="appWrapper">
+                <SessionProvider session={session}>
+                    <SkipToMain />
+                    <Header />
+                    <Navbar />
 
-                        <main id="main" className="main-container">
-                            {children}
-                            <ScrollTop />
-                        </main>
+                    <main id="main" className="main-container">
+                        {children}
+                        <ScrollTop />
+                    </main>
 
-                        <Footer />
-                    </SessionProvider>
-                </div>
+                    <Footer />
+                </SessionProvider>
             </body>
         </html>
     );

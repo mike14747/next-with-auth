@@ -76,7 +76,7 @@
 /* for semi-full height websites with next.js use #__next and with react use #root */
 
 #__next,
-#__wrapper {
+#appWrapper {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;

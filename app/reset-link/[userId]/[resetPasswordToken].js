@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import FormInputForNewPassword from '../../shared/FormInputForNewPassword';
-import Button from '../../shared/Button';
+import FormInputForNewPassword from '../../components/FormInputForNewPassword';
+import Button from '../../components/Button';
 
-import styles from '../../profile/profile.module.css';
+import styles from '../../styles/profile.module.css';
 
 export default function ResetPasswordToken() {
     const { data: session } = useSession();

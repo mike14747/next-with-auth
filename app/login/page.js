@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import FormInput from '../shared/FormInput';
-import Button from '../shared/Button';
+import FormInput from '../components/FormInput';
+import Button from '../components/Button';
 import ForgotLoginInfo from './ForgotLoginInfo';
-import Loading from '../shared/Loading';
+import Loading from '../components/Loading';
 
 export default function Login() {
     const { status } = useSession();
