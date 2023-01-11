@@ -4,7 +4,7 @@ import styles from '../../styles/FormInput.module.css';
 
 const sizes = ['small', 'normal'];
 
-export default function FormInput({ id, label = '', handleChange, errorMsg = '', required = false, size = 'normal', type = 'text', ...rest }) {
+export default function FormInput({ id, label = '', handleChange, errorMsg = '', required = false, size = 'normal', type = 'text', placeholder = '', ...rest }) {
     const inputSize = sizes?.includes(size) ? size : 'normal';
 
     const { checked } = { ...rest };
@@ -25,6 +25,7 @@ export default function FormInput({ id, label = '', handleChange, errorMsg = '',
                 required={required}
                 size="30"
                 type={type}
+                placeholder={placeholder}
                 {...rest}
             />
 
@@ -58,8 +59,8 @@ FormInput.propTypes = {
         'time',
         'checkbox',
     ]),
-    // ...rest are below
     placeholder: PropTypes.string,
+    // ...rest are below
     pattern: PropTypes.string,
     step: PropTypes.string,
     checked: PropTypes.bool,

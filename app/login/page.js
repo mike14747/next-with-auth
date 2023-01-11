@@ -5,7 +5,7 @@ import { useSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FormInput from '../components/FormInput';
 import Button from '../components/Button';
-import ForgotLoginInfo from './ForgotLoginInfo';
+import ForgotLoginInfo from '../components/ForgotLoginInfo';
 import Loading from '../components/Loading';
 
 export default function Login() {

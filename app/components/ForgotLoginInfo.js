@@ -6,7 +6,7 @@ import FormInputForEmail from '../components/FormInputForEmail';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 
-import styles from '../styles/ForgotLoginInfo.module.css';
+import styles from '../../styles/ForgotLoginInfo.module.css';
 
 export default function ForgottenUsername() {
     const [username, setUsername] = useState('');

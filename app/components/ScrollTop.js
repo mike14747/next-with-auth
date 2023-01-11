@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react/no-unknown-property */
 import { useState, useEffect } from 'react';
 

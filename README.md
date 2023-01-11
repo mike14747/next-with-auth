@@ -1196,6 +1196,20 @@ fetch(URL, { next: { revalidate: 20 } });
 
 ---
 
+### #__next wrapping div
+
+Next.js version 13 does not seem to use a wrapper div with the id of **__next** like previous versions did. This had made the css for my full height pages stop working.
+
+My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** which uses the same css as the old #__next div.
+
+```jsx
+<body id="appWrapper">
+    {/* ... */}
+</body>
+```
+
+---
+
 ### Todos
 
 -   Write tests.
@@ -1203,9 +1217,7 @@ fetch(URL, { next: { revalidate: 20 } });
 -   Decide what to name the page.js components (Page vs the name of the route folder).
 -   Switch over from client fetch to swr?
 -   There is still a login redirect bug in middleware protected pages.
--   Why aren't my pages full height? **UPDATE**: I fixed this (permanently?) by added a **__wrapper** div to /app/layout.js since the **__next** id is no longer in use in next.js v13.
--   Should css files be moved out of the /styles folder and into the folders where they're being used?
--   Figure out why the form input fields are always showing the validation errors.
+-   Is there a way to make /app/layout.js a server component? SessionProvider is a client component. One possibility is to call **unstable_getServerSession** in server components and do away with SessionProvider and useSession client-side calls. This would allow for client components to be turned into server components... including /app/layout.js.
 
 ---
 
