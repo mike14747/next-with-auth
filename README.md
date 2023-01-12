@@ -1219,6 +1219,7 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** 
 -   There is still a login redirect bug in middleware protected pages.
 -   Is there a way to make /app/layout.js a server component? SessionProvider is a client component. One possibility is to call **unstable_getServerSession** in server components and do away with SessionProvider and useSession client-side calls. This would allow for client components to be turned into server components... including /app/layout.js.
 -    Possible way to use SessionProvider and still keep /app/layout.js as a server component:  https://beta.nextjs.org/docs/rendering/server-and-client-components#using-context-in-client-components
+-    Convert the profile page to a server component. I think this will mean abstracting the parts out that use useState to their own client component.
 
 ---
 

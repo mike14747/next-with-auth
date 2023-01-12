@@ -148,14 +148,12 @@ export default function Page() {
     useEffect(() => {
         if (status !== 'authenticated') return;
 
-        const abortController = new AbortController();
-
         if (session?.user?._id) {
             setIsLoading(true);
 
             // I'm using plain old promise chaining here since it's inside a useEffect
             // otherwise I'd have to write an async function, then call it to run to set the fetch call to a variable using async/await
-            fetch('/api/users/' + session.user._id, { signal: abortController.signal })
+            fetch('/api/users/' + session.user._id)
                 .then(res => {
                     if (!res.ok) throw new Error('An error occurred fetching data.');
                     return res.json();
@@ -164,20 +162,14 @@ export default function Page() {
                     setUser(data);
                 })
                 .catch(error => {
-                    if (error.name === 'AbortError') {
-                        console.error(error.name + ': Data fetching was aborted.');
-                    } else {
-                        console.error(error.name + ': ' + error.message);
-                        setUser(null);
-                        setProfileError('An error occurred fetching data.');
-                    }
+                    console.error(error.name + ': ' + error.message);
+                    setUser(null);
+                    setProfileError('An error occurred fetching data.');
                 })
                 .finally(() => setIsLoading(false));
         } else {
             setUser(null);
         }
-
-        return () => abortController.abort();
     }, [status, session, emailUpdateMsg]);
 
     if (status === 'loading') return <Loading />;

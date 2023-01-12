@@ -1,7 +1,5 @@
-'use client';
-
 import PropTypes from 'prop-types';
-import { SessionProvider } from 'next-auth/react';
+import ClientSession from './components/ClientSession';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -15,7 +13,7 @@ export default function RootLayout({ children, session }) {
         <html lang='en'>
             <head />
             <body id="appWrapper">
-                <SessionProvider session={session}>
+                <ClientSession session={session}>
                     <SkipToMain />
                     <Header />
                     <Navbar />
@@ -24,9 +22,8 @@ export default function RootLayout({ children, session }) {
                         {children}
                         <ScrollTop />
                     </main>
-
                     <Footer />
-                </SessionProvider>
+                </ClientSession>
             </body>
         </html>
     );
