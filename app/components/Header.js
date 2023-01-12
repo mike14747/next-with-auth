@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Authbar from './Authbar';
 
 import styles from '../../styles/Header.module.css';
 
-export default function Header() {
+export default function Header({ testInfo = '' }) {
     return (
         <div className={styles.headerContainer}>
             <header className={styles.header + ' container'}>
@@ -15,6 +16,10 @@ export default function Header() {
                             Home
                         </Link>
                     </p>
+
+                    <p>
+                        {testInfo}
+                    </p>
                 </div>
 
                 <div className={styles.rightDiv}>
@@ -25,3 +30,7 @@ export default function Header() {
         </div>
     );
 }
+
+Header.propTypes = {
+    testInfo: PropTypes.string,
+};
