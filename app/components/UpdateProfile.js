@@ -12,7 +12,9 @@ import Button from './Button';
 import styles from '../../styles/profile.module.css';
 
 export default function UpdateProfile({ userId }) {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingUsername, setIsLoadingUsername] = useState(false);
+    const [isLoadingPassword, setIsLoadingPassword] = useState(false);
+    const [isLoadingEmail, setIsLoadingEmail] = useState(false);
 
     const [usernameError, setUsernameError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
@@ -31,6 +33,8 @@ export default function UpdateProfile({ userId }) {
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
 
+        setIsLoadingUsername(true);
+
         const res = await fetch('/api/users/' + userId + '/change-username', {
             method: 'PUT',
             headers: {
@@ -42,13 +46,17 @@ export default function UpdateProfile({ userId }) {
             setUsernameError('An error occurred sending the data.');
         });
 
-        if (res) {
-            if (res.status === 200) {
-                setUsername('');
-                setUsernameError(null);
-                signOut({ callbackUrl: '/' });
-            }
+        if (res?.status === 200) {
+            setUsername('');
+            setUsernameError(null);
+            signOut({ callbackUrl: '/' });
+        }
 
+        setIsLoadingUsername(false);
+
+        if (!res) setUsernameError('An error occurred. Please try your update again.');
+
+        if (res.status !== 200) {
             res.status === 400 && setUsernameError('An error occurred. New username is not in the proper format.');
             res.status === 401 && setUsernameError('An error occurred. You do not have permission to make this update.');
             res.status === 409 && setUsernameError('An error occurred. The username you submitted is already in use.');
@@ -59,7 +67,7 @@ export default function UpdateProfile({ userId }) {
     const handleUpdateEmailSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoading(true);
+        setIsLoadingEmail(true);
 
         const res = await fetch('/api/users/' + userId + '/change-email', {
             method: 'PUT',
@@ -72,15 +80,17 @@ export default function UpdateProfile({ userId }) {
             setEmailError('An error occurred sending the data.');
         });
 
-        setIsLoading(false);
+        setIsLoadingEmail(false);
 
-        if (res) {
-            if (res.status === 200) {
-                setEmail('');
-                setEmailError(null);
-                setEmailUpdateMsg('Your email address has been successfully updated!');
-            }
+        if (res.status === 200) {
+            setEmail('');
+            setEmailError(null);
+            setEmailUpdateMsg('Your email address has been successfully updated!');
+        }
 
+        if (!res) setEmailError('An error occurred. Please try your update again.');
+
+        if (res.status !== 200) {
             if (res.status !== 200) {
                 res.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
                 res.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
@@ -93,6 +103,8 @@ export default function UpdateProfile({ userId }) {
     const handleUpdatePasswordSubmit = async (e) => {
         e.preventDefault();
 
+        setIsLoadingPassword(true);
+
         const res = await fetch('/api/users/' + userId + '/change-password', {
             method: 'PUT',
             headers: {
@@ -104,14 +116,18 @@ export default function UpdateProfile({ userId }) {
             setPasswordError('An error occurred sending the data.');
         });
 
-        if (res) {
-            if (res.status === 200) {
-                setPassword('');
-                setRepeatPassword('');
-                setPasswordError(null);
-                signOut({ callbackUrl: '/' });
-            }
+        if (res.status === 200) {
+            setPassword('');
+            setRepeatPassword('');
+            setPasswordError(null);
+            signOut({ callbackUrl: '/' });
+        }
 
+        setIsLoadingPassword(false);
+
+        if (!res) setPasswordError('An error occurred. Please try your update again.');
+
+        if (res.status !== 200) {
             res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
             res.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
             res.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
@@ -148,13 +164,13 @@ export default function UpdateProfile({ userId }) {
             <div className={styles.updateContainer}>
                 <h3 className={styles.updateHeading}>Update your profile information:</h3>
 
-                {isLoading && <Loading />}
-
                 <p className={styles.note}>
                     <strong>Note:</strong> changing your username and/or password will log you out.
                 </p>
 
                 <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
+                    {isLoadingUsername && <Loading />}
+
                     {usernameError && <p className={styles.error}>{usernameError}</p>}
 
                     <FormInputForUsername username={username} setUsername={setUsername} />
@@ -163,6 +179,8 @@ export default function UpdateProfile({ userId }) {
                 </form>
 
                 <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
+                    {isLoadingPassword && <Loading />}
+
                     {passwordError && <p className={styles.error}>{passwordError}</p>}
 
                     <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
@@ -171,6 +189,8 @@ export default function UpdateProfile({ userId }) {
                 </form>
 
                 <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
+                    {isLoadingEmail && <Loading />}
+
                     {emailError && <p className={styles.error}>{emailError}</p>}
 
                     {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
