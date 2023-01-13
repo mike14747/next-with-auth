@@ -14,7 +14,9 @@ async function getData() {
     return await getUnprotectedData().catch(error => console.log(error.message));
 }
 
-export default async function RootLayout({ children, session }) {
+export default async function RootLayout({ children, session, ...props }) {
+    props.params.prop1 = 'testing params props to children';
+
     const data = await getData().catch(error => console.log(error.message));
 
     return (
