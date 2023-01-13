@@ -24,7 +24,6 @@ export default async function Page() {
     let data = null;
     if (session.role === 'admin') {
         data = await getData().catch(error => console.log(error.message));
-        console.log({ data });
     }
 
     return (
@@ -50,8 +49,8 @@ export default async function Page() {
                     <>
                         {data?.length > 0 && (
                             <ul>
-                                {data.map((item, index) => (
-                                    <li key={index}>
+                                {data.map((item) => (
+                                    <li key={item._id}>
                                         {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
                                     </li>
                                 ))}

@@ -40,8 +40,8 @@ export default async function Page({ params, searchParams }) {
 
                 {data?.length > 0 &&
                     <ul>
-                        {data.map((item, index) => (
-                            <li key={index}>
+                        {data.map((item) => (
+                            <li key={item._id}>
                                 {item.name + ' - age: ' + item.age}
                             </li>
                         ))}
