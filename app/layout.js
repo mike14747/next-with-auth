@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import ClientSessionProvider from './components/ClientSession';
+import ClientSessionProvider from './components/ClientSessionProvider';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';

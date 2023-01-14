@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
 import { unstable_getServerSession } from 'next-auth/next';
-// import { authOptions } from '../../pages/api/auth/[...nextauth]';
 
 async function getData() {
     return await getAdminData().catch(error => console.log(error.message));
@@ -13,9 +12,6 @@ export default async function Page() {
     const session = await unstable_getServerSession({
         callbacks: { session: ({ token }) => token },
     });
-    // console.log({ session });
-    // doing this will get the session, but with the expiry date stripped out
-    // const session = await unstable_getServerSession(authOptions);
 
     if (!session) {
         redirect('/login?callbackUrl=/admin');

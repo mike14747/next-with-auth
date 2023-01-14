@@ -78,19 +78,21 @@ cd ../../styles && touch globals.css Home.module.css Header.module.css Footer.mo
 
 Some of the above created files will need to be populated with code before this app will work. That will follow in subsequent sections.
 
-I added **.env** to my **.gitignore** file, because by default the github node .gitignore file only includes .env.local.
-
-**UPDATE**: I've upgraded this app to use next.js version 13, so the initial folder/file structure I listed above is now longer valid. This is the current setup which I've changed to:
+Since I've upgraded this app to use next.js version 13, the initial folder/file structure will now be:
 
 ```bash
 touch .env
-mkdir app lib pages public
-cd app && mkdir shared && touch page.js layout.js head.js Header.js Navbar.js Footer.js Layout.js globals.css Home.module.css Header.module.css Navbar.module.css Footer.module.css
+mkdir app lib pages public styles
+cd app && mkdir components && touch page.js layout.js head.js
+cd components && touch Header.js Navbar.js Footer.js
 cd ../lib && mkdir api
 cd ../pages && mkdir api
 cd ../public && mkdir images
+cd ../styles && touch globals.css Home.module.css Header.module.css Navbar.module.css Footer.module.css
 
 ```
+
+I added **.env** to my **.gitignore** file, because by default the github node .gitignore file only includes .env.local.
 
 ---
 
@@ -98,96 +100,75 @@ cd ../public && mkdir images
 
 For starters, let's populate just the files necessary to run the app. I've included my custom **SkipTpMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section.
 
-**UPDATE**: the **Layout** component is no longer used in next.js version 13.
-
-**/components/Layout.js**
+**UPDATE**: the **Layout** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.js**. **NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
 
 ```js
+// /app/layout.js
+
 import PropTypes from 'prop-types';
-import SkipToMain from './SkipToMain';
-
-import Header from './Header';
-import Navbar from './Navbar';
-import Footer from './Footer';
-
-const Layout = ({ children }) => {
-    return (
-        <>
-            <SkipToMain />
-            <Header />
-            <Navbar />
-
-            <main id="main" className="main-container">
-                {children}
-            </main>
-
-            <Footer />
-        </Navbar>
-    );
-};
-
-Layout.propTypes = {
-    children: PropTypes.object,
-};
-
-export default Layout;
-```
-
-**/pages/\_app.js**
-
-**NOTE**: **\_app.js** will need to have some additions made to it once **next-auth** is installed.
-
-**UPDATE**: the **\_app.js** page is no longer used in next.js version 13.
-
-```js
-import PropTypes from 'prop-types';
-import Layout from '../components/Layout';
+import ClientSessionProvider from './components/ClientSession';
+import Header from './components/Header';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import ScrollTop from './components/ScrollTop';
+import SkipToMain from './components/SkipToMain';
+import { getSettings } from '../lib/api';
 
 import '../styles/globals.css';
 
-function MyApp({ Component, pageProps }) {
+async function getSettingsData() {
+    return await getSettings().catch((error) => console.log(error.message));
+}
+
+export default async function RootLayout({ children, session, ...props }) {
+    const settingsData = await getSettingsData().catch((error) => console.log(error.message));
+
+    props.params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
+    props.params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
+
     return (
-        <Layout>
-            <Component {...pageProps} />
-        </Layout>
+        <html lang="en">
+            <head />
+            <body id="appWrapper">
+                <ClientSessionProvider session={session}>
+                    <SkipToMain />
+                    <Header topInfoActive={settingsData?.topInfoActive} topInfoText={settingsData?.topInfoText} />
+                    <Navbar />
+
+                    <main id="main" className="main-container">
+                        {children}
+                        <ScrollTop />
+                    </main>
+                    <Footer contactEmail={settingsData?.contactEmail} />
+                </ClientSessionProvider>
+            </body>
+        </html>
     );
 }
 
-MyApp.propTypes = {
-    Component: PropTypes.func,
-    pageProps: PropTypes.any,
+RootLayout.propTypes = {
+    children: PropTypes.node,
+    session: PropTypes.object,
 };
-
-export default MyApp;
 ```
 
-**/pages/\_document.js**
-
-**UPDATE**: the **\document.js** page is no longer used in next.js version 13.
+..and **/app/head.js**
 
 ```js
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-
-class MyDocument extends Document {
-    render() {
-        return (
-            <Html lang="en">
-                <Head>
-                    <link rel="icon" href="data:," />
-                    {/* <link rel="icon" type="image/png" href="/images/my_favicon-16x16.png" sizes="16x16" /> */}
-                    {/* <link rel="icon" type="image/png" href="/images/my_favicon-32x32.png" sizes="32x32" /> */}
-                </Head>
-                <body>
-                    <Main />
-                    <NextScript />
-                </body>
-            </Html>
-        );
-    }
+export default function Head() {
+    return (
+        <>
+            <title>next-with-auth</title>
+            <meta content="width=device-width, initial-scale=1" name="viewport" />
+            {/* <link rel="icon" href="data:," /> */}
+            <link rel="icon" type="image/png" href="/images/next_with_auth_favicon-16x16.png" sizes="16x16" />
+            <link rel="icon" type="image/png" href="/images/next_with_auth_favicon-32x32.png" sizes="32x32" />
+        </>
+    );
 }
-
-export default MyDocument;
 ```
+
+---
 
 You can uncomment one of the favicon lines if you add a favicon to: **/public/images**. If you do that, you'll need to comment the line that disables them.
 
@@ -195,15 +176,15 @@ You can uncomment one of the favicon lines if you add a favicon to: **/public/im
 <link rel="icon" href="data:," />
 ```
 
-The initial **Header**, **Navbar** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, so for now it's just commented out.
+The initial **Header**, **Navbar** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, but for now it's just commented out.
 
 ```js
-// /app/Header.js
+// /app/components/Header.js
 
 import Link from 'next/link';
-// import Authbar from './Authbar'; // this path was changed now that I'm using next.js version 13
+// import Authbar from './Authbar';
 
-import styles from './Header.module.css'; // this path was changed now that I'm using next.js version 13
+import styles from '../../styles/Header.module.css';
 
 export default function Header() {
     return (
@@ -227,17 +208,31 @@ export default function Header() {
 ...and
 
 ```js
-// /app/Navbar.js
+// /app/components/Navbar.js
 
 import Link from 'next/link';
 
-import styles from './Navbar.module.css'; // this path was changed now that I'm using next.js version 13
+import styles from '../../styles/Navbar.module.css';
 
 export default function Navbar() {
     return (
         <nav className={styles.nav + ' container'}>
             <ul>
-                <li>{/* links to all the pages will go in these list items using the Link component */}</li>
+                <li>
+                    <Link href="/public">Public page</Link>
+                </li>
+
+                <li>
+                    <Link href="/protected">Protected page</Link>
+                </li>
+
+                <li>
+                    <Link href="/admin">Admin page</Link>
+                </li>
+
+                <li>
+                    <Link href="/register">Register</Link>
+                </li>
             </ul>
         </nav>
     );
@@ -247,15 +242,16 @@ export default function Navbar() {
 ...and
 
 ```js
-// /app/Footer.js
+// /app/components/Footer.js
 
-import styles from './Footer.module.css'; // this path was changed now that I'm using next.js version 13
+import styles from '../../styles/Footer.module.css';
 
 export default function Footer() {
     return (
-        // to make the footer full width, just omit the container class
-        <div className={styles.footer + ' container'}>
-            <p className={styles.copyright}>&copy; 2022 next-with-auth</p>
+        <div className={styles.footerContainer}>
+            <footer className={styles.footer + ' container'}>
+                <p className={styles.copyright}>&copy; 2022 next-with-auth</p>
+            </footer>
         </div>
     );
 }
@@ -413,42 +409,31 @@ Some things to note with the next-auth file:
 -   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session).
 -   You can have more providers (eg: email or OAuth). They would get added to the **providers** array.
 
-I wrapped a session provider around the Layout component in **\_app.js**. Doing this makes the logged in status available to all components and pages. But, you could only wrap certain components or pages if you'd like.
-
-**UPDATE**: the **\_app.js** page is no longer used in next.js version 13.
+I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.js**, but I wanted to keep layout.js as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.js. This allowed me to keep layout.js as a server component.
 
 ```js
-// /pages/_app.js
+// /app/compontents/ClientSessionProvider.js
+
+'use client';
 
 import PropTypes from 'prop-types';
 import { SessionProvider } from 'next-auth/react';
-import Layout from '../components/Layout';
 
-import '../styles/globals.css';
-
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-    return (
-        <SessionProvider session={session}>
-            <Layout>
-                <Component {...pageProps} />
-            </Layout>
-        </SessionProvider>
-    );
+export default function ClientSession({ children, session }) {
+    return <SessionProvider session={session}>{children}</SessionProvider>;
 }
 
-MyApp.propTypes = {
-    Component: PropTypes.func,
-    pageProps: PropTypes.any,
+ClientSession.propTypes = {
+    children: PropTypes.node,
+    session: PropTypes.object,
 };
-
-export default MyApp;
 ```
 
 I added my standard **login**, **register** and **profile** pages.
 
 Since an attempt to access a protected page would lead to a redirect to the login page, I've set the login page to monitor for a callbackUrl query parameter. That way, if the login is successful, the browser would redirect to the page the user was trying to go to in the first place.
 
-There is also an array of possible callbackUrl query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as a query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
+There is also an array of possible callbackUrl query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as the callbackUrl query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
 
 **NOTE**: the **callbackUrl** has to either be an **absolute url from the same domain** or a **relative url starting with a "/"**.
 
@@ -491,100 +476,40 @@ There are 3 types of pages in this app.
 
 **Public pages**
 
-There's nothing unusual about my public pages. The following is a basic public page that does client side data fetching, though most public pages would likely be either server-side rendered or would be static pages.
-
-**UPDATE**: now that I've upgraded to next.js version 13, I'm using the new **/app** folder for all my pages and am taking advantage of their new Server Components as much as possible. As of 2023-01-09, his is an example of my old method of page construction. See below for the new method.
+I've upgraded to next.js version 13 and I'm using the new **/app** folder for all my pages. I'm taking advantage of their new Server Components as much as possible. As of 2023-01-13, this is an example of my old method of page construction. Notice that I'm calling a serverless function directly in page.js via an async function... and not using fetch.
 
 ```js
-import { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Loading from '../components/Loading';
+// /app/public/page.js
 
-export default function Public() {
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const abortController = new AbortController();
-
-        fetch('/api/public', { signal: abortController.signal })
-            .then((res) => {
-                if (!res.ok) throw new Error('An error occurred fetching data.');
-                return res.json();
-            })
-            .then((data) => {
-                setData(data);
-                setError(null);
-            })
-            .catch((error) => {
-                if (error.name === 'AbortError') {
-                    console.error(error.name + ': Data fetching was aborted.');
-                } else {
-                    console.error(error.name + ': ' + error.message);
-                    setData(null);
-                    setError('An error occurred fetching data.');
-                }
-            })
-            .finally(() => setIsLoading(false));
-
-        return () => abortController.abort();
-    }, []);
-
-    return (
-        <>
-            <Head>
-                <title>Public Page</title>
-            </Head>
-
-            <article>
-                <h2 className="page-heading">Public Page</h2>
-
-                {error && <p className="error">{error}</p>}
-
-                {isLoading && <Loading />}
-
-                {data?.length > 0 && (
-                    <ul>
-                        {data.map((item, index) => (
-                            <li key={index}>{item.name}</li>
-                        ))}
-                    </ul>
-                )}
-            </article>
-        </>
-    );
-}
-```
-
-This is my new way of using public pages that don't have any user interaction.
-
-Notice that I'm calling a serverless function directly in my page file. This is possible because all pages are now Server Components by default.
-
-```js
 import { getUnprotectedData } from '../../lib/api/index';
 
 async function getData() {
-    return await getUnprotectedData().catch((error) => console.log(error.message));
+    return await getUnprotectedData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
-    const data = await getData().catch((error) => console.log(error.message));
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
         <>
             <article>
-                <h2 className="page-heading">Public Page</h2>
+                <h2 className="page-heading">
+                    Public Page
+                </h2>
 
-                <p>This page is getting data on the server-side, right in the component.</p>
+                <p>
+                    This page is getting data on the server-side, right in the component.
+                </p>
 
-                {data?.length > 0 && (
+                {data?.length > 0 &&
                     <ul>
-                        {data.map((item, index) => (
-                            <li key={index}>{item.name}</li>
+                        {data.map((item) => (
+                            <li key={item._id}>
+                                {item.name}
+                            </li>
                         ))}
                     </ul>
-                )}
+                }
             </article>
         </>
     );
@@ -593,113 +518,18 @@ export default async function Page() {
 
 **Protected pages**
 
-This is my standard client-side protected page. It only fetches data if a user is authenticated. If a user is not authenticated, the user is redirected to the login page.
-
-**UPDATE**: now that I've upgraded to next.js version 13, I'm using the new **/app** folder for all my pages and am taking advantage of their new Server Components as much as possible. As of 2023-01-09, his is an example of my old method of page construction. See below for the new method.
+This is very similar to the public page, but 
 
 ```js
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import Head from 'next/head';
-import Loading from '../components/Loading';
+// /app/protected/page.js
 
-export default function Protected() {
-    const { status } = useSession();
-
-    const router = useRouter();
-
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        // this short-circuits useEffect so it won't proceed if the status is loading, a user is not signed in while navigating to this page or a user signs out while on this page
-        if (status !== 'authenticated') return;
-
-        const abortController = new AbortController();
-
-        if (status === 'authenticated') {
-            setIsLoading(true);
-
-            fetch('/api/protected', { signal: abortController.signal })
-                .then((res) => {
-                    if (!res.ok) throw new Error('An error occurred fetching data.');
-                    return res.json();
-                })
-                .then((data) => {
-                    setData(data);
-                    setError(null);
-                })
-                .catch((error) => {
-                    if (error.name === 'AbortError') {
-                        console.error(error.name + ': Data fetching was aborted.');
-                    } else {
-                        console.error(error.name + ': ' + error.message);
-                        setData(null);
-                        setError('An error occurred fetching data.');
-                    }
-                })
-                .finally(() => setIsLoading(false));
-        } else {
-            setData(null);
-        }
-
-        return () => abortController.abort();
-    }, [status]);
-
-    // these are the possible outcomes of this page based upon the 3 possible values of status (loading, unauthenticated and authenticated)
-
-    // loading: display the Loading component
-    if (status === 'loading') return <Loading />;
-
-    // unauthenticated: redirect to the login page with the query parameter set so the login page will send them back here if they successfully log in
-    if (status === 'unauthenticated') router.push('/login?callbackUrl=/protected');
-
-    // authenticated: render the page as intended
-    // this doesn't have to have a condition attached to it since it's the only option remaining if the code gets this far, but it makes it easier to understand what's going on, so I've included it
-    if (status === 'authenticated') {
-        return (
-            <>
-                <Head>
-                    <title>Protected Page</title>
-                </Head>
-
-                <article>
-                    <h2 className="page-heading">Protected Page</h2>
-
-                    {error && <p className="error">{error}</p>}
-
-                    {isLoading && <Loading />}
-
-                    {data?.length > 0 && (
-                        <ul>
-                            {data.map((item, index) => (
-                                <li key={index}>{item.name + ' - age: ' + item.age}</li>
-                            ))}
-                        </ul>
-                    )}
-                </article>
-            </>
-        );
-    }
-
-    return null;
-}
-```
-
-This is my new way of using public pages that don't have any user interaction.
-
-Notice that I'm calling a serverless function directly in my page file. This is possible because all pages are now Server Components by default.
-
-```js
 import { redirect } from 'next/navigation';
 import { getProtectedData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
 import { unstable_getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getProtectedData().catch((error) => console.log(error.message));
+    return await getProtectedData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
@@ -707,27 +537,32 @@ export default async function Page() {
     const session = await unstable_getServerSession({
         callbacks: { session: ({ token }) => token },
     });
-    // doing this will get the session, but with the expiry date stripped out
-    // const session = await unstable_getServerSession(authOptions);
+
     if (!session) {
         redirect('/login?callbackUrl=/protected');
     }
-    const data = await getData().catch((error) => console.log(error.message));
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
         <>
             <article>
-                <h2 className="page-heading">Protected Page</h2>
+                <h2 className="page-heading">
+                    Protected Page
+                </h2>
 
-                <p>This page is getting data on the server-side, right in the component.</p>
+                <p>
+                    This page is getting data on the server-side, right in the component.
+                </p>
 
-                {data?.length > 0 && (
+                {data?.length > 0 &&
                     <ul>
-                        {data.map((item, index) => (
-                            <li key={index}>{item.name + ' - age: ' + item.age}</li>
+                        {data.map((item) => (
+                            <li key={item._id}>
+                                {item.name + ' - age: ' + item.age}
+                            </li>
                         ))}
                     </ul>
-                )}
+                }
             </article>
         </>
     );
@@ -738,159 +573,29 @@ export default async function Page() {
 
 **Pages protected by middleware**
 
-Pages that are protected by middleware are the same as the public pages. They don't require code that's any different from the public pages.
-
 The middleware does not allow anyone who is not authenticated to visit the page. The middleware sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
 
-**NOTE**: I'm currently not using middleware to protect any pages, because as I said above, I feel next-auth is too buggy with middleware.
+**NOTE**: I'm currently not using middleware to protect any pages, because I feel next-auth is currently too buggy with middleware... though I did include a middleware.js file with a matcher in this project. It only contains a dummy route in the matcher though.
 
 ---
 
 **Admin pages**
 
-These pages are very similar to the client-side protected pages... with the following exception:
+This page is very similar to the protected page... with the following exception:
 
--   I fully destructure the useSession() object because the session (more specifically the user's role) will be needed.
-
-```js
-const { data: session, status } = useSession();
-```
-
--   Inside the useEffect() hook (and the very first line), data is not fetched unless a signed in user has a role of admin.
+-   I check for the role of the user before fetching data.
+-   If the user is logged in, but doesn't have a role of "admin", I show an error message telling they lack credentials, but I don't redirect them.
 
 ```js
-if (status !== 'authenticated' || session?.user?.role !== 'admin') return;
-```
+// /app/admin/page.js
 
-```jsx
-{
-    session?.user?.role !== 'admin' && (
-        <>
-            <p className="error">You are logged in, but do not have the proper credentials to view this page.</p>
-        </>
-    );
-}
-
-{
-    session?.user?.role === 'admin' && <>{/* display the normal admin page */}</>;
-}
-```
-
-```js
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import Head from 'next/head';
-import Loading from '../components/Loading';
-
-export default function Admin() {
-    // on this page we do need access to the session because in addition to knowing whether the user is sined in, we need to check whether the user's role is sufficient to access this page
-    const { data: session, status } = useSession();
-    const router = useRouter();
-
-    const [data, setData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        if (status !== 'authenticated' || session?.user?.role !== 'admin') return;
-
-        const abortController = new AbortController();
-
-        if (status === 'authenticated' && session?.user?.role === 'admin') {
-            setIsLoading(true);
-
-            fetch('/api/admin', { signal: abortController.signal })
-                .then((res) => {
-                    if (!res.ok) throw new Error('An error occurred fetching data.');
-                    return res.json();
-                })
-                .then((data) => {
-                    setData(data);
-                    setError(null);
-                })
-                .catch((error) => {
-                    if (error.name === 'AbortError') {
-                        console.error(error.name + ': Data fetching was aborted.');
-                    } else {
-                        console.error(error.name + ': ' + error.message);
-                        setData(null);
-                        setError('An error occurred fetching data.');
-                    }
-                })
-                .finally(() => setIsLoading(false));
-        } else {
-            setData(null);
-        }
-
-        return () => abortController.abort();
-    }, [status, session]);
-
-    if (status === 'loading') return <Loading />;
-
-    if (status === 'unauthenticated') router.push('/login?callbackUrl=/admin');
-
-    if (status === 'authenticated') {
-        return (
-            <>
-                <Head>
-                    <title>Admin Page</title>
-                </Head>
-
-                <article>
-                    <h2 className="page-heading">Admin Page</h2>
-
-                    {session?.user?.role !== 'admin' && (
-                        <>
-                            <p className="error">
-                                You are logged in, but do not have the proper credentials to view this page.
-                            </p>
-
-                            <p className="error">
-                                Log out, then log back in as a user with the proper credentials to view this page.
-                            </p>
-                        </>
-                    )}
-
-                    {session?.user?.role === 'admin' && (
-                        <>
-                            {error && <p className="error">{error}</p>}
-
-                            {isLoading && <Loading />}
-
-                            {data?.length > 0 && (
-                                <ul>
-                                    {data.map((item, index) => (
-                                        <li key={index}>
-                                            {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </>
-                    )}
-                </article>
-            </>
-        );
-    }
-
-    return null;
-}
-```
-
-This is my new way of using admin pages that don't have any user interaction.
-
-Notice that I'm calling a serverless function directly in my page file. This is possible because all pages are now Server Components by default.
-
-```js
 import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
 import { unstable_getServerSession } from 'next-auth/next';
-// import { authOptions } from '../../pages/api/auth/[...nextauth]';
 
 async function getData() {
-    return await getAdminData().catch((error) => console.log(error.message));
+    return await getAdminData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
@@ -905,14 +610,15 @@ export default async function Page() {
 
     let data = null;
     if (session.role === 'admin') {
-        data = await getData().catch((error) => console.log(error.message));
-        console.log({ data });
+        data = await getData().catch(error => console.log(error.message));
     }
 
     return (
         <>
             <article>
-                <h2 className="page-heading">Admin Page</h2>
+                <h2 className="page-heading">
+                    Admin Page
+                </h2>
 
                 {session?.role !== 'admin' && (
                     <>
@@ -930,8 +636,8 @@ export default async function Page() {
                     <>
                         {data?.length > 0 && (
                             <ul>
-                                {data.map((item, index) => (
-                                    <li key={index}>
+                                {data.map((item) => (
+                                    <li key={item._id}>
                                         {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
                                     </li>
                                 ))}
@@ -945,7 +651,7 @@ export default async function Page() {
 }
 ```
 
-When the admin pages are protected by middleware, I tend to have the middleware redirect users to the homepage if they're signed in, but don't have the role of admin. Any user not signed in would obviously be redirected to the login page because they don't have a role at all yet.
+When (if) the admin pages are protected by middleware, I tend to have the middleware redirect users to the homepage if they're signed in, but don't have the role of admin. Any user not signed in would obviously be redirected to the login page because they don't have a role at all yet.
 
 ---
 
@@ -1087,44 +793,15 @@ export default async function adminRoute(req, res) {
 
 ---
 
-This is how I'm testing my conditions using Quokka in VS Code:
-
-```js
-const session1 = null;
-
-const session2 = {
-    user: {
-        username: 'test-user',
-        role: 'user',
-    },
-};
-
-const session3 = {
-    user: {
-        username: 'test-admin',
-        role: 'admin',
-    },
-};
-
-const status1 = 'loading';
-const status2 = 'unauthenticated';
-const status3 = 'authenticated';
-
-const session = session1;
-const status = status3;
-
-console.log(status !== 'authenticated' || session?.user?.role !== 'admin');
-```
-
----
-
 ### Using signOut()
 
-The only place I'm using the next-auth **signOut()** is in the **Authbar** component.
+The only places I'm using the next-auth **signOut()** is in the **Authbar** and **UpdateProfile** components.
 
 Normally, I don't redirect upon signing out because my pages are protected client-side and will automatically redirect to the login page if you're on a protected page when you sign out.
 
-However, redirecting to the homepage upon signing out is useful when using middleware to protect a page because once you're on a protected page, the middleware by itself won't be able to take you away from it upon signing out. I'll revert this back to the previous functionality if I can come up with a good solution to this.
+However, redirecting to the homepage upon signing out is useful when using middleware to protect a page because once you're on a protected page, the middleware by itself won't be able to take you away from it upon signing out.
+
+For now, I'm redirecting to the homepage upon signOut().
 
 ```js
 // /components/Authbar.js
@@ -1142,7 +819,6 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 There were warnings in the build process on vercel concerning the node version needing to be v12, v14 or v16 and by default vercel uses v18. So, I downgraded vercel's node version to v16 and the warnings went away.
 
-I had an issue with my middleware not working when I deployed this app to vercel. It would get into an infinite loop and error out when I tried to access a middleware protected page. If you refreshed the page, you could get out of the error loop and the middleware protected pages would work. **UPDATE**: I'm not sure how or why, but this issue seems to have been resolved.
 
 You need the **NEXTAUTH_URL** environment variable locally, but it's not needed if you deploy to vercel. Vercel will populate it itself as **VERCEL_URL**. You do need to make sure **Settings > Environment Variables > Automatically expose System Environment Variables** is checked.
 
@@ -1183,6 +859,10 @@ export default async function CheckoutPage() {
 
 ### getStaticProps and getServerSideProps replacements
 
+I haven't implemented any of these yet, but hope to shortly.
+
+-   **generateStaticParams** is the new getStaticPaths
+
 ```js
 // Generates statically like getStaticProps.
 fetch(URL, { cache: 'force-cache' });
@@ -1196,16 +876,14 @@ fetch(URL, { next: { revalidate: 20 } });
 
 ---
 
-### #__next wrapping div
+### #\_\_next wrapping div
 
-Next.js version 13 does not seem to use a wrapper div with the id of **__next** like previous versions did. This had made the css for my full height pages stop working.
+Next.js version 13 does not seem to use a wrapper div with the id of **\_\_next** like previous versions did. This had made the css for my full height pages stop working.
 
-My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** which uses the same css as the old #__next div.
+My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** which uses the same css as the old #\_\_next div.
 
 ```jsx
-<body id="appWrapper">
-    {/* ... */}
-</body>
+<body id="appWrapper">{/* ... */}</body>
 ```
 
 ---
@@ -1213,13 +891,11 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** 
 ### Todos
 
 -   Write tests.
--   This doesn't really have anything to do with this app specifically, but I'd like to come up with a way to clear button and nav focus on next/link page transition.
+-   I'd like to come up with a way to clear button and nav focus on next/link page transition.
 -   Decide what to name the page.js components (Page vs the name of the route folder).
 -   Switch over from client fetch to swr?
 -   There is still a login redirect bug in middleware protected pages.
--   Is there a way to make /app/layout.js a server component? SessionProvider is a client component. One possibility is to call **unstable_getServerSession** in server components and do away with SessionProvider and useSession client-side calls. This would allow for client components to be turned into server components... including /app/layout.js.
--    Possible way to use SessionProvider and still keep /app/layout.js as a server component:  https://beta.nextjs.org/docs/rendering/server-and-client-components#using-context-in-client-components
--    Convert the profile page to a server component. I think this will mean abstracting the parts out that use useState to their own client component.
+-   Convert the profile page to a server component. I think this will mean abstracting the parts out that use useState to their own client component.
 
 ---
 

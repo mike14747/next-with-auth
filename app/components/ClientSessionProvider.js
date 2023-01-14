@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { SessionProvider } from 'next-auth/react';
 
 export default function ClientSession({ children, session }) {
-    // console.log({ session });
     return (
         <SessionProvider session={session}>
             {children}
