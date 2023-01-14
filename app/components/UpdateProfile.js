@@ -11,7 +11,7 @@ import Button from './Button';
 
 import styles from '../../styles/profile.module.css';
 
-export default function UpdateProfile({ userId }) {
+export default function UpdateProfile({ user, setUser }) {
     const [isLoadingUsername, setIsLoadingUsername] = useState(false);
     const [isLoadingPassword, setIsLoadingPassword] = useState(false);
     const [isLoadingEmail, setIsLoadingEmail] = useState(false);
@@ -35,7 +35,7 @@ export default function UpdateProfile({ userId }) {
 
         setIsLoadingUsername(true);
 
-        const res = await fetch('/api/users/' + userId + '/change-username', {
+        const res = await fetch('/api/users/' + user._id + '/change-username', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -64,48 +64,12 @@ export default function UpdateProfile({ userId }) {
         }
     };
 
-    const handleUpdateEmailSubmit = async (e) => {
-        e.preventDefault();
-
-        setIsLoadingEmail(true);
-
-        const res = await fetch('/api/users/' + userId + '/change-email', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json;charset=utf-8',
-            },
-            body: JSON.stringify({ email }),
-        }).catch(error => {
-            console.error(error.name + ': ' + error.message);
-            setEmailError('An error occurred sending the data.');
-        });
-
-        setIsLoadingEmail(false);
-
-        if (res.status === 200) {
-            setEmail('');
-            setEmailError(null);
-            setEmailUpdateMsg('Your email address has been successfully updated!');
-        }
-
-        if (!res) setEmailError('An error occurred. Please try your update again.');
-
-        if (res.status !== 200) {
-            if (res.status !== 200) {
-                res.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
-                res.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
-                res.status === 500 && setEmailError('A server error occurred. Please try your update again.');
-                setEmailUpdateMsg('');
-            }
-        }
-    };
-
     const handleUpdatePasswordSubmit = async (e) => {
         e.preventDefault();
 
         setIsLoadingPassword(true);
 
-        const res = await fetch('/api/users/' + userId + '/change-password', {
+        const res = await fetch('/api/users/' + user._id + '/change-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -134,11 +98,51 @@ export default function UpdateProfile({ userId }) {
         }
     };
 
+    const handleUpdateEmailSubmit = async (e) => {
+        e.preventDefault();
+
+        setIsLoadingEmail(true);
+
+        const res = await fetch('/api/users/' + user._id + '/change-email', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8',
+            },
+            body: JSON.stringify({ email }),
+        }).catch(error => {
+            console.error(error.name + ': ' + error.message);
+            setEmailError('An error occurred sending the data.');
+        });
+
+        setIsLoadingEmail(false);
+
+        if (res.status === 200) {
+            setEmail('');
+            setEmailError(null);
+            setEmailUpdateMsg('Your email address has been successfully updated!');
+            setUser({
+                ...user,
+                email: email,
+            });
+        }
+
+        if (!res) setEmailError('An error occurred. Please try your update again.');
+
+        if (res.status !== 200) {
+            if (res.status !== 200) {
+                res.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
+                res.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
+                res.status === 500 && setEmailError('A server error occurred. Please try your update again.');
+                setEmailUpdateMsg('');
+            }
+        }
+    };
+
     const handleDeleteAccount = async () => {
         if (deleteCounter === 0) {
             setDeleteCounter(1);
         } else if (deleteCounter > 0) {
-            const res = await fetch('/api/users/' + userId + '/delete-account', {
+            const res = await fetch('/api/users/' + user._id + '/delete-account', {
                 method: 'DELETE',
             }).catch(error => {
                 console.error(error.name + ': ' + error.message);
@@ -219,5 +223,6 @@ export default function UpdateProfile({ userId }) {
 }
 
 UpdateProfile.propTypes = {
-    userId: PropTypes.string,
+    user: PropTypes.object,
+    setUser: PropTypes.func,
 };
