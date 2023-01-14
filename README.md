@@ -894,8 +894,7 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** 
 -   I'd like to come up with a way to clear button and nav focus on next/link page transition.
 -   Decide what to name the page.js components (Page vs the name of the route folder).
 -   Switch over from client fetch to swr?
--   There is still a login redirect bug in middleware protected pages.
--   Convert the profile page to a server component. I think this will mean abstracting the parts out that use useState to their own client component.
+-   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
 
 ---
 
