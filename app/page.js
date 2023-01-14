@@ -10,7 +10,9 @@ export default function Page({ params }) {
             </p>
 
             <p>
-                This is prop1: {params.prop1}
+                <small>
+                    Items passed from the RootLayout to children (the pages) via props: <strong>{params?.numInitialNewsItems || ''}</strong> and <strong>{params?.newsItemIncrement || ''}</strong>
+                </small>
             </p>
         </>
     );

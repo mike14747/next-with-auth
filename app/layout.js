@@ -1,39 +1,39 @@
 import PropTypes from 'prop-types';
-import ClientSession from './components/ClientSession';
+import ClientSessionProvider from './components/ClientSession';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollTop from './components/ScrollTop';
 import SkipToMain from './components/SkipToMain';
-import { getUnprotectedData } from '../lib/api';
+import { getSettings } from '../lib/api';
 
 import '../styles/globals.css';
 
-// I need to test getting data via a serverless function here
-async function getData() {
-    return await getUnprotectedData().catch(error => console.log(error.message));
+async function getSettingsData() {
+    return await getSettings().catch(error => console.log(error.message));
 }
 
 export default async function RootLayout({ children, session, ...props }) {
-    props.params.prop1 = 'testing params props to children';
+    const settingsData = await getSettingsData().catch(error => console.log(error.message));
 
-    const data = await getData().catch(error => console.log(error.message));
+    props.params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
+    props.params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
 
     return (
         <html lang='en'>
             <head />
             <body id="appWrapper">
-                <ClientSession session={session}>
+                <ClientSessionProvider session={session}>
                     <SkipToMain />
-                    <Header testInfo={data?.[1].name} />
+                    <Header topInfoActive={settingsData?.topInfoActive} topInfoText={settingsData?.topInfoText} />
                     <Navbar />
 
                     <main id="main" className="main-container">
                         {children}
                         <ScrollTop />
                     </main>
-                    <Footer />
-                </ClientSession>
+                    <Footer contactEmail={settingsData?.contactEmail} />
+                </ClientSessionProvider>
             </body>
         </html>
     );
