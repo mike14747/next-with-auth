@@ -1,11 +1,5 @@
 .currentContainer,
 .updateContainer {
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px var(--mg-gray-5) solid;
-}
-
-.deleteContainer {
     margin-bottom: 2rem;
 }
 
@@ -21,12 +15,27 @@
     margin-bottom: 2rem;
 }
 
+.updateButtonsHeading {
+    font-size: var(--step-0-base);
+    font-size: var(--step-0);
+    margin: 2rem 0 0.50rem 0;
+    padding-top: 2rem;
+    color: var(--mg-dark);
+    border-top: 1px var(--mg-gray-2) solid;
+}
+
 .updateHeading {
+    margin-top: 2rem;
+    padding-top: 2rem;
     color: var(--mg-orange-dark);
+    border-top: 1px var(--mg-gray-2) solid;
 }
 
 .deleteHeading {
-    margin-bottom: 2rem;
+    margin: 2rem 0 1.5rem 0;
+    padding-top: 1rem;
+    color: var(--mg--dark);
+    border-top: 1px var(--mg-gray-2) solid;
 }
 
 .note {
@@ -37,17 +46,6 @@
     font-size: 0.833rem;
     font-size: var(--step--1);
     color: var(--mg-blue);
-}
-
-.updateGroup {
-    margin: 0 0 2rem 0;
-    border-bottom: 1px var(--mg-gray-5) solid;
-    padding: 0 0 2rem 0;
-}
-
-.updateGroup:last-of-type {
-    border: 0;
-    padding: 0;
 }
 
 .success {

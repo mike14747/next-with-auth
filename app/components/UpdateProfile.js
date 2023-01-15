@@ -16,6 +16,11 @@ export default function UpdateProfile({ user, setUser }) {
     const [isLoadingPassword, setIsLoadingPassword] = useState(false);
     const [isLoadingEmail, setIsLoadingEmail] = useState(false);
 
+    const [showUpdateUsername, setShowUpdateUsername] = useState(false);
+    const [showUpdatePassword, setShowUpdatePassword] = useState(false);
+    const [showUpdateEmail, setShowUpdateEmail] = useState(false);
+    const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+
     const [usernameError, setUsernameError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [emailError, setEmailError] = useState(null);
@@ -165,60 +170,132 @@ export default function UpdateProfile({ user, setUser }) {
 
     return (
         <>
-            <div className={styles.updateContainer}>
-                <h3 className={styles.updateHeading}>Update your profile information:</h3>
-
-                <p className={styles.note}>
-                    <strong>Note:</strong> changing your username and/or password will log you out.
-                </p>
-
-                <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
-                    {isLoadingUsername && <Loading />}
-
-                    {usernameError && <p className={styles.error}>{usernameError}</p>}
-
-                    <FormInputForUsername username={username} setUsername={setUsername} />
-
-                    <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
-                </form>
-
-                <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
-                    {isLoadingPassword && <Loading />}
-
-                    {passwordError && <p className={styles.error}>{passwordError}</p>}
-
-                    <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
-
-                    <Button type="submit" size="medium" variant="contained" theme="secondary">Apply</Button>
-                </form>
-
-                <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
-                    {isLoadingEmail && <Loading />}
-
-                    {emailError && <p className={styles.error}>{emailError}</p>}
-
-                    {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
-
-                    <FormInputForEmail email={email} setEmail={setEmail} />
-
-                    <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
-                </form>
+            <div>
+                <h3 className={styles.updateButtonsHeading}>Update / Delete your account</h3>
+                {showUpdateUsername
+                    ? <Button onClick={() => setShowUpdateUsername(false)} type="button" size="small" variant="text" theme="primary">Hide Update Username</Button>
+                    : <Button onClick={() => {
+                        setShowUpdateUsername(true);
+                        setShowUpdatePassword(false);
+                        setShowUpdateEmail(false);
+                        setShowDeleteAccount(false);
+                    }} type="button" size="small" variant="text" theme="primary">Update Username</Button>
+                }
             </div>
 
-            <div className={styles.deleteContainer}>
-                <h3 className={styles.deleteHeading}>Delete your account</h3>
+            <div>
+                {showUpdatePassword
+                    ? <Button onClick={() => setShowUpdatePassword(false)} type="button" size="small" variant="text" theme="primary">Hide Update Password</Button>
+                    : <Button onClick={() => {
+                        setShowUpdateUsername(false);
+                        setShowUpdatePassword(true);
+                        setShowUpdateEmail(false);
+                        setShowDeleteAccount(false);
+                    }} type="button" size="small" variant="text" theme="primary">Update Password</Button>
+                }
+            </div>
 
-                {deleteError && <p className={styles.error}>{deleteError}</p>}
+            <div>
+                {showUpdateEmail
+                    ? <Button onClick={() => setShowUpdateEmail(false)} type="button" size="small" variant="text" theme="primary">Hide Update Email</Button>
+                    : <Button onClick={() => {
+                        setShowUpdateUsername(false);
+                        setShowUpdatePassword(false);
+                        setShowUpdateEmail(true);
+                        setShowDeleteAccount(false);
+                    }} type="button" size="small" variant="text" theme="primary">Update Email</Button>
+                }
+            </div>
 
-                {deleteCounter > 0 &&
-                    <p>
-                        Are you sure?
-                    </p>
+            <div>
+                {showDeleteAccount
+                    ? <Button onClick={() => setShowDeleteAccount(false)} type="button" size="small" variant="text" theme="primary">Hide Delete Account</Button>
+                    : <Button onClick={() => {
+                        setShowUpdateUsername(false);
+                        setShowUpdatePassword(false);
+                        setShowUpdateEmail(false);
+                        setShowDeleteAccount(true);
+                    }} type="button" size="small" variant="text" theme="primary">Delete Account</Button>
+                }
+            </div>
+
+            <div className={styles.updateContainer}>
+                {showUpdateUsername &&
+                    <>
+                        <h3 className={styles.updateHeading}>Update your username:</h3>
+
+                        <p className={styles.note}>
+                            <strong>Note:</strong> changing your username will log you out.
+                        </p>
+
+                        <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
+                            {isLoadingUsername && <Loading />}
+
+                            {usernameError && <p className={styles.error}>{usernameError}</p>}
+
+                            <FormInputForUsername username={username} setUsername={setUsername} />
+
+                            <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
+                        </form>
+                    </>
                 }
 
-                <Button type="button" size={deleteCounter > 0 ? 'medium' : 'small'} variant="contained" theme="danger" onClick={handleDeleteAccount}>Delete Account</Button>
+                {showUpdatePassword &&
+                    <>
+                        <h3 className={styles.updateHeading}>Update your password:</h3>
+
+                        <p className={styles.note}>
+                            <strong>Note:</strong> changing your password will log you out.
+                        </p>
+
+                        <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
+                            {isLoadingPassword && <Loading />}
+
+                            {passwordError && <p className={styles.error}>{passwordError}</p>}
+
+                            <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
+
+                            <Button type="submit" size="medium" variant="contained" theme="secondary">Apply</Button>
+                        </form>
+                    </>
+                }
+
+                {showUpdateEmail &&
+                    <>
+                        <h3 className={styles.updateHeading}>Update your email:</h3>
+
+                        <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
+                            {isLoadingEmail && <Loading />}
+
+                            {emailError && <p className={styles.error}>{emailError}</p>}
+
+                            {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
+
+                            <FormInputForEmail email={email} setEmail={setEmail} />
+
+                            <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
+                        </form>
+                    </>
+                }
+
+                {showDeleteAccount &&
+                    <>
+                        <h3 className={styles.deleteHeading}>Delete your account</h3>
+
+                        {deleteError && <p className={styles.error}>{deleteError}</p>}
+
+                        {deleteCounter > 0 &&
+                            <p>
+                                Are you sure?
+                            </p>
+                        }
+
+                        <Button type="button" size={deleteCounter > 0 ? 'medium' : 'small'} variant="contained" theme="danger" onClick={handleDeleteAccount}>Delete Account</Button>
+                    </>
+                }
             </div>
         </>
+
     );
 }
 

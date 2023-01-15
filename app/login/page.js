@@ -45,11 +45,6 @@ export default function Login() {
         }
     };
 
-    // if (status === 'authenticated') {
-    //     console.log({ redirectUrl });
-    //     router.push(redirectUrl);
-    // }
-
     useEffect(() => {
         if (status === 'authenticated') router.push(redirectUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
