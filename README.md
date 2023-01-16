@@ -484,32 +484,26 @@ I've upgraded to next.js version 13 and I'm using the new **/app** folder for al
 import { getUnprotectedData } from '../../lib/api/index';
 
 async function getData() {
-    return await getUnprotectedData().catch(error => console.log(error.message));
+    return await getUnprotectedData().catch((error) => console.log(error.message));
 }
 
 export default async function Page() {
-    const data = await getData().catch(error => console.log(error.message));
+    const data = await getData().catch((error) => console.log(error.message));
 
     return (
         <>
             <article>
-                <h2 className="page-heading">
-                    Public Page
-                </h2>
+                <h2 className="page-heading">Public Page</h2>
 
-                <p>
-                    This page is getting data on the server-side, right in the component.
-                </p>
+                <p>This page is getting data on the server-side, right in the component.</p>
 
-                {data?.length > 0 &&
+                {data?.length > 0 && (
                     <ul>
                         {data.map((item) => (
-                            <li key={item._id}>
-                                {item.name}
-                            </li>
+                            <li key={item._id}>{item.name}</li>
                         ))}
                     </ul>
-                }
+                )}
             </article>
         </>
     );
@@ -518,7 +512,7 @@ export default async function Page() {
 
 **Protected pages**
 
-This is very similar to the public page, but 
+This is very similar to the public page, but
 
 ```js
 // /app/protected/page.js
@@ -529,7 +523,7 @@ import { getProtectedData } from '../../lib/api/index';
 import { unstable_getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getProtectedData().catch(error => console.log(error.message));
+    return await getProtectedData().catch((error) => console.log(error.message));
 }
 
 export default async function Page() {
@@ -541,28 +535,22 @@ export default async function Page() {
     if (!session) {
         redirect('/login?callbackUrl=/protected');
     }
-    const data = await getData().catch(error => console.log(error.message));
+    const data = await getData().catch((error) => console.log(error.message));
 
     return (
         <>
             <article>
-                <h2 className="page-heading">
-                    Protected Page
-                </h2>
+                <h2 className="page-heading">Protected Page</h2>
 
-                <p>
-                    This page is getting data on the server-side, right in the component.
-                </p>
+                <p>This page is getting data on the server-side, right in the component.</p>
 
-                {data?.length > 0 &&
+                {data?.length > 0 && (
                     <ul>
                         {data.map((item) => (
-                            <li key={item._id}>
-                                {item.name + ' - age: ' + item.age}
-                            </li>
+                            <li key={item._id}>{item.name + ' - age: ' + item.age}</li>
                         ))}
                     </ul>
-                }
+                )}
             </article>
         </>
     );
@@ -595,7 +583,7 @@ import { getAdminData } from '../../lib/api/index';
 import { unstable_getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getAdminData().catch(error => console.log(error.message));
+    return await getAdminData().catch((error) => console.log(error.message));
 }
 
 export default async function Page() {
@@ -610,15 +598,13 @@ export default async function Page() {
 
     let data = null;
     if (session.role === 'admin') {
-        data = await getData().catch(error => console.log(error.message));
+        data = await getData().catch((error) => console.log(error.message));
     }
 
     return (
         <>
             <article>
-                <h2 className="page-heading">
-                    Admin Page
-                </h2>
+                <h2 className="page-heading">Admin Page</h2>
 
                 {session?.role !== 'admin' && (
                     <>
@@ -819,7 +805,6 @@ For now, I'm redirecting to the homepage upon signOut().
 
 There were warnings in the build process on vercel concerning the node version needing to be v12, v14 or v16 and by default vercel uses v18. So, I downgraded vercel's node version to v16 and the warnings went away.
 
-
 You need the **NEXTAUTH_URL** environment variable locally, but it's not needed if you deploy to vercel. Vercel will populate it itself as **VERCEL_URL**. You do need to make sure **Settings > Environment Variables > Automatically expose System Environment Variables** is checked.
 
 ---
@@ -885,6 +870,21 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** 
 ```jsx
 <body id="appWrapper">{/* ... */}</body>
 ```
+
+---
+
+### Miscellaneous
+
+In **/app/layout.js** I have an id of _main_ on the main tag.
+
+```jsx
+<main id="main" className="main-container">
+    {children}
+    <ScrollTop />
+</main>
+```
+
+The sole purpose of this is to support the **SkipToMain** component.
 
 ---
 
