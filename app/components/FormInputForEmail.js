@@ -10,7 +10,7 @@ export default function FormInputForEmail({ email }) {
             name="email"
             type="email"
             required={true}
-            onChange={e => email.current = e.target.value}
+            handleChange={e => email.current = e.target.value}
             pattern={emailPattern}
             errorMsg={emailErrorMsg}
         />

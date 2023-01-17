@@ -66,14 +66,14 @@ export default function Login() {
                         </p>
                     }
 
-                    <form method="post" onSubmit={handleSignIn} className="form">
+                    <form onSubmit={handleSignIn} className="form">
                         <FormInput
                             id="username"
                             label="Username"
                             name="username"
                             type="text"
                             required={false}
-                            onChange={(e) => username.current = e.target.value}
+                            handleChange={(e) => username.current = e.target.value}
                         />
 
                         <FormInput
@@ -82,7 +82,7 @@ export default function Login() {
                             name="password"
                             type="password"
                             required={false}
-                            onChange={(e) => password.current = e.target.value}
+                            handleChange={(e) => password.current = e.target.value}
                         />
 
                         <div className="btn-container">

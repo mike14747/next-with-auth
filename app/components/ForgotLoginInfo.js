@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import FormInputForUsername from '../components/FormInputForUsername';
 import FormInputForEmail from '../components/FormInputForEmail';
 import Button from '../components/Button';
@@ -9,8 +9,9 @@ import Loading from '../components/Loading';
 import styles from '../../styles/ForgotLoginInfo.module.css';
 
 export default function ForgottenUsername() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const username = useRef('');
+    const email = useRef('');
+
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [showForgotUsername, setShowForgotUsername] = useState(false);
@@ -28,7 +29,7 @@ export default function ForgottenUsername() {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
-            body: JSON.stringify({ email }),
+            body: JSON.stringify({ email: email.current }),
         });
 
         setIsSubmitting(false);
@@ -40,7 +41,6 @@ export default function ForgottenUsername() {
         if (res.status === 200) {
             setError(false);
             setSuccess(true);
-            setEmail('');
         }
     };
 
@@ -55,7 +55,7 @@ export default function ForgottenUsername() {
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
-            body: JSON.stringify({ username, email }),
+            body: JSON.stringify({ username: username.current, email: email.current }),
         });
 
         setIsSubmitting(false);
@@ -68,8 +68,6 @@ export default function ForgottenUsername() {
         if (res.status === 200) {
             setError(false);
             setSuccess(true);
-            setUsername('');
-            setEmail('');
         }
     };
 
@@ -84,8 +82,6 @@ export default function ForgottenUsername() {
                             setShowForgotPassword(false);
                             setError(false);
                             setSuccess(false);
-                            setUsername('');
-                            setEmail('');
                         }} size="small" variant="text">I forgot my Username</Button>
                     }
 
@@ -100,8 +96,6 @@ export default function ForgottenUsername() {
                             setShowForgotUsername(false);
                             setError(false);
                             setSuccess(false);
-                            setUsername('');
-                            setEmail('');
                         }} size="small" variant="text">I forgot my Password</Button>}
                 </div>
             </div>
@@ -117,8 +111,8 @@ export default function ForgottenUsername() {
 
                     {success && <p className="success">An email has been sent to the email address you entered.</p>}
 
-                    <form method="post" onSubmit={handleUsernameSubmit} className="form">
-                        {/* <FormInputForEmail email={email} setEmail={setEmail} /> */}
+                    <form onSubmit={handleUsernameSubmit} className="form">
+                        <FormInputForEmail email={email} />
 
                         <Button type="submit">Submit</Button>
                     </form>
@@ -138,10 +132,10 @@ export default function ForgottenUsername() {
 
                     {success && <p className="success">An email has been sent to the email address you entered.</p>}
 
-                    <form method="post" onSubmit={handlePasswordSubmit} className="form">
-                        {/* <FormInputForUsername username={username} setUsername={setUsername} /> */}
+                    <form onSubmit={handlePasswordSubmit} className="form">
+                        <FormInputForUsername username={username} />
 
-                        {/* <FormInputForEmail email={email} setEmail={setEmail} /> */}
+                        <FormInputForEmail email={email} />
 
                         <Button type="submit">Submit</Button>
                     </form>

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import FormInput from './FormInput';
-import { passwordPattern, passwordErrorMsg, repeatPassordErrorMsg } from '../../lib/formInputPatterns';
+import { passwordPattern, passwordErrorMsg } from '../../lib/formInputPatterns';
 
 export default function FormInputForNewPassword({ password, repeatPassword }) {
     return (
@@ -11,7 +11,7 @@ export default function FormInputForNewPassword({ password, repeatPassword }) {
                 name="password"
                 type="password"
                 required={true}
-                onChange={(e) => password.current = e.target.value}
+                handleChange={(e) => password.current = e.target.value}
                 pattern={passwordPattern}
                 errorMsg={passwordErrorMsg}
             />
@@ -22,9 +22,9 @@ export default function FormInputForNewPassword({ password, repeatPassword }) {
                 name="repeatPassword"
                 type="password"
                 required={true}
-                onChange={(e) => repeatPassword.current = e.target.value}
+                handleChange={(e) => repeatPassword.current = e.target.value}
                 pattern={passwordPattern}
-                errorMsg={repeatPassordErrorMsg}
+                errorMsg={passwordErrorMsg}
             />
         </>
     );

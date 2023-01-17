@@ -895,7 +895,7 @@ The sole purpose of this is to support the **SkipToMain** component.
 -   Decide what to name the page.js components (Page vs the name of the route folder).
 -   Switch over from client fetch to swr?
 -   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
--   Update the rest of the components that use the FormInputFor(...) to use useRef.
+-   Update the rest of the components that use the FormInputFor(...) to use useRef. I think I'm done with this.
 
 ---
 

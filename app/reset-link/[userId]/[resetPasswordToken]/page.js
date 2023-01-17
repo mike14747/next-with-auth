@@ -1,22 +1,26 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
-import FormInputForNewPassword from '../../components/FormInputForNewPassword';
-import Button from '../../components/Button';
+import FormInputForNewPassword from '../../../components/FormInputForNewPassword';
+import Button from '../../../components/Button';
+import Loading from '../../../components/Loading';
 
-import styles from '../../styles/profile.module.css';
+import styles from '../../../../styles/profile.module.css';
 
-export default function ResetPasswordToken() {
+export default function ResetPasswordToken({ params }) {
     const { data: session } = useSession();
 
     const router = useRouter();
 
-    const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatPassword] = useState('');
+    const password = useRef('');
+    const repeatPassword = useRef('');
+
     const [passwordError, setPasswordError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [isSuccessfullyUpdated, setIsSuccessfullyUpdated] = useState(false);
 
     useEffect(() => {
@@ -29,25 +33,33 @@ export default function ResetPasswordToken() {
     const handleUpdatePasswordSubmit = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/api/users/' + router.query.userId + '/change-password', {
+        setIsLoading(true);
+
+        if (password.current !== repeatPassword.current) {
+            setPasswordError('Passwords do not match.');
+            return;
+        }
+
+        const res = await fetch('/api/users/' + params.userId + '/change-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
-            body: JSON.stringify({ userId: router.query.userId, resetPasswordToken: router.query.resetPasswordToken, password }),
+            body: JSON.stringify({ userId: params.userId, resetPasswordToken: params.resetPasswordToken, password: password.current }),
         });
 
         if (res.status !== 200) {
-            console.log('the password change seems to have failed');
+            setIsLoading(false);
             res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
             res.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
             res.status === 406 && setPasswordError('An error occurred. User or reset password token do not exist.');
             res.status === 412 && setPasswordError('An error occurred. The reset password token has expired.');
             res.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
         }
+
         if (res.status === 200) {
-            setPassword('');
-            setRepeatPassword('');
+            password.current = '';
+            repeatPassword.current = '';
             setPasswordError(null);
             setIsSuccessfullyUpdated(true);
         }
@@ -69,6 +81,8 @@ export default function ResetPasswordToken() {
                     </p>
                 }
 
+                {isLoading && <Loading />}
+
                 {!session && !isSuccessfullyUpdated &&
                     <>
                         <p>
@@ -78,7 +92,7 @@ export default function ResetPasswordToken() {
                         <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
                             {passwordError && <p className={styles.error}>{passwordError}</p>}
 
-                            {/* <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} /> */}
+                            <FormInputForNewPassword password={password} repeatPassword={repeatPassword} />
 
                             <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
                         </form>
@@ -88,3 +102,7 @@ export default function ResetPasswordToken() {
         </>
     );
 }
+
+ResetPasswordToken.propTypes = {
+    params: PropTypes.object,
+};

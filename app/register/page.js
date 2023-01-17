@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import FormInputForUsername from '../components/FormInputForUsername';
 import FormInputForNewPassword from '../components/FormInputForNewPassword';
@@ -11,22 +11,28 @@ import Loading from '../components/Loading';
 export default function Page() {
     const { status } = useSession();
 
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatPassword] = useState('');
+    const username = useRef('');
+    const email = useRef('');
+    const password = useRef('');
+    const repeatPassword = useRef('');
+
     const [error, setError] = useState(null);
     const [isSuccessful, setIsSuccessful] = useState(false);
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
 
+        if (password.current !== repeatPassword.current) {
+            setError('Passwords do not match.');
+            return;
+        }
+
         const res = await fetch('/api/users', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
-            body: JSON.stringify({ username, email, password }),
+            body: JSON.stringify({ username: username.current, email: email.current, password: password.current }),
         }).catch(error => {
             console.error(error.name + ': ' + error.message);
             setError('An error occurred sending the data.');
@@ -34,16 +40,17 @@ export default function Page() {
 
         if (res) {
             if (res.status === 201) {
-                setUsername(null);
-                setPassword(null);
-                setRepeatPassword(null);
                 setIsSuccessful(true);
                 setError(null);
             }
 
-            res.status === 400 && setError('An error occurred. One or more of the fields are missing or not in the proper format.');
-            res.status === 409 && setError('An error occurred. The username you submitted is already in use.');
-            res.status === 500 && setError('A server error occurred. Please try your submission again.');
+            if (res.status !== 201) {
+                setIsSuccessful(false);
+
+                res.status === 400 && setError('An error occurred. One or more of the fields are missing or not in the proper format.');
+                res.status === 409 && setError('An error occurred. The username you submitted is already in use.');
+                res.status === 500 && setError('A server error occurred. Please try your submission again.');
+            }
         }
     };
 
@@ -64,7 +71,7 @@ export default function Page() {
                     </p>
                 }
 
-                {status === 'unauthenticated' && !isSuccessful &&
+                {status === 'unauthenticated' &&
                     <>
                         {error &&
                             <p className="error">
@@ -72,12 +79,16 @@ export default function Page() {
                             </p>
                         }
 
-                        <form method="post" onSubmit={handleRegisterSubmit} className="form">
-                            {/* <FormInputForUsername username={username} setUsername={setUsername} /> */}
+                        {isSuccessful &&
+                            <p className="success-large">You have successfully registered!</p>
+                        }
 
-                            {/* <FormInputForEmail email={email} setEmail={setEmail} /> */}
+                        <form onSubmit={handleRegisterSubmit} className="form">
+                            <FormInputForUsername username={username} />
 
-                            {/* <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} /> */}
+                            <FormInputForEmail email={email} />
+
+                            <FormInputForNewPassword password={password} repeatPassword={repeatPassword} />
 
                             <div className="btn-container">
                                 <Button type="submit" size="medium" variant="contained">Submit</Button>
@@ -85,10 +96,6 @@ export default function Page() {
                         </form>
                     </>
 
-                }
-
-                {status === 'unauthenticated' && isSuccessful &&
-                    <p className="success-large">You have successfully registered!</p>
                 }
             </article>
         </>

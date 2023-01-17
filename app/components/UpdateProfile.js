@@ -14,6 +14,7 @@ import styles from '../../styles/profile.module.css';
 export default function UpdateProfile({ user, setUser }) {
     const username = useRef('');
     const email = useRef('');
+    const emailForm = useRef();
     const password = useRef('');
     const repeatPassword = useRef('');
 
@@ -135,10 +136,10 @@ export default function UpdateProfile({ user, setUser }) {
                 ...prev,
                 email: email.current,
             }));
-            email.current = '';
             setEmailError(null);
+            email.current = '';
+            emailForm.current.reset();
             setEmailUpdateMsg('Your email address has been successfully updated.');
-            setShowUpdateEmail(false);
         }
 
         if (!res) setEmailError('An error occurred. Please try your update again.');
@@ -181,8 +182,6 @@ export default function UpdateProfile({ user, setUser }) {
     return (
         <>
             <div>
-                {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
-
                 <h3 className={styles.updateButtonsHeading}>Update / Delete your account</h3>
                 {showUpdateUsername
                     ? <Button onClick={() => {
@@ -193,7 +192,6 @@ export default function UpdateProfile({ user, setUser }) {
                         setShowUpdatePassword(false);
                         setShowUpdateEmail(false);
                         setShowDeleteAccount(false);
-                        // setDeleteCounter(0);
                     }} type="button" size="small" variant="text" theme="primary">Update Username</Button>
                 }
             </div>
@@ -208,7 +206,6 @@ export default function UpdateProfile({ user, setUser }) {
                         setShowUpdatePassword(true);
                         setShowUpdateEmail(false);
                         setShowDeleteAccount(false);
-                        // setDeleteCounter(0);
                     }} type="button" size="small" variant="text" theme="primary">Update Password</Button>
                 }
             </div>
@@ -224,7 +221,6 @@ export default function UpdateProfile({ user, setUser }) {
                         setShowUpdateEmail(true);
                         setEmailUpdateMsg('');
                         setShowDeleteAccount(false);
-                        // setDeleteCounter(0);
                     }} type="button" size="small" variant="text" theme="primary">Update Email</Button>
                 }
             </div>
@@ -289,7 +285,9 @@ export default function UpdateProfile({ user, setUser }) {
                     <>
                         <h3 className={styles.updateHeading}>Update your email:</h3>
 
-                        <form className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
+                        {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
+
+                        <form ref={emailForm} className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
                             {isLoadingEmail && <Loading />}
 
                             {emailError && <p className={styles.error}>{emailError}</p>}

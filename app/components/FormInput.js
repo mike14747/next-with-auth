@@ -4,7 +4,7 @@ import styles from '../../styles/FormInput.module.css';
 
 const sizes = ['small', 'normal'];
 
-export default function FormInput({ id, label = '', onChange, errorMsg = '', required = false, size = 'normal', type = 'text', placeholder = '', ...rest }) {
+export default function FormInput({ id, label = '', handleChange, errorMsg = '', required = false, size = 'normal', type = 'text', placeholder = '', ...rest }) {
     const inputSize = sizes?.includes(size) ? size : 'normal';
 
     const { checked } = { ...rest };
@@ -21,7 +21,7 @@ export default function FormInput({ id, label = '', onChange, errorMsg = '', req
             <input
                 id={id}
                 className={`${styles.input} ${styles[inputSize]}`}
-                onChange={onChange}
+                onChange={handleChange}
                 required={required}
                 size="30"
                 type={type}
@@ -43,7 +43,7 @@ export default function FormInput({ id, label = '', onChange, errorMsg = '', req
 FormInput.propTypes = {
     id: (props) => props?.label?.length > 0 && (!props.id || (typeof props.id !== 'string' && typeof props.id !== 'number')) && new Error('id is needed and must be in the proper format when a label is present'),
     label: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired,
     errorMsg: PropTypes.string,
     required: PropTypes.bool,
     size: PropTypes.string,

@@ -748,6 +748,8 @@ h2.page-heading {
     font-size: var(--step-0);
     color: var(--mg-red);
     text-align: center;
+    max-width: 60ch;
+    margin: 0 auto;
 }
 
 .error::before {
@@ -760,7 +762,8 @@ h2.page-heading {
 /* start global <form> css */
 
 .form {
-    max-width: 40ch;
+    width: fit-content;
+    max-width: 400px;
     margin: 0 auto;
 }
 
@@ -773,6 +776,8 @@ h2.page-heading {
     font-size: var(--step--1);
     color: var(--mg-red);
     text-align: center;
+    max-width: 60ch;
+    margin: 0 auto;
 }
 
 .validation-error::before {
@@ -808,6 +813,8 @@ h2.page-heading {
     font-size: var(--step-0);
     color: var(--mg-green);
     text-align: center;
+    max-width: 60ch;
+    margin: 0 auto;
 }
 
 .success-large {
@@ -815,6 +822,8 @@ h2.page-heading {
     font-size: var(--step-1);
     color: var(--mg-green);
     text-align: center;
+    max-width: 60ch;
+    margin: 0 auto;
 }
 
 .reset-password-success {
@@ -823,6 +832,8 @@ h2.page-heading {
     font-size: var(--step-2);
     color: var(--mg-green);
     text-align: center;
+    max-width: 60ch;
+    margin: 0 auto;
 }
 
 /* end global <form> css */

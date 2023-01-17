@@ -10,7 +10,7 @@ export default function FormInputForUsername({ username }) {
             name="username"
             type="text"
             required={true}
-            onChange={(e) => username.current = e.target.value}
+            handleChange={(e) => username.current = e.target.value}
             pattern={usernamePattern}
             errorMsg={usernameErrorMsg}
         />
