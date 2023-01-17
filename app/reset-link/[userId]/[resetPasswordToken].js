@@ -78,7 +78,7 @@ export default function ResetPasswordToken() {
                         <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
                             {passwordError && <p className={styles.error}>{passwordError}</p>}
 
-                            <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
+                            {/* <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} /> */}
 
                             <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
                         </form>

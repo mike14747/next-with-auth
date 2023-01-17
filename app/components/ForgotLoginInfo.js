@@ -118,7 +118,7 @@ export default function ForgottenUsername() {
                     {success && <p className="success">An email has been sent to the email address you entered.</p>}
 
                     <form method="post" onSubmit={handleUsernameSubmit} className="form">
-                        <FormInputForEmail email={email} setEmail={setEmail} />
+                        {/* <FormInputForEmail email={email} setEmail={setEmail} /> */}
 
                         <Button type="submit">Submit</Button>
                     </form>
@@ -139,9 +139,9 @@ export default function ForgottenUsername() {
                     {success && <p className="success">An email has been sent to the email address you entered.</p>}
 
                     <form method="post" onSubmit={handlePasswordSubmit} className="form">
-                        <FormInputForUsername username={username} setUsername={setUsername} />
+                        {/* <FormInputForUsername username={username} setUsername={setUsername} /> */}
 
-                        <FormInputForEmail email={email} setEmail={setEmail} />
+                        {/* <FormInputForEmail email={email} setEmail={setEmail} /> */}
 
                         <Button type="submit">Submit</Button>
                     </form>

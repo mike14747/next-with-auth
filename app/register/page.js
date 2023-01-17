@@ -73,11 +73,11 @@ export default function Page() {
                         }
 
                         <form method="post" onSubmit={handleRegisterSubmit} className="form">
-                            <FormInputForUsername username={username} setUsername={setUsername} />
+                            {/* <FormInputForUsername username={username} setUsername={setUsername} /> */}
 
-                            <FormInputForEmail email={email} setEmail={setEmail} />
+                            {/* <FormInputForEmail email={email} setEmail={setEmail} /> */}
 
-                            <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} />
+                            {/* <FormInputForNewPassword password={password} setPassword={setPassword} repeatPassword={repeatPassword} setRepeatPassword={setRepeatPassword} /> */}
 
                             <div className="btn-container">
                                 <Button type="submit" size="medium" variant="contained">Submit</Button>

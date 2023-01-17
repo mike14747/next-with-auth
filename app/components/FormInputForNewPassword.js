@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import FormInput from './FormInput';
 import { passwordPattern, passwordErrorMsg, repeatPassordErrorMsg } from '../../lib/formInputPatterns';
 
-export default function FormInputForNewPassword({ password, setPassword, repeatPassword, setRepeatPassword }) {
+export default function FormInputForNewPassword({ password, repeatPassword }) {
     return (
         <>
             <FormInput
@@ -10,9 +10,8 @@ export default function FormInputForNewPassword({ password, setPassword, repeatP
                 label="Password"
                 name="password"
                 type="password"
-                value={password}
                 required={true}
-                handleChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => password.current = e.target.value}
                 pattern={passwordPattern}
                 errorMsg={passwordErrorMsg}
             />
@@ -22,18 +21,15 @@ export default function FormInputForNewPassword({ password, setPassword, repeatP
                 label="Repeat Password"
                 name="repeatPassword"
                 type="password"
-                value={repeatPassword}
                 required={true}
-                handleChange={(e) => setRepeatPassword(e.target.value)}
-                pattern={password}
+                onChange={(e) => repeatPassword.current = e.target.value}
+                pattern={passwordPattern}
                 errorMsg={repeatPassordErrorMsg}
             />
         </>
     );
 }
 FormInputForNewPassword.propTypes = {
-    password: PropTypes.string,
-    setPassword: PropTypes.func,
-    repeatPassword: PropTypes.string,
-    setRepeatPassword: PropTypes.func,
+    password: PropTypes.object,
+    repeatPassword: PropTypes.object,
 };

@@ -2,16 +2,15 @@ import PropTypes from 'prop-types';
 import FormInput from './FormInput';
 import { emailPattern, emailErrorMsg } from '../../lib/formInputPatterns';
 
-export default function FormInputForEmail({ email, setEmail }) {
+export default function FormInputForEmail({ email }) {
     return (
         <FormInput
             id="email"
             label="Email"
             name="email"
             type="email"
-            value={email}
             required={true}
-            handleChange={(e) => setEmail(e.target.value)}
+            onChange={e => email.current = e.target.value}
             pattern={emailPattern}
             errorMsg={emailErrorMsg}
         />
@@ -19,6 +18,5 @@ export default function FormInputForEmail({ email, setEmail }) {
 }
 
 FormInputForEmail.propTypes = {
-    email: PropTypes.string,
-    setEmail: PropTypes.func,
+    email: PropTypes.object,
 };

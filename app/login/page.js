@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FormInput from '../components/FormInput';
@@ -24,8 +24,8 @@ export default function Login() {
     // if a resistricted query parameter is included, redirect to the homepage
     if (notRedirectableCheck.length > 0) redirectUrl = '/';
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const username = useRef('');
+    const password = useRef('');
     const [error, setError] = useState(null);
 
     const handleSignIn = async (e) => {
@@ -33,8 +33,8 @@ export default function Login() {
 
         // use the built-in signIn function of next-auth to try to sign in a user
         const loginStatus = await signIn('credentials', {
-            username: username,
-            password: password,
+            username: username.current,
+            password: password.current,
             redirect: false,
             // callbackUrl: redirectUrl,
         });
@@ -47,7 +47,7 @@ export default function Login() {
 
     useEffect(() => {
         if (status === 'authenticated') router.push(redirectUrl);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status]);
 
     if (status === 'loading') return <Loading />;
@@ -72,9 +72,8 @@ export default function Login() {
                             label="Username"
                             name="username"
                             type="text"
-                            value={username}
                             required={false}
-                            handleChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => username.current = e.target.value}
                         />
 
                         <FormInput
@@ -82,9 +81,8 @@ export default function Login() {
                             label="Password"
                             name="password"
                             type="password"
-                            value={password}
                             required={false}
-                            handleChange={(e) => setPassword(e.target.value)}
+                            onChange={(e) => password.current = e.target.value}
                         />
 
                         <div className="btn-container">

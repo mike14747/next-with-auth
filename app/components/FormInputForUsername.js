@@ -2,22 +2,20 @@ import PropTypes from 'prop-types';
 import FormInput from './FormInput';
 import { usernamePattern, usernameErrorMsg } from '../../lib/formInputPatterns';
 
-export default function FormInputForUsername({ username, setUsername }) {
+export default function FormInputForUsername({ username }) {
     return (
         <FormInput
             id="username"
             label="Username"
             name="username"
             type="text"
-            value={username}
             required={true}
-            handleChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => username.current = e.target.value}
             pattern={usernamePattern}
             errorMsg={usernameErrorMsg}
         />
     );
 }
 FormInputForUsername.propTypes = {
-    username: PropTypes.string,
-    setUsername: PropTypes.func,
+    username: PropTypes.object,
 };
