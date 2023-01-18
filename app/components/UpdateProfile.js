@@ -1,7 +1,7 @@
 'use client';
 
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Loading from './Loading';
 import FormInputForUsername from './FormInputForUsername';
@@ -14,7 +14,7 @@ import styles from '../../styles/profile.module.css';
 export default function UpdateProfile({ user, setUser }) {
     const username = useRef('');
     const email = useRef('');
-    const emailForm = useRef();
+    const emailForm = useRef('');
     const password = useRef('');
     const repeatPassword = useRef('');
 
@@ -35,6 +35,13 @@ export default function UpdateProfile({ user, setUser }) {
     const [emailUpdateMsg, setEmailUpdateMsg] = useState('');
 
     const [deleteCounter, setDeleteCounter] = useState(0);
+
+    useEffect(() => {
+        if (emailUpdateMsg) {
+            email.current = '';
+            emailForm.current.reset();
+        }
+    }, [emailUpdateMsg]);
 
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
@@ -137,8 +144,6 @@ export default function UpdateProfile({ user, setUser }) {
                 email: email.current,
             }));
             setEmailError(null);
-            email.current = '';
-            emailForm.current.reset();
             setEmailUpdateMsg('Your email address has been successfully updated.');
         }
 
