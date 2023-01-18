@@ -65,4 +65,7 @@ FormInput.propTypes = {
     step: PropTypes.string,
     checked: PropTypes.bool,
     value: PropTypes.string,
+    maxLength: PropTypes.number,
+    readOnly: PropTypes.bool,
+    disabled: PropTypes.bool,
 };
