@@ -22,15 +22,35 @@ export default function UpdateProfile({ user, setUser }) {
     const [isLoadingPassword, setIsLoadingPassword] = useState(false);
     const [isLoadingEmail, setIsLoadingEmail] = useState(false);
 
+    const [isLoadingState, setIsLoadingState] = useState({
+        isLoadingUsername: false,
+        isLoadingPassword: false,
+        isLoadingEmail: false,
+    });
+
     const [showUpdateUsername, setShowUpdateUsername] = useState(false);
     const [showUpdatePassword, setShowUpdatePassword] = useState(false);
     const [showUpdateEmail, setShowUpdateEmail] = useState(false);
     const [showDeleteAccount, setShowDeleteAccount] = useState(false);
 
+    const [showOptionsState, setShowOptionsState] = useState({
+        showUpdateUsername: false,
+        showUpdatePassword: false,
+        showUpdateEmail: false,
+        showDeleteAccount: false,
+    });
+
     const [usernameError, setUsernameError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
     const [emailError, setEmailError] = useState(null);
     const [deleteError, setDeleteError] = useState(null);
+
+    const [errorState, setErrorState] = useState({
+        usernameError: null,
+        passwordError: null,
+        emailError: null,
+        deleteError: null,
+    });
 
     const [emailUpdateMsg, setEmailUpdateMsg] = useState('');
 
@@ -100,23 +120,23 @@ export default function UpdateProfile({ user, setUser }) {
             setPasswordError('An error occurred sending the data.');
         });
 
-        if (res.status === 200) {
+        if (!res) {
+            setIsLoadingPassword(false);
+            setPasswordError('An error occurred. Please try your update again.');
+        }
+
+        if (res?.status === 200) {
             password.current = '';
             repeatPassword.current = '';
             setPasswordError(null);
             signOut({ callbackUrl: '/' });
         }
 
-        if (!res) {
+        if (res?.status !== 200) {
             setIsLoadingPassword(false);
-            setPasswordError('An error occurred. Please try your update again.');
-        }
-
-        if (res.status !== 200) {
-            setIsLoadingPassword(false);
-            res.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
-            res.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
-            res.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
+            res?.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
+            res?.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
+            res?.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
         }
     };
 
@@ -138,7 +158,7 @@ export default function UpdateProfile({ user, setUser }) {
 
         setIsLoadingEmail(false);
 
-        if (res.status === 200) {
+        if (res?.status === 200) {
             setUser(prev => ({
                 ...prev,
                 email: email.current,
@@ -149,11 +169,11 @@ export default function UpdateProfile({ user, setUser }) {
 
         if (!res) setEmailError('An error occurred. Please try your update again.');
 
-        if (res.status !== 200) {
-            if (res.status !== 200) {
-                res.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
-                res.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
-                res.status === 500 && setEmailError('A server error occurred. Please try your update again.');
+        if (res?.status !== 200) {
+            if (res?.status !== 200) {
+                res?.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
+                res?.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
+                res?.status === 500 && setEmailError('A server error occurred. Please try your update again.');
                 setEmailUpdateMsg('');
             }
         }
@@ -170,16 +190,18 @@ export default function UpdateProfile({ user, setUser }) {
                 setPasswordError('An error occurred sending the data.');
             });
 
+            if (!res) setDeleteError('An error occurred. Please try your update again.');
+
             if (res) {
-                if (res.status === 200) {
+                if (res?.status === 200) {
                     setDeleteCounter(0);
                     setDeleteError(null);
                     signOut({ callbackUrl: '/' });
                 }
 
-                res.status === 400 && setDeleteError('An error occurred. A bad request was made.');
-                res.status === 401 && setDeleteError('An error occurred. You do not have permission to delete this account.');
-                res.status === 500 && setDeleteError('A server error occurred. Please try your update again.');
+                res?.status === 400 && setDeleteError('An error occurred. A bad request was made.');
+                res?.status === 401 && setDeleteError('An error occurred. You do not have permission to delete this account.');
+                res?.status === 500 && setDeleteError('A server error occurred. Please try your update again.');
             }
         }
     };
