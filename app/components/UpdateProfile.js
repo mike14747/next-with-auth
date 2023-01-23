@@ -1,7 +1,7 @@
 'use client';
 
 import PropTypes from 'prop-types';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Loading from './Loading';
 import FormInputForUsername from './FormInputForUsername';
@@ -18,32 +18,19 @@ export default function UpdateProfile({ user, setUser }) {
     const password = useRef('');
     const repeatPassword = useRef('');
 
-    const [isLoadingUsername, setIsLoadingUsername] = useState(false);
-    const [isLoadingPassword, setIsLoadingPassword] = useState(false);
-    const [isLoadingEmail, setIsLoadingEmail] = useState(false);
-
-    const [isLoadingState, setIsLoadingState] = useState({
+    const [loadingState, setLoadingState] = useState({
         isLoadingUsername: false,
         isLoadingPassword: false,
         isLoadingEmail: false,
+        isLoadingDelete: false,
     });
 
-    const [showUpdateUsername, setShowUpdateUsername] = useState(false);
-    const [showUpdatePassword, setShowUpdatePassword] = useState(false);
-    const [showUpdateEmail, setShowUpdateEmail] = useState(false);
-    const [showDeleteAccount, setShowDeleteAccount] = useState(false);
-
-    const [showOptionsState, setShowOptionsState] = useState({
+    const [viewState, setViewState] = useState({
         showUpdateUsername: false,
         showUpdatePassword: false,
         showUpdateEmail: false,
         showDeleteAccount: false,
     });
-
-    const [usernameError, setUsernameError] = useState(null);
-    const [passwordError, setPasswordError] = useState(null);
-    const [emailError, setEmailError] = useState(null);
-    const [deleteError, setDeleteError] = useState(null);
 
     const [errorState, setErrorState] = useState({
         usernameError: null,
@@ -52,21 +39,14 @@ export default function UpdateProfile({ user, setUser }) {
         deleteError: null,
     });
 
-    const [emailUpdateMsg, setEmailUpdateMsg] = useState('');
+    const [isEmailUpdated, setIsEmailUpdated] = useState(false);
 
     const [deleteCounter, setDeleteCounter] = useState(0);
-
-    useEffect(() => {
-        if (emailUpdateMsg) {
-            email.current = '';
-            emailForm.current.reset();
-        }
-    }, [emailUpdateMsg]);
 
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoadingUsername(true);
+        setLoadingState(prev => ({ ...prev, isLoadingUsername: true }));
 
         const res = await fetch('/api/users/' + user._id + '/change-username', {
             method: 'PUT',
@@ -74,28 +54,32 @@ export default function UpdateProfile({ user, setUser }) {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ username: username.current }),
-        }).catch(error => {
-            console.error(error.name + ': ' + error.message);
-            setUsernameError('An error occurred sending the data.');
-        });
+        }).catch(error => console.error(error.name + ': ' + error.message));
 
-        if (res?.status === 200) {
-            username.current = '';
-            setUsernameError(null);
-            signOut({ callbackUrl: '/' });
-        }
+        if (!res || res.status !== 200) setLoadingState(prev => ({ ...prev, isLoadingUsername: false }));
 
-        if (!res) {
-            setIsLoadingUsername(false);
-            setUsernameError('An error occurred. Please try your update again.');
-        }
-
-        if (res.status !== 200) {
-            setIsLoadingUsername(false);
-            res.status === 400 && setUsernameError('An error occurred. New username is not in the proper format.');
-            res.status === 401 && setUsernameError('An error occurred. You do not have permission to make this update.');
-            res.status === 409 && setUsernameError('An error occurred. The username you submitted is already in use.');
-            res.status === 500 && setUsernameError('A server error occurred. Please try your update again.');
+        switch (res?.status) {
+            case undefined:
+                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. Please try your update again.' }));
+                break;
+            case 200:
+                setErrorState(prev => ({ ...prev, usernameError: null }));
+                signOut({ callbackUrl: '/' });
+                break;
+            case 400:
+                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. New username is not in the proper format.' }));
+                break;
+            case 401:
+                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. You do not have permission to make this update.' }));
+                break;
+            case 409:
+                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. The username you submitted is already in use.' }));
+                break;
+            case 500:
+                setErrorState(prev => ({ ...prev, usernameError: 'A server error occurred. Please try your update again.' }));
+                break;
+            default:
+                setErrorState(prev => ({ ...prev, usernameError: 'An unknown error occurred. Please try your update again.' }));
         }
     };
 
@@ -103,11 +87,11 @@ export default function UpdateProfile({ user, setUser }) {
         e.preventDefault();
 
         if (password.current !== repeatPassword.current) {
-            setPasswordError('Passwords do not match.');
+            setErrorState(prev => ({ ...prev, passwordError: 'Passwords do not match.' }));
             return;
         }
 
-        setIsLoadingPassword(true);
+        setLoadingState(prev => ({ ...prev, isLoadingPassword: true }));
 
         const res = await fetch('/api/users/' + user._id + '/change-password', {
             method: 'PUT',
@@ -115,35 +99,37 @@ export default function UpdateProfile({ user, setUser }) {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ password: password.current }),
-        }).catch(error => {
-            console.error(error.name + ': ' + error.message);
-            setPasswordError('An error occurred sending the data.');
-        });
+        }).catch(error => console.error(error.name + ': ' + error.message));
 
-        if (!res) {
-            setIsLoadingPassword(false);
-            setPasswordError('An error occurred. Please try your update again.');
-        }
+        if (!res || res.status !== 200) setLoadingState(prev => ({ ...prev, isLoadingPassword: false }));
 
-        if (res?.status === 200) {
-            password.current = '';
-            repeatPassword.current = '';
-            setPasswordError(null);
-            signOut({ callbackUrl: '/' });
-        }
-
-        if (res?.status !== 200) {
-            setIsLoadingPassword(false);
-            res?.status === 400 && setPasswordError('An error occurred. New password is not in the proper format.');
-            res?.status === 401 && setPasswordError('An error occurred. You do not have permission to make this update.');
-            res?.status === 500 && setPasswordError('A server error occurred. Please try your update again.');
+        switch (res?.status) {
+            case undefined:
+                setErrorState(prev => ({ ...prev, passwordError: 'An error occurred. Please try your update again.' }));
+                break;
+            case 200:
+                setErrorState(prev => ({ ...prev, passwordError: null }));
+                signOut({ callbackUrl: '/' });
+                break;
+            case 400:
+                setErrorState(prev => ({ ...prev, passwordError: 'An error occurred. New password is not in the proper format.' }));
+                break;
+            case 401:
+                setErrorState(prev => ({ ...prev, passwordError: 'An error occurred. You do not have permission to make this update.' }));
+                break;
+            case 500:
+                setErrorState(prev => ({ ...prev, passwordError: 'A server error occurred. Please try your update again.' }));
+                break;
+            default:
+                setErrorState(prev => ({ ...prev, passwordError: 'An unknown error occurred. Please try your update again.' }));
         }
     };
 
     const handleUpdateEmailSubmit = async (e) => {
         e.preventDefault();
 
-        setIsLoadingEmail(true);
+        setIsEmailUpdated(false);
+        setLoadingState(prev => ({ ...prev, isLoadingEmail: true }));
 
         const res = await fetch('/api/users/' + user._id + '/change-email', {
             method: 'PUT',
@@ -151,57 +137,72 @@ export default function UpdateProfile({ user, setUser }) {
                 'Content-Type': 'application/json;charset=utf-8',
             },
             body: JSON.stringify({ email: email.current }),
-        }).catch(error => {
-            console.error(error.name + ': ' + error.message);
-            setEmailError('An error occurred sending the data.');
-        });
+        }).catch(error => console.error(error.name + ': ' + error.message));
 
-        setIsLoadingEmail(false);
+        setLoadingState(prev => ({ ...prev, isLoadingEmail: false }));
 
-        if (res?.status === 200) {
-            setUser(prev => ({
-                ...prev,
-                email: email.current,
-            }));
-            setEmailError(null);
-            setEmailUpdateMsg('Your email address has been successfully updated.');
-        }
+        switch (res?.status) {
+            case undefined:
+                setErrorState(prev => ({ ...prev, emailError: 'An error occurred. Please try your update again.' }));
+                break;
+            case 200:
+                setUser(prev => ({
+                    ...prev,
+                    email: email.current,
+                }));
 
-        if (!res) setEmailError('An error occurred. Please try your update again.');
-
-        if (res?.status !== 200) {
-            if (res?.status !== 200) {
-                res?.status === 400 && setEmailError('An error occurred. New email is not in the proper format.');
-                res?.status === 401 && setEmailError('An error occurred. You do not have permission to make this update.');
-                res?.status === 500 && setEmailError('A server error occurred. Please try your update again.');
-                setEmailUpdateMsg('');
-            }
+                setErrorState(prev => ({ ...prev, emailError: null }));
+                setIsEmailUpdated(true);
+                emailForm.current.reset();
+                break;
+            case 400:
+                setErrorState(prev => ({ ...prev, emailError: 'An error occurred. New email is not in the proper format.' }));
+                break;
+            case 401:
+                setErrorState(prev => ({ ...prev, emailError: 'An error occurred. You do not have permission to make this update.' }));
+                break;
+            case 500:
+                setErrorState(prev => ({ ...prev, emailError: 'A server error occurred. Please try your update again.' }));
+                break;
+            default:
+                setErrorState(prev => ({ ...prev, emailError: 'An unknown error occurred. Please try your update again.' }));
         }
     };
 
     const handleDeleteAccount = async () => {
         if (deleteCounter === 0) {
             setDeleteCounter(1);
-        } else if (deleteCounter > 0) {
+            return;
+        }
+
+        if (deleteCounter > 0) {
+            setLoadingState(prev => ({ ...prev, isLoadingDelete: true }));
+
             const res = await fetch('/api/users/' + user._id + '/delete-account', {
                 method: 'DELETE',
-            }).catch(error => {
-                console.error(error.name + ': ' + error.message);
-                setPasswordError('An error occurred sending the data.');
-            });
+            }).catch(error => console.error(error.name + ': ' + error.message));
 
-            if (!res) setDeleteError('An error occurred. Please try your update again.');
+            if (!res || res.status !== 200) setLoadingState(prev => ({ ...prev, isLoadingDelete: false }));
 
-            if (res) {
-                if (res?.status === 200) {
-                    setDeleteCounter(0);
-                    setDeleteError(null);
+            switch (res?.status) {
+                case undefined:
+                    setErrorState(prev => ({ ...prev, deleteError: 'An error occurred. Please try again.' }));
+                    break;
+                case 200:
+                    setErrorState(prev => ({ ...prev, deleteError: null }));
                     signOut({ callbackUrl: '/' });
-                }
-
-                res?.status === 400 && setDeleteError('An error occurred. A bad request was made.');
-                res?.status === 401 && setDeleteError('An error occurred. You do not have permission to delete this account.');
-                res?.status === 500 && setDeleteError('A server error occurred. Please try your update again.');
+                    break;
+                case 400:
+                    setErrorState(prev => ({ ...prev, deleteError: 'An error occurred. A bad request was made.' }));
+                    break;
+                case 401:
+                    setErrorState(prev => ({ ...prev, deleteError: 'An error occurred. You do not have permission to delete this account.' }));
+                    break;
+                case 500:
+                    setErrorState(prev => ({ ...prev, deleteError: 'A server error occurred. Please try again.' }));
+                    break;
+                default:
+                    setErrorState(prev => ({ ...prev, deleteError: 'An unknown error occurred. Please try again.' }));
             }
         }
     };
@@ -210,65 +211,75 @@ export default function UpdateProfile({ user, setUser }) {
         <>
             <div>
                 <h3 className={styles.updateButtonsHeading}>Update / Delete your account</h3>
-                {showUpdateUsername
+                {viewState.showUpdateUsername
                     ? <Button onClick={() => {
-                        setShowUpdateUsername(false);
+                        setViewState(prev => ({ ...prev, showUpdateUsername: false }));
                     }} type="button" size="small" variant="text" theme="primary">Hide Update Username</Button>
                     : <Button onClick={() => {
-                        setShowUpdateUsername(true);
-                        setShowUpdatePassword(false);
-                        setShowUpdateEmail(false);
-                        setShowDeleteAccount(false);
+                        setViewState(() => ({
+                            showUpdateUsername: true,
+                            showUpdatePassword: false,
+                            showUpdateEmail: false,
+                            showDeleteAccount: false,
+                        }));
                     }} type="button" size="small" variant="text" theme="primary">Update Username</Button>
                 }
             </div>
 
             <div>
-                {showUpdatePassword
+                {viewState.showUpdatePassword
                     ? <Button onClick={() => {
-                        setShowUpdatePassword(false);
+                        setViewState(prev => ({ ...prev, showUpdatePassword: false }));
                     }} type="button" size="small" variant="text" theme="primary">Hide Update Password</Button>
                     : <Button onClick={() => {
-                        setShowUpdateUsername(false);
-                        setShowUpdatePassword(true);
-                        setShowUpdateEmail(false);
-                        setShowDeleteAccount(false);
+                        setViewState(() => ({
+                            showUpdateUsername: false,
+                            showUpdatePassword: true,
+                            showUpdateEmail: false,
+                            showDeleteAccount: false,
+                        }));
                     }} type="button" size="small" variant="text" theme="primary">Update Password</Button>
                 }
             </div>
 
             <div>
-                {showUpdateEmail
+                {viewState.showUpdateEmail
                     ? <Button onClick={() => {
-                        setShowUpdateEmail(false);
+                        setViewState(prev => ({ ...prev, showUpdateEmail: false }));
                     }} type="button" size="small" variant="text" theme="primary">Hide Update Email</Button>
                     : <Button onClick={() => {
-                        setShowUpdateUsername(false);
-                        setShowUpdatePassword(false);
-                        setShowUpdateEmail(true);
-                        setEmailUpdateMsg('');
-                        setShowDeleteAccount(false);
+                        setIsEmailUpdated(false);
+
+                        setViewState(() => ({
+                            showUpdateUsername: false,
+                            showUpdatePassword: false,
+                            showUpdateEmail: true,
+                            showDeleteAccount: false,
+                        }));
                     }} type="button" size="small" variant="text" theme="primary">Update Email</Button>
                 }
             </div>
 
             <div>
-                {showDeleteAccount
+                {viewState.showDeleteAccount
                     ? <Button onClick={() => {
-                        setShowDeleteAccount(false);
+                        setViewState(prev => ({ ...prev, showDeleteAccount: false }));
                     }} type="button" size="small" variant="text" theme="primary">Hide Delete Account</Button>
                     : <Button onClick={() => {
-                        setShowUpdateUsername(false);
-                        setShowUpdatePassword(false);
-                        setShowUpdateEmail(false);
-                        setShowDeleteAccount(true);
                         setDeleteCounter(0);
+
+                        setViewState(() => ({
+                            showUpdateUsername: false,
+                            showUpdatePassword: false,
+                            showUpdateEmail: false,
+                            showDeleteAccount: true,
+                        }));
                     }} type="button" size="small" variant="text" theme="primary">Delete Account</Button>
                 }
             </div>
 
             <div className={styles.updateContainer}>
-                {showUpdateUsername &&
+                {viewState.showUpdateUsername &&
                     <>
                         <h3 className={styles.updateHeading}>Update your username:</h3>
 
@@ -277,9 +288,9 @@ export default function UpdateProfile({ user, setUser }) {
                         </p>
 
                         <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
-                            {isLoadingUsername && <Loading />}
+                            {loadingState.isLoadingUsername && <Loading />}
 
-                            {usernameError && <p className={styles.error}>{usernameError}</p>}
+                            {errorState.usernameError && <p className={styles.error}>{errorState.usernameError}</p>}
 
                             <FormInputForUsername username={username} />
 
@@ -288,7 +299,7 @@ export default function UpdateProfile({ user, setUser }) {
                     </>
                 }
 
-                {showUpdatePassword &&
+                {viewState.showUpdatePassword &&
                     <>
                         <h3 className={styles.updateHeading}>Update your password:</h3>
 
@@ -297,9 +308,9 @@ export default function UpdateProfile({ user, setUser }) {
                         </p>
 
                         <form className={styles.updateGroup} onSubmit={handleUpdatePasswordSubmit}>
-                            {isLoadingPassword && <Loading />}
+                            {loadingState.isLoadingPassword && <Loading />}
 
-                            {passwordError && <p className={styles.error}>{passwordError}</p>}
+                            {errorState.passwordError && <p className={styles.error}>{errorState.passwordError}</p>}
 
                             <FormInputForNewPassword password={password} repeatPassword={repeatPassword} />
 
@@ -308,16 +319,16 @@ export default function UpdateProfile({ user, setUser }) {
                     </>
                 }
 
-                {showUpdateEmail &&
+                {viewState.showUpdateEmail &&
                     <>
                         <h3 className={styles.updateHeading}>Update your email:</h3>
 
-                        {emailUpdateMsg && <p className={styles.success}>{emailUpdateMsg}</p>}
+                        {isEmailUpdated && <p className={styles.success}>Your email address has been successfully updated.</p>}
 
                         <form ref={emailForm} className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
-                            {isLoadingEmail && <Loading />}
+                            {loadingState.isLoadingEmail && <Loading />}
 
-                            {emailError && <p className={styles.error}>{emailError}</p>}
+                            {errorState.emailError && <p className={styles.error}>{errorState.emailError}</p>}
 
                             <FormInputForEmail email={email} />
 
@@ -326,11 +337,13 @@ export default function UpdateProfile({ user, setUser }) {
                     </>
                 }
 
-                {showDeleteAccount &&
+                {viewState.showDeleteAccount &&
                     <>
                         <h3 className={styles.deleteHeading}>Delete your account</h3>
 
-                        {deleteError && <p className={styles.error}>{deleteError}</p>}
+                        {loadingState.isLoadingDelete && <Loading />}
+
+                        {errorState.deleteError && <p className={styles.error}>{errorState.deleteError}</p>}
 
                         {deleteCounter > 0 &&
                             <p>
