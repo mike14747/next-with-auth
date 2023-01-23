@@ -18,6 +18,7 @@
 .updateButtonsHeading {
     font-size: var(--step-0-base);
     font-size: var(--step-0);
+    font-weight: bolder;
     margin: 2rem 0 0.50rem 0;
     padding-top: 2rem;
     color: var(--mg-dark);
