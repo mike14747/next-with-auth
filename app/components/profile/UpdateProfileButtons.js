@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-import Button from './Button';
+import Button from '../Button';
 
-import styles from '../../styles/profile.module.css';
+import styles from '../../../styles/profile.module.css';
 
 export default function UpdateProfileButtons({ viewState, setViewState, setIsEmailUpdated, setDeleteCounter }) {
     return (

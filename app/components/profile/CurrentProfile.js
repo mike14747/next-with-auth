@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import UpdateProfile from './UpdateProfile';
 
-import styles from '../../styles/profile.module.css';
+import styles from '../../../styles/profile.module.css';
 
 export default function CurrentProfile({ userObj }) {
     const [user, setUser] = useState(userObj);

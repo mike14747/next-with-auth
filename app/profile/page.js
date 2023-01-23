@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 // eslint-disable-next-line camelcase
 import { unstable_getServerSession } from 'next-auth/next';
-import CurrentProfile from '../components/CurrentProfile';
+import CurrentProfile from '../components/profile/CurrentProfile';
 import { getUserProfile } from '../../lib/api/user';
 
 async function getData(_id) {
