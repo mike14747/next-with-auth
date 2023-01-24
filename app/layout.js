@@ -32,6 +32,7 @@ export default async function RootLayout({ children, session, ...props }) {
                         {children}
                         <ScrollTop />
                     </div>
+
                     <Footer contactEmail={settingsData?.contactEmail} />
                 </ClientSessionProvider>
             </body>
