@@ -66,7 +66,7 @@ export default function ResetPasswordToken({ params }) {
     };
 
     return (
-        <>
+        <main id="main">
             <article className="mw-75ch">
                 <h2 className={'page-heading ' + styles.resetPageHeading}>
                     Reset your password
@@ -99,7 +99,7 @@ export default function ResetPasswordToken({ params }) {
                     </>
                 }
             </article>
-        </>
+        </main>
     );
 }
 

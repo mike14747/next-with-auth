@@ -55,7 +55,7 @@ export default function Page() {
     };
 
     return (
-        <>
+        <main id="main">
             <article>
                 <h2 className="page-heading">
                     Register
@@ -98,6 +98,6 @@ export default function Page() {
 
                 }
             </article>
-        </>
+        </main>
     );
 }

@@ -19,7 +19,7 @@ export default async function Page() {
     const data = await getData().catch(error => console.log(error.message));
 
     return (
-        <>
+        <main id="main">
             <article>
                 <h2 className="page-heading">
                     Protected Page
@@ -39,6 +39,6 @@ export default async function Page() {
                     </ul>
                 }
             </article>
-        </>
+        </main>
     );
 }

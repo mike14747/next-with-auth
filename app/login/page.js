@@ -54,7 +54,7 @@ export default function Login() {
 
     if (status === 'unauthenticated') {
         return (
-            <>
+            <main id="main">
                 <article>
                     <h2 className="page-heading">
                         Login
@@ -93,7 +93,7 @@ export default function Login() {
                     <ForgotLoginInfo />
                 </article>
 
-            </>
+            </main>
         );
     }
 }

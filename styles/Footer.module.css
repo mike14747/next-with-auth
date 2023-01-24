@@ -1,4 +1,4 @@
-.footerContainer {
+.footer {
     width: 100%;
     border-top: 2px var(--mg-green) solid;
     background-color: var(--mg-gray-1);
@@ -6,7 +6,7 @@
     padding: 0;
 }
 
-.footer {
+.footerBody {
     padding: 0.5rem;
 }
 

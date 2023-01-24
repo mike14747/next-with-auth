@@ -65,3 +65,7 @@
     font-size: 1.44rem;
     font-size: var(--step-2);
 }
+
+.showButtonNav button {
+    display: block;
+}

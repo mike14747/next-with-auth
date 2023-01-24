@@ -28,10 +28,10 @@ export default async function RootLayout({ children, session, ...props }) {
                     <Header topInfoActive={settingsData?.topInfoActive} topInfoText={settingsData?.topInfoText} />
                     <Navbar />
 
-                    <main id="main" className="main-container">
+                    <div className="main-container">
                         {children}
                         <ScrollTop />
-                    </main>
+                    </div>
                     <Footer contactEmail={settingsData?.contactEmail} />
                 </ClientSessionProvider>
             </body>

@@ -1,4 +1,4 @@
-.headerContainer {
+.header {
     width: 100%;
     border-bottom: 2px var(--mg-green) solid;
     background-color: var(--mg-gray-1);
@@ -6,7 +6,7 @@
     padding: 0;
 }
 
-.header {
+.headerBody {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;

@@ -21,7 +21,7 @@ export default async function Page() {
     user._id = session._id;
 
     return (
-        <>
+        <main id="main">
             <article className="mw-75ch">
                 <h2 className="page-heading">
                     Profile
@@ -29,6 +29,6 @@ export default async function Page() {
 
                 <CurrentProfile userObj={user} />
             </article>
-        </>
+        </main>
     );
 }

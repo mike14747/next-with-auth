@@ -673,7 +673,7 @@ template {
     color: var(--mg-gray-5);
 }
 
-/* use with the <main> element on pages */
+/* use with the main <div> element in layout components or with the <main> tag on pages if it's the outer wrapper */
 .main-container {
     /* enable flex: 1; on the next line for full or semi-full height websites */
 

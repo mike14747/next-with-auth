@@ -23,7 +23,7 @@ export default async function Page() {
     }
 
     return (
-        <>
+        <main id="main">
             <article>
                 <h2 className="page-heading">
                     Admin Page
@@ -55,6 +55,6 @@ export default async function Page() {
                     </>
                 )}
             </article>
-        </>
+        </main>
     );
 }

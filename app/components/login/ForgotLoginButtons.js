@@ -5,7 +5,7 @@ import styles from '../../../styles/ForgotLoginInfo.module.css';
 
 export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword, setError, setSuccess }) {
     return (
-        <>
+        <nav aria-label="Forgotten Login Information Navigation">
             <div className={styles.btnContainer}>
                 {showForgotUsername
                     ? <Button onClick={() => setShowForgotUsername(false)} size="small" variant="text">Hide forgot my Username</Button>
@@ -30,7 +30,7 @@ export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUs
                         setSuccess(false);
                     }} size="small" variant="text">I forgot my Password</Button>}
             </div>
-        </>
+        </nav>
     );
 }
 

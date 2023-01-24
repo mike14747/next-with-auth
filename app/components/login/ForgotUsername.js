@@ -45,7 +45,7 @@ export default function ForgotUsername({ email, showForgotUsername, success, err
     return (
         <>
             {showForgotUsername &&
-                <div className={styles.lower}>
+                <section className={styles.lower}>
                     <h3>Forgot my Username</h3>
                     <p className="text-left">
                         Enter the email address associated with your account(s) and an email will be sent with the username(s) linked to your email address.
@@ -62,7 +62,7 @@ export default function ForgotUsername({ email, showForgotUsername, success, err
 
                         <Button type="submit">Submit</Button>
                     </form>
-                </div>
+                </section>
             }
         </>
     );

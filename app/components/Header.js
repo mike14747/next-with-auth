@@ -6,8 +6,8 @@ import styles from '../../styles/Header.module.css';
 
 export default function Header({ topInfoActive = false, topInfoText = '' }) {
     return (
-        <div className={styles.headerContainer}>
-            <header className={styles.header + ' container'}>
+        <header className={styles.header}>
+            <div className={styles.headerBody + ' container'}>
                 <div className={styles.leftDiv}>
                     <h1 className={styles.h1} >next-with-auth</h1>
 
@@ -29,9 +29,8 @@ export default function Header({ topInfoActive = false, topInfoText = '' }) {
                 <div className={styles.rightDiv}>
                     <Authbar />
                 </div>
-
-            </header>
-        </div>
+            </div>
+        </header>
     );
 }
 

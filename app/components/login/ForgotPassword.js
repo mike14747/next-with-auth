@@ -46,7 +46,7 @@ export default function ForgotPassword({ username, email, showForgotPassword, su
     return (
         <>
             {showForgotPassword &&
-                <div className={styles.lower}>
+                <section className={styles.lower}>
                     <h3>Forgot my Password</h3>
                     <p className="text-left">
                         Enter the username and email address associated with your account and an email will be sent to you with a link to reset your password.
@@ -65,7 +65,7 @@ export default function ForgotPassword({ username, email, showForgotPassword, su
 
                         <Button type="submit">Submit</Button>
                     </form>
-                </div>
+                </section>
             }
         </>
     );

@@ -43,7 +43,7 @@ export default function UpdateProfile({ user, setUser }) {
     const [deleteCounter, setDeleteCounter] = useState(0);
 
     return (
-        <>
+        <section>
             <UpdateProfileButtons viewState={viewState} setViewState={setViewState} setIsEmailUpdated={setIsEmailUpdated} setDeleteCounter={setDeleteCounter} />
 
             <div className={styles.updateContainer}>
@@ -93,7 +93,7 @@ export default function UpdateProfile({ user, setUser }) {
                     setLoadingState={setLoadingState}
                 />
             </div>
-        </>
+        </section>
 
     );
 }
