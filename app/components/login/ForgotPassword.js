@@ -3,6 +3,7 @@ import Button from '../Button';
 import FormInputForUsername from '../FormInputForUsername';
 import FormInputForEmail from '../FormInputForEmail';
 import Loading from '../Loading';
+import useSubmitForm from '../../hooks/useSubmitForm';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
