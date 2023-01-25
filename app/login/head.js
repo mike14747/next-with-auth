@@ -5,7 +5,7 @@ export default function Head() {
         <>
             <DefaultHeadTags />
 
-            <title>next-with-auth</title>
+            <title>Login (next-with-auth)</title>
         </>
     );
 }

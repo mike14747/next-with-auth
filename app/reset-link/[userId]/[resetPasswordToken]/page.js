@@ -11,7 +11,7 @@ import Loading from '../../../components/Loading';
 
 import styles from '../../../../styles/profile.module.css';
 
-export default function ResetPasswordToken({ params }) {
+export default function Page({ params }) {
     const { data: session } = useSession();
 
     const router = useRouter();
@@ -103,6 +103,6 @@ export default function ResetPasswordToken({ params }) {
     );
 }
 
-ResetPasswordToken.propTypes = {
+Page.propTypes = {
     params: PropTypes.object,
 };

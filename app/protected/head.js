@@ -5,7 +5,7 @@ export default function Head() {
         <>
             <DefaultHeadTags />
 
-            <title>next-with-auth</title>
+            <title>Protected Page (next-with-auth)</title>
         </>
     );
 }
