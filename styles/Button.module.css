@@ -1,3 +1,4 @@
+/* set the button color variables inside the button.btn class */
 button.btn {
     --button-color-primary: var(--mg-green);
     --button-color-secondary: var(--mg-orange-dark);
@@ -116,3 +117,5 @@ button.special:hover {
     cursor: pointer;
     filter: invert();
 }
+
+/* if anything needs to be changed (other than the button colors... aka themes), it's best to add code here that overides the original code... try not to change the original code */
