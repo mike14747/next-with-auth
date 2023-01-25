@@ -7,6 +7,7 @@ import ScrollTop from './components/ScrollTop';
 import SkipToMain from './components/SkipToMain';
 import { getSettings } from '../lib/api';
 
+import '../styles/mg_base.css';
 import '../styles/globals.css';
 
 async function getSettingsData() {
@@ -28,7 +29,7 @@ export default async function RootLayout({ children, session, ...props }) {
                     <Header topInfoActive={settingsData?.topInfoActive} topInfoText={settingsData?.topInfoText} />
                     <Navbar />
 
-                    <div className="main-container">
+                    <div className="page-container">
                         {children}
                         <ScrollTop />
                     </div>

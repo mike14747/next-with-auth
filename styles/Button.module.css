@@ -1,4 +1,7 @@
 button.btn {
+    --button-color-primary: var(--mg-green);
+    --button-color-secondary: var(--mg-orange-dark);
+    --button-color-danger: var(--mg-red);
     --bg-img-lighten: linear-gradient(rgba(255, 255, 255, 0.1) 100%, transparent 100%);
     --bg-img-darken: linear-gradient(rgba(0, 0, 0, 0.1) 100%, transparent 100%);
     cursor: pointer;
@@ -8,7 +11,7 @@ button.btn {
 }
 
 button.btn:focus {
-    outline: 2px var(--mg-gray-4) dotted;
+    outline: 1px var(--mg-gray-4) dashed;
 }
 
 button.btn:not(.text):focus {
@@ -17,35 +20,35 @@ button.btn:not(.text):focus {
 
 button.contained.primary {
     color: #ffffff;
-    background-color: var(--mg-green-dark);
+    background-color: var(--button-color-primary);
 }
 
 button.contained.secondary {
     color: #ffffff;
-    background-color: var(--mg-orange-dark);
+    background-color: var(--button-color-secondary);
 }
 
 button.contained.danger {
     color: #ffffff;
-    background-color: var(--mg-red);
+    background-color: var(--button-color-danger);
 }
 
 button.outlined.primary {
-    color: var(--mg-green-dark);
+    color: var(--button-color-primary);
     background-color: #ffffff;
-    border: 1px var(--mg-green-dark) solid;
+    border: 1px var(--button-color-primary) solid;
 }
 
 button.outlined.secondary {
-    color: var(--mg-orange-dark);
+    color: var(--button-color-secondary);
     background-color: #ffffff;
-    border: 1px var(--mg-orange-dark) solid;
+    border: 1px var(--button-color-secondary) solid;
 }
 
 button.outlined.danger {
-    color: var(--mg-red);
+    color: var(--button-color-danger);
     background-color: #ffffff;
-    border: 1px var(--mg-red) solid;
+    border: 1px var(--button-color-danger) solid;
 }
 
 button.text {
@@ -65,17 +68,17 @@ button.special {
 }
 
 button.small {
-    font-size: var(--step-0);
-    padding: 0.25rem 0.75rem;
+    font-size: clamp(0.83rem, 0.78rem + 0.19vw, 1rem);
+    padding: 0.25rem 0.5rem;
 }
 
 button.medium {
-    font-size: var(--step-1);
+    font-size: clamp(1rem, 0.93rem + 0.22vw, 1.2rem);
     padding: 0.5rem 1rem;
 }
 
 button.large {
-    font-size: var(--step-2);
+    font-size: clamp(1.2rem, 1.12rem + 0.27vw, 1.44rem);
     padding: 0.75rem 1.5rem;
 }
 
@@ -105,7 +108,7 @@ button:not(.small).outlined:hover {
 }
 
 button.text:hover {
-    color: var(--mg-orange-dark);
+    color: var(--button-color-secondary);
     outline: 1px var(--mg-gray-3) dashed;
 }
 
