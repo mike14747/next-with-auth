@@ -1,7 +1,7 @@
 'use client';
 
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import UpdateProfileButtons from './UpdateProfileButtons';
 import UpdateUsername from './UpdateUsername';
 import UpdatePassword from './UpdatePassword';
@@ -11,11 +11,6 @@ import DeleteAccount from './DeleteAccount';
 import styles from '../../../styles/profile.module.css';
 
 export default function UpdateProfile({ user, setUser }) {
-    const username = useRef('');
-    const email = useRef('');
-    const password = useRef('');
-    const repeatPassword = useRef('');
-
     const [viewState, setViewState] = useState({
         showUpdateUsername: false,
         showUpdatePassword: false,
@@ -31,15 +26,12 @@ export default function UpdateProfile({ user, setUser }) {
                 {viewState.showUpdateUsername &&
                     <UpdateUsername
                         _id={user?._id}
-                        username={username}
                     />
                 }
 
                 {viewState.showUpdatePassword &&
                     <UpdatePassword
                         _id={user?._id}
-                        password={password}
-                        repeatPassword={repeatPassword}
                     />
                 }
 
@@ -47,7 +39,6 @@ export default function UpdateProfile({ user, setUser }) {
                     <UpdateEmail
                         _id={user?._id}
                         setUser={setUser}
-                        email={email}
                     />
                 }
 

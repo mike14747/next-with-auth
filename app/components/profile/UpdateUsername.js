@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
 import Loading from '../Loading';
@@ -7,7 +7,8 @@ import FormInputForUsername from '../FormInputForUsername';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateUsername({ _id, username }) {
+export default function UpdateUsername({ _id }) {
+    const username = useRef('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -73,5 +74,4 @@ export default function UpdateUsername({ _id, username }) {
 }
 UpdateUsername.propTypes = {
     _id: PropTypes.string,
-    username: PropTypes.object,
 };

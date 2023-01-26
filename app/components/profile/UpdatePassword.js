@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
 import Loading from '../Loading';
@@ -7,7 +7,9 @@ import FormInputForNewPassword from '../FormInputForNewPassword';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdatePassword({ _id, password, repeatPassword }) {
+export default function UpdatePassword({ _id }) {
+    const password = useRef('');
+    const repeatPassword = useRef('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -75,6 +77,4 @@ export default function UpdatePassword({ _id, password, repeatPassword }) {
 }
 UpdatePassword.propTypes = {
     _id: PropTypes.string,
-    password: PropTypes.object,
-    repeatPassword: PropTypes.object,
 };

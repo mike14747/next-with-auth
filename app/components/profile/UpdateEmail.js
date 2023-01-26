@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import Button from '../Button';
 import Loading from '../Loading';
 import FormInputForEmail from '../FormInputForEmail';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateEmail({ _id, setUser, email }) {
+export default function UpdateEmail({ _id, setUser }) {
+    const email = useRef('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isEmailUpdated, setIsEmailUpdated] = useState(false);
@@ -78,5 +79,4 @@ export default function UpdateEmail({ _id, setUser, email }) {
 UpdateEmail.propTypes = {
     _id: PropTypes.string,
     setUser: PropTypes.func,
-    email: PropTypes.object,
 };
