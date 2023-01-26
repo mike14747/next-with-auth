@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import ForgotLoginButtons from './ForgotLoginButtons';
 import ForgotUsername from './ForgotUsername';
 import ForgotPassword from './ForgotPassword';
@@ -8,9 +8,6 @@ import ForgotPassword from './ForgotPassword';
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
 export default function ForgottenUsername() {
-    const username = useRef('');
-    const email = useRef('');
-
     const [showForgotUsername, setShowForgotUsername] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
 
@@ -25,18 +22,9 @@ export default function ForgottenUsername() {
                 />
             </div>
 
-            {showForgotUsername &&
-                <ForgotUsername
-                    email={email}
-                />
-            }
+            {showForgotUsername && <ForgotUsername />}
 
-            {showForgotPassword &&
-                <ForgotPassword
-                    username={username}
-                    email={email}
-                />
-            }
+            {showForgotPassword && <ForgotPassword />}
         </div>
     );
 }

@@ -1,12 +1,12 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from '../Button';
 import FormInputForEmail from '../FormInputForEmail';
 import Loading from '../Loading';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgotUsername({ email }) {
+export default function ForgotUsername() {
+    const email = useRef('');
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,7 +68,3 @@ export default function ForgotUsername({ email }) {
         </section>
     );
 }
-
-ForgotUsername.propTypes = {
-    email: PropTypes.object,
-};

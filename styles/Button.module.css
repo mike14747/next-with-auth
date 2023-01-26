@@ -1,6 +1,6 @@
 /* set the button color variables inside the button.btn class */
 button.btn {
-    --button-color-primary: var(--mg-green-3);
+    --button-color-primary: var(--mg-green);
     --button-color-secondary: var(--mg-orange-dark);
     --button-color-danger: var(--mg-red);
     --bg-img-lighten: linear-gradient(rgba(255, 255, 255, 0.1) 100%, transparent 100%);

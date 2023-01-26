@@ -6,10 +6,9 @@
     --mg-blue: #214fc6;
     --mg-cream: #fffdd0;
     --mg-dark: #232323;
-    --mg-green-1: #87a96b; /* asparagus */
-    --mg-green-2: #228b22; /* html forestgreen */
-    --mg-green-3: #177245; /* dark spring green */
-    --mg-green-4: #195905 ; /* lincoln green */
+    --mg-green-light: #87a96b; /* asparagus */
+    --mg-green: #177245; /* dark spring green */
+    --mg-green-dark: #195905 ; /* lincoln green */
     --mg-gray: #808080; /* html gray */
     --mg-gray-1: #f5f5f5; /* html whitesmoke */
     --mg-gray-2: #d3d3d3; /* html lightgray */

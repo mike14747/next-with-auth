@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from '../Button';
 import FormInputForUsername from '../FormInputForUsername';
 import FormInputForEmail from '../FormInputForEmail';
 import Loading from '../Loading';
-// import useSubmitForm from '../../hooks/useSubmitForm';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgotPassword({ username, email }) {
+export default function ForgotPassword() {
+    const username = useRef('');
+    const email = useRef('');
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,8 +72,3 @@ export default function ForgotPassword({ username, email }) {
         </section>
     );
 }
-
-ForgotPassword.propTypes = {
-    username: PropTypes.object,
-    email: PropTypes.object,
-};

@@ -193,7 +193,7 @@ h2.page-heading {
 .success {
     font-size: 1rem;
     font-size: var(--step-0);
-    color: var(--mg-green-3);
+    color: var(--mg-green);
     text-align: center;
     max-width: 60ch;
     margin: 0 auto;
@@ -202,7 +202,7 @@ h2.page-heading {
 .success-large {
     font-size: 1.2rem;
     font-size: var(--step-1);
-    color: var(--mg-green-3);
+    color: var(--mg-green);
     text-align: center;
     max-width: 60ch;
     margin: 0 auto;
@@ -261,7 +261,7 @@ h2.page-heading {
     margin-top: 3rem;
     font-size: 1.44rem;
     font-size: var(--step-2);
-    color: var(--mg-green-3);
+    color: var(--mg-green);
     text-align: center;
     max-width: 60ch;
     margin: 0 auto;
