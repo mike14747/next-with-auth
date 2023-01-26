@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import Button from '../Button';
 import FormInputForUsername from '../FormInputForUsername';
 import FormInputForEmail from '../FormInputForEmail';
@@ -7,7 +8,11 @@ import Loading from '../Loading';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgotPassword({ username, email, showForgotPassword, success, error, setError, setSuccess, isSubmitting, setIsSubmitting }) {
+export default function ForgotPassword({ username, email }) {
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handlePasswordSubmit = async (e) => {
         e.preventDefault();
 
@@ -30,7 +35,7 @@ export default function ForgotPassword({ username, email, showForgotPassword, su
                 setError('An error occurred. Please try your request again.');
                 break;
             case 200:
-                setError(false);
+                setError('');
                 setSuccess(true);
                 break;
             case 400:
@@ -45,42 +50,30 @@ export default function ForgotPassword({ username, email, showForgotPassword, su
     };
 
     return (
-        <>
-            {showForgotPassword &&
-                <section className={styles.lower}>
-                    <h3>Forgot my Password</h3>
-                    <p className="text-left">
-                        Enter the username and email address associated with your account and an email will be sent to you with a link to reset your password.
-                    </p>
+        <section className={styles.lower}>
+            <h3>Forgot my Password</h3>
+            <p className="text-left">
+                Enter the username and email address associated with your account and an email will be sent to you with a link to reset your password.
+            </p>
 
-                    {isSubmitting && <Loading />}
+            {isSubmitting && <Loading />}
 
-                    {error && <p className="error">{error}</p>}
+            {error && <p className="error">{error}</p>}
 
-                    {success && <p className="success">An email has been sent to the email address you entered.</p>}
+            {success && <p className="success">An email has been sent to the email address you entered.</p>}
 
-                    <form onSubmit={handlePasswordSubmit} className="form">
-                        <FormInputForUsername username={username} />
+            <form onSubmit={handlePasswordSubmit} className="form">
+                <FormInputForUsername username={username} />
 
-                        <FormInputForEmail email={email} />
+                <FormInputForEmail email={email} />
 
-                        <Button type="submit">Submit</Button>
-                    </form>
-                </section>
-            }
-        </>
+                <Button type="submit">Submit</Button>
+            </form>
+        </section>
     );
 }
 
 ForgotPassword.propTypes = {
     username: PropTypes.object,
-    password: PropTypes.object,
     email: PropTypes.object,
-    showForgotPassword: PropTypes.bool,
-    success: PropTypes.bool,
-    error: PropTypes.string,
-    setError: PropTypes.func,
-    setSuccess: PropTypes.func,
-    isSubmitting: PropTypes.bool,
-    setIsSubmitting: PropTypes.func,
 };

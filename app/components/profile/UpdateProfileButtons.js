@@ -3,7 +3,7 @@ import Button from '../Button';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateProfileButtons({ viewState, setViewState, setIsEmailUpdated, setDeleteCounter }) {
+export default function UpdateProfileButtons({ viewState, setViewState }) {
     return (
         <nav aria-label="Update / Delete your account navigation" className={styles.showButtonNav}>
             <h3 className={styles.updateButtonsHeading}>Update / Delete your account</h3>
@@ -41,8 +41,6 @@ export default function UpdateProfileButtons({ viewState, setViewState, setIsEma
                     setViewState(prev => ({ ...prev, showUpdateEmail: false }));
                 }} type="button" size="small" variant="text" theme="primary">Hide Update Email</Button>
                 : <Button onClick={() => {
-                    setIsEmailUpdated(false);
-
                     setViewState(() => ({
                         showUpdateUsername: false,
                         showUpdatePassword: false,
@@ -57,8 +55,6 @@ export default function UpdateProfileButtons({ viewState, setViewState, setIsEma
                     setViewState(prev => ({ ...prev, showDeleteAccount: false }));
                 }} type="button" size="small" variant="text" theme="primary">Hide Delete Account</Button>
                 : <Button onClick={() => {
-                    setDeleteCounter(0);
-
                     setViewState(() => ({
                         showUpdateUsername: false,
                         showUpdatePassword: false,
@@ -74,6 +70,4 @@ export default function UpdateProfileButtons({ viewState, setViewState, setIsEma
 UpdateProfileButtons.propTypes = {
     viewState: PropTypes.object,
     setViewState: PropTypes.func,
-    setIsEmailUpdated: PropTypes.func,
-    setDeleteCounter: PropTypes.func,
 };

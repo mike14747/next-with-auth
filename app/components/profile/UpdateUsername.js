@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
 import Loading from '../Loading';
@@ -6,13 +7,16 @@ import FormInputForUsername from '../FormInputForUsername';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateUsername({ user, username, viewState, errorState, setErrorState, loadingState, setLoadingState }) {
+export default function UpdateUsername({ _id, username }) {
+    const [error, setError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleUpdateUsernameSubmit = async (e) => {
         e.preventDefault();
 
-        setLoadingState(prev => ({ ...prev, isLoadingUsername: true }));
+        setIsSubmitting(true);
 
-        const res = await fetch('/api/users/' + user._id + '/change-username', {
+        const res = await fetch('/api/users/' + _id + '/change-username', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -20,63 +24,54 @@ export default function UpdateUsername({ user, username, viewState, errorState, 
             body: JSON.stringify({ username: username.current }),
         }).catch(error => console.error(error.name + ': ' + error.message));
 
-        if (!res || res.status !== 200) setLoadingState(prev => ({ ...prev, isLoadingUsername: false }));
+        if (!res || res.status !== 200) setIsSubmitting(false);
 
         switch (res?.status) {
             case undefined:
-                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. Please try your update again.' }));
+                setError('An error occurred. Please try your update again.');
                 break;
             case 200:
-                setErrorState(prev => ({ ...prev, usernameError: null }));
+                setError('');
                 signOut({ callbackUrl: '/' });
                 break;
             case 400:
-                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. New username is not in the proper format.' }));
+                setError('An error occurred. New username is not in the proper format.');
                 break;
             case 401:
-                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. You do not have permission to make this update.' }));
+                setError('An error occurred. You do not have permission to make this update.');
                 break;
             case 409:
-                setErrorState(prev => ({ ...prev, usernameError: 'An error occurred. The username you submitted is already in use.' }));
+                setError('An error occurred. The username you submitted is already in use.');
                 break;
             case 500:
-                setErrorState(prev => ({ ...prev, usernameError: 'A server error occurred. Please try your update again.' }));
+                setError('A server error occurred. Please try your update again.');
                 break;
             default:
-                setErrorState(prev => ({ ...prev, usernameError: 'An unknown error occurred. Please try your update again.' }));
+                setError('An unknown error occurred. Please try your update again.');
         }
     };
 
     return (
         <>
-            {viewState.showUpdateUsername &&
-                <>
-                    <h3 className={styles.updateHeading}>Update your username:</h3>
+            <h3 className={styles.updateHeading}>Update your username:</h3>
 
-                    <p className={styles.note}>
-                        <strong>Note:</strong> changing your username will log you out.
-                    </p>
+            <p className={styles.note}>
+                <strong>Note:</strong> changing your username will log you out.
+            </p>
 
-                    <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
-                        {loadingState.isLoadingUsername && <Loading />}
+            <form className={styles.updateGroup} onSubmit={handleUpdateUsernameSubmit}>
+                {isSubmitting && <Loading />}
 
-                        {errorState.usernameError && <p className={styles.error}>{errorState.usernameError}</p>}
+                {error && <p className={styles.error}>{error}</p>}
 
-                        <FormInputForUsername username={username} />
+                <FormInputForUsername username={username} />
 
-                        <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
-                    </form>
-                </>
-            }
+                <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
+            </form>
         </>
     );
 }
 UpdateUsername.propTypes = {
-    user: PropTypes.object,
+    _id: PropTypes.string,
     username: PropTypes.object,
-    viewState: PropTypes.object,
-    errorState: PropTypes.object,
-    setErrorState: PropTypes.func,
-    loadingState: PropTypes.object,
-    setLoadingState: PropTypes.func,
 };

@@ -13,16 +13,8 @@ import styles from '../../../styles/profile.module.css';
 export default function UpdateProfile({ user, setUser }) {
     const username = useRef('');
     const email = useRef('');
-    const emailForm = useRef('');
     const password = useRef('');
     const repeatPassword = useRef('');
-
-    const [loadingState, setLoadingState] = useState({
-        isLoadingUsername: false,
-        isLoadingPassword: false,
-        isLoadingEmail: false,
-        isLoadingDelete: false,
-    });
 
     const [viewState, setViewState] = useState({
         showUpdateUsername: false,
@@ -31,70 +23,41 @@ export default function UpdateProfile({ user, setUser }) {
         showDeleteAccount: false,
     });
 
-    const [errorState, setErrorState] = useState({
-        usernameError: null,
-        passwordError: null,
-        emailError: null,
-        deleteError: null,
-    });
-
-    const [isEmailUpdated, setIsEmailUpdated] = useState(false);
-
-    const [deleteCounter, setDeleteCounter] = useState(0);
-
     return (
         <section>
-            <UpdateProfileButtons viewState={viewState} setViewState={setViewState} setIsEmailUpdated={setIsEmailUpdated} setDeleteCounter={setDeleteCounter} />
+            <UpdateProfileButtons viewState={viewState} setViewState={setViewState} />
 
             <div className={styles.updateContainer}>
-                <UpdateUsername
-                    user={user}
-                    username={username}
-                    viewState={viewState}
-                    errorState={errorState}
-                    setErrorState={setErrorState}
-                    loadingState={loadingState}
-                    setLoadingState={setLoadingState}
-                />
+                {viewState.showUpdateUsername &&
+                    <UpdateUsername
+                        _id={user?._id}
+                        username={username}
+                    />
+                }
 
-                <UpdatePassword
-                    user={user}
-                    password={password}
-                    repeatPassword={repeatPassword}
-                    viewState={viewState}
-                    errorState={errorState}
-                    setErrorState={setErrorState}
-                    loadingState={loadingState}
-                    setLoadingState={setLoadingState}
-                />
+                {viewState.showUpdatePassword &&
+                    <UpdatePassword
+                        _id={user?._id}
+                        password={password}
+                        repeatPassword={repeatPassword}
+                    />
+                }
 
-                <UpdateEmail
-                    user={user}
-                    setUser={setUser}
-                    email={email}
-                    emailForm={emailForm}
-                    isEmailUpdated={isEmailUpdated}
-                    setIsEmailUpdated={setIsEmailUpdated}
-                    viewState={viewState}
-                    errorState={errorState}
-                    setErrorState={setErrorState}
-                    loadingState={loadingState}
-                    setLoadingState={setLoadingState}
-                />
+                {viewState.showUpdateEmail &&
+                    <UpdateEmail
+                        _id={user?._id}
+                        setUser={setUser}
+                        email={email}
+                    />
+                }
 
-                <DeleteAccount
-                    user={user}
-                    viewState={viewState}
-                    errorState={errorState}
-                    setErrorState={setErrorState}
-                    deleteCounter={deleteCounter}
-                    setDeleteCounter={setDeleteCounter}
-                    loadingState={loadingState}
-                    setLoadingState={setLoadingState}
-                />
+                {viewState.showDeleteAccount &&
+                    <DeleteAccount
+                        _id={user?._id}
+                    />
+                }
             </div>
         </section>
-
     );
 }
 

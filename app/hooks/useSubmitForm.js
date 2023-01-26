@@ -1,10 +1,14 @@
 import { useState, useCallback } from 'react';
 
 export default function useSubmitForm(url, body) {
-    const [statusCode, setStatusCode] = useState(undefined);
-    const [isSubmitting, setIsSubmitting] = useState(true);
+    const [statusCode, setStatusCode] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = useCallback(() => {
+    const handleSubmit = useCallback((e) => {
+        e.preventDefault();
+
+        setIsSubmitting(false);
+
         fetch(url, {
             method: 'POST',
             headers: {

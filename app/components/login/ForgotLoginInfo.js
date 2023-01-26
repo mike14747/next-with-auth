@@ -11,11 +11,8 @@ export default function ForgottenUsername() {
     const username = useRef('');
     const email = useRef('');
 
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState(false);
     const [showForgotUsername, setShowForgotUsername] = useState(false);
     const [showForgotPassword, setShowForgotPassword] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     return (
         <div className={'mw-75ch ' + styles.container}>
@@ -25,33 +22,21 @@ export default function ForgottenUsername() {
                     setShowForgotUsername={setShowForgotUsername}
                     showForgotPassword={showForgotPassword}
                     setShowForgotPassword={setShowForgotPassword}
-                    setError={setError}
-                    setSuccess={setSuccess}
                 />
             </div>
 
-            <ForgotUsername
-                email={email}
-                showForgotUsername={showForgotUsername}
-                success={success}
-                error={error}
-                setError={setError}
-                setSuccess={setSuccess}
-                isSubmitting={isSubmitting}
-                setIsSubmitting={setIsSubmitting}
-            />
+            {showForgotUsername &&
+                <ForgotUsername
+                    email={email}
+                />
+            }
 
-            <ForgotPassword
-                username={username}
-                email={email}
-                showForgotPassword={showForgotPassword}
-                success={success}
-                error={error}
-                setError={setError}
-                setSuccess={setSuccess}
-                isSubmitting={isSubmitting}
-                setIsSubmitting={setIsSubmitting}
-            />
+            {showForgotPassword &&
+                <ForgotPassword
+                    username={username}
+                    email={email}
+                />
+            }
         </div>
     );
 }

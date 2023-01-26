@@ -3,7 +3,7 @@ import Button from '../Button';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword, setError, setSuccess }) {
+export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword }) {
     return (
         <nav aria-label="Forgotten Login Information Navigation">
             <div className={styles.btnContainer}>
@@ -12,8 +12,6 @@ export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUs
                     : <Button onClick={() => {
                         setShowForgotUsername(true);
                         setShowForgotPassword(false);
-                        setError(false);
-                        setSuccess(false);
                     }} size="small" variant="text">I forgot my Username</Button>
                 }
 
@@ -26,8 +24,6 @@ export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUs
                     : <Button onClick={() => {
                         setShowForgotPassword(true);
                         setShowForgotUsername(false);
-                        setError(false);
-                        setSuccess(false);
                     }} size="small" variant="text">I forgot my Password</Button>}
             </div>
         </nav>
@@ -39,6 +35,4 @@ ForgotLoginButtons.propTypes = {
     setShowForgotUsername: PropTypes.func,
     showForgotPassword: PropTypes.bool,
     setShowForgotPassword: PropTypes.func,
-    setError: PropTypes.func,
-    setSuccess: PropTypes.func,
 };
