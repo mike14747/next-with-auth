@@ -512,7 +512,7 @@ export default async function Page() {
 
 **Protected pages**
 
-This is very similar to the public page, but
+This is very similar to the public page, but checks for a session and redirects to the login page if it doesn't find one.
 
 ```js
 // /app/protected/page.js
@@ -893,9 +893,8 @@ The sole purpose of this is to support the **SkipToMain** component.
 -   Write tests.
 -   I'd like to come up with a way to clear button and nav focus on next/link page transition.
 -   Decide what to name the page.js components (Page vs the name of the route folder).
--   Switch over from client fetch to swr?
+-   Switch over from client fetch to swr for data fetching... for now at least. Using fetch to POST/DELETE seems fine though.
 -   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
--   Update the rest of the components that use the FormInputFor(...) to use useRef. I think I'm done with this.
 
 ---
 
