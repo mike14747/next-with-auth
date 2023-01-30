@@ -1,9 +1,17 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import Button from '../Button';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword }) {
+type Props = {
+    showForgotUsername: boolean,
+    setShowForgotUsername: React.Dispatch<React.SetStateAction<boolean>>,
+    showForgotPassword: boolean,
+    setShowForgotPassword: React.Dispatch<React.SetStateAction<boolean>>,
+}
+
+export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword }: Props): JSX.Element {
     return (
         <nav aria-label="Forgotten Login Information Navigation">
             <div className={styles.btnContainer}>
@@ -31,8 +39,8 @@ export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUs
 }
 
 ForgotLoginButtons.propTypes = {
-    showForgotUsername: PropTypes.bool,
-    setShowForgotUsername: PropTypes.func,
-    showForgotPassword: PropTypes.bool,
-    setShowForgotPassword: PropTypes.func,
+    showForgotUsername: PropTypes.bool.isRequired,
+    setShowForgotUsername: PropTypes.func.isRequired,
+    showForgotPassword: PropTypes.bool.isRequired,
+    setShowForgotPassword: PropTypes.func.isRequired,
 };

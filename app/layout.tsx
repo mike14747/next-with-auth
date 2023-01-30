@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import React from 'react';
 import ClientSessionProvider from './components/ClientSessionProvider';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
@@ -10,15 +11,24 @@ import { getSettings } from '../lib/api';
 import '../styles/mg_base.css';
 import '../styles/globals.css';
 
+type Props = {
+    children: React.ReactNode,
+    session: object | null,
+    params: {
+        numInitialNewsItems: number,
+        newsItemIncrement: number,
+    },
+};
+
 async function getSettingsData() {
     return await getSettings().catch(error => console.log(error.message));
 }
 
-export default async function RootLayout({ children, session, ...props }) {
+export default async function RootLayout({ children, session, params }: Props) {
     const settingsData = await getSettingsData().catch(error => console.log(error.message));
 
-    props.params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
-    props.params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
+    params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
+    params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
 
     return (
         <html lang='en'>
