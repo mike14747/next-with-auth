@@ -1,17 +1,19 @@
+'use client';
+
 import PropTypes from 'prop-types';
-import React from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import Button from '../Button';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-type Props = {
+type ForgotLoginButtonsProps = {
     showForgotUsername: boolean,
-    setShowForgotUsername: React.Dispatch<React.SetStateAction<boolean>>,
+    setShowForgotUsername: Dispatch<SetStateAction<boolean>>,
     showForgotPassword: boolean,
-    setShowForgotPassword: React.Dispatch<React.SetStateAction<boolean>>,
+    setShowForgotPassword: Dispatch<SetStateAction<boolean>>,
 }
 
-export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword }: Props): JSX.Element {
+export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword }: ForgotLoginButtonsProps) {
     return (
         <nav aria-label="Forgotten Login Information Navigation">
             <div className={styles.btnContainer}>

@@ -1,30 +1,38 @@
-import { useRef, useState } from 'react';
+'use client';
+
+import { FormEvent, useRef, useState } from 'react';
 import Button from '../Button';
+import FormInputForUsername from '../FormInputForUsername';
 import FormInputForEmail from '../FormInputForEmail';
 import Loading from '../Loading';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgotUsername() {
-    const email = useRef('');
-    const [success, setSuccess] = useState(false);
-    const [error, setError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
+export default function ForgotPassword() {
+    const username = useRef<string>('');
+    const email = useRef<string>('');
+    const [success, setSuccess] = useState<boolean>(false);
+    const [error, setError] = useState<string>('');
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-    const handleUsernameSubmit = async (e) => {
+    const handlePasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setIsSubmitting(true);
         setSuccess(false);
         setError('');
 
-        const res = await fetch('/api/users/forgot-username', {
+        const res = await fetch('/api/users/reset-password', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
             },
-            body: JSON.stringify({ email: email.current }),
-        });
+            body: JSON.stringify({ username: username.current, email: email.current }),
+        })
+            .catch(error => {
+                console.log(error.message);
+                setError('A network error occurred. Please try your request again.');
+            });
 
         setIsSubmitting(false);
 
@@ -37,7 +45,7 @@ export default function ForgotUsername() {
                 setSuccess(true);
                 break;
             case 400:
-                setError('An error occurred. Make sure you submitted your email address correctly and try again.');
+                setError('An error occurred. Your username and/or email are not valid.');
                 break;
             case 500:
                 setError('A server error occurred. Please try your request again.');
@@ -49,9 +57,9 @@ export default function ForgotUsername() {
 
     return (
         <section className={styles.lower}>
-            <h3>Forgot my Username</h3>
+            <h3>Forgot my Password</h3>
             <p className="text-left">
-                Enter the email address associated with your account(s) and an email will be sent with the username(s) linked to your email address.
+                Enter the username and email address associated with your account and an email will be sent to you with a link to reset your password.
             </p>
 
             {isSubmitting && <Loading />}
@@ -60,7 +68,9 @@ export default function ForgotUsername() {
 
             {success && <p className="success">An email has been sent to the email address you entered.</p>}
 
-            <form onSubmit={handleUsernameSubmit} className="form">
+            <form onSubmit={handlePasswordSubmit} className="form">
+                <FormInputForUsername username={username} />
+
                 <FormInputForEmail email={email} />
 
                 <Button type="submit">Submit</Button>

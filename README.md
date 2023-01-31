@@ -520,7 +520,7 @@ This is very similar to the public page, but checks for a session and redirects 
 import { redirect } from 'next/navigation';
 import { getProtectedData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 
 async function getData() {
     return await getProtectedData().catch((error) => console.log(error.message));
@@ -528,7 +528,7 @@ async function getData() {
 
 export default async function Page() {
     // doing this will return the session in the form of a token... including the expiry date
-    const session = await unstable_getServerSession({
+    const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });
 
@@ -580,7 +580,7 @@ This page is very similar to the protected page... with the following exception:
 import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 
 async function getData() {
     return await getAdminData().catch((error) => console.log(error.message));
@@ -588,7 +588,7 @@ async function getData() {
 
 export default async function Page() {
     // doing this will return the session in the form of a token... including the expiry date
-    const session = await unstable_getServerSession({
+    const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });
 

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
-import { unstable_getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth/next';
 
 async function getData() {
     return await getAdminData().catch(error => console.log(error.message));
@@ -9,7 +9,7 @@ async function getData() {
 
 export default async function Page() {
     // doing this will return the session in the form of a token... including the expiry date
-    const session = await unstable_getServerSession({
+    const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });
 
@@ -17,7 +17,14 @@ export default async function Page() {
         redirect('/login?callbackUrl=/admin');
     }
 
-    let data = null;
+    type DataObject = {
+        _id: string,
+        name: string,
+        age: number,
+        salary: number,
+    }
+
+    let data: DataObject[] = [];
     if (session.role === 'admin') {
         data = await getData().catch(error => console.log(error.message));
     }
@@ -43,9 +50,9 @@ export default async function Page() {
 
                 {session?.role === 'admin' && (
                     <>
-                        {data?.length > 0 && (
+                        {data.length > 0 && (
                             <ul>
-                                {data.map((item) => (
+                                {data.map((item: DataObject) => (
                                     <li key={item._id}>
                                         {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
                                     </li>

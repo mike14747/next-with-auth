@@ -20,7 +20,7 @@ export default async function Page() {
 
                 {data?.length > 0 &&
                     <ul>
-                        {data.map((item) => (
+                        {data.map((item: { _id: string, name: string }) => (
                             <li key={item._id}>
                                 {item.name}
                             </li>

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import { ReactNode } from 'react';
 import ClientSessionProvider from './components/ClientSessionProvider';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
@@ -11,8 +11,8 @@ import { getSettings } from '../lib/api';
 import '../styles/mg_base.css';
 import '../styles/globals.css';
 
-type Props = {
-    children: React.ReactNode,
+type RootLayoutProps = {
+    children: ReactNode,
     session: object | null,
     params: {
         numInitialNewsItems: number,
@@ -24,7 +24,7 @@ async function getSettingsData() {
     return await getSettings().catch(error => console.log(error.message));
 }
 
-export default async function RootLayout({ children, session, params }: Props) {
+export default async function RootLayout({ children, session, params }: RootLayoutProps) {
     const settingsData = await getSettingsData().catch(error => console.log(error.message));
 
     params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;

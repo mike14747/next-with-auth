@@ -8,7 +8,7 @@ import ForgotPassword from './ForgotPassword';
 
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
-export default function ForgottenUsername(): JSX.Element {
+export default function ForgottenUsername() {
     const [showForgotUsername, setShowForgotUsername] = useState<boolean>(false);
     const [showForgotPassword, setShowForgotPassword] = useState<boolean>(false);
 
