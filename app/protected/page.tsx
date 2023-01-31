@@ -16,7 +16,15 @@ export default async function Page() {
     if (!session) {
         redirect('/login?callbackUrl=/protected');
     }
-    const data = await getData().catch(error => console.log(error.message));
+
+    type DataObject = {
+        _id: string;
+        name: string;
+        age: number;
+    }
+
+    let data: DataObject[] | null = null;
+    data = await getData().catch(error => console.log(error.message));
 
     return (
         <main id="main">
@@ -29,9 +37,9 @@ export default async function Page() {
                     This page is getting data on the server-side, right in the component.
                 </p>
 
-                {data?.length > 0 &&
+                {data && data.length > 0 &&
                     <ul>
-                        {data.map((item: { _id: string, name: string, age: number }) => (
+                        {data.map((item: DataObject) => (
                             <li key={item._id}>
                                 {item.name + ' - age: ' + item.age}
                             </li>

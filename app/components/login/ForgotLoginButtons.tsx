@@ -7,10 +7,10 @@ import Button from '../Button';
 import styles from '../../../styles/ForgotLoginInfo.module.css';
 
 type ForgotLoginButtonsProps = {
-    showForgotUsername: boolean,
-    setShowForgotUsername: Dispatch<SetStateAction<boolean>>,
-    showForgotPassword: boolean,
-    setShowForgotPassword: Dispatch<SetStateAction<boolean>>,
+    showForgotUsername: boolean;
+    setShowForgotUsername: Dispatch<SetStateAction<boolean>>;
+    showForgotPassword: boolean;
+    setShowForgotPassword: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUsername, showForgotPassword, setShowForgotPassword }: ForgotLoginButtonsProps) {

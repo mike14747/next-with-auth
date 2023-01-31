@@ -2,7 +2,7 @@ import { randomBytes, pbkdf2Sync } from 'node:crypto';
 
 // this can only be used server-side
 
-export function generateRandom(size: number = 32): string {
+export function generateRandom(size = 32): string {
     if (!Number.isInteger(size)) size = 32;
     return randomBytes(size).toString('hex');
 }

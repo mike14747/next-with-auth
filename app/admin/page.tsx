@@ -18,13 +18,13 @@ export default async function Page() {
     }
 
     type DataObject = {
-        _id: string,
-        name: string,
-        age: number,
-        salary: number,
+        _id: string;
+        name: string;
+        age: number;
+        salary: number;
     }
 
-    let data: DataObject[] = [];
+    let data: DataObject[] | null = null;
     if (session.role === 'admin') {
         data = await getData().catch(error => console.log(error.message));
     }
@@ -50,7 +50,7 @@ export default async function Page() {
 
                 {session?.role === 'admin' && (
                     <>
-                        {data.length > 0 && (
+                        {data && data.length > 0 && (
                             <ul>
                                 {data.map((item: DataObject) => (
                                     <li key={item._id}>

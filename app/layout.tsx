@@ -12,11 +12,11 @@ import '../styles/mg_base.css';
 import '../styles/globals.css';
 
 type RootLayoutProps = {
-    children: ReactNode,
-    session: object | null,
+    children: ReactNode;
+    session: object | null;
     params: {
-        numInitialNewsItems: number,
-        newsItemIncrement: number,
+        numInitialNewsItems: number;
+        newsItemIncrement: number;
     },
 };
 

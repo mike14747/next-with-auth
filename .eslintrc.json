@@ -7,9 +7,14 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:jsx-a11y/recommended",
         "next",
         "next/core-web-vitals"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
     ],
     "globals": {
         "JSX": "readonly"
@@ -97,7 +102,15 @@
             "error",
             4
         ],
-        "react/no-unknown-property": [1, { "ignore": ["key", "jsx"] }],
+        "react/no-unknown-property": [
+            1,
+            {
+                "ignore": [
+                    "key",
+                    "jsx"
+                ]
+            }
+        ],
         "react/prop-types": "error",
         "react/react-in-jsx-scope": "off",
         "react/require-default-props": "off",
@@ -124,7 +137,12 @@
             "error",
             "never"
         ],
-        "space-infix-ops": ["error", { "int32Hint": false }],
+        "space-infix-ops": [
+            "error",
+            {
+                "int32Hint": false
+            }
+        ],
         "space-unary-ops": [
             2,
             {
