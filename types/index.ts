@@ -21,3 +21,11 @@ export interface Session {
     user: User;
     expires: Date;
 }
+export interface token {
+    name: string;
+    _id: string;
+    role: 'user' | 'admin';
+    iat: number;
+    exp: number;
+    jti: string;
+}

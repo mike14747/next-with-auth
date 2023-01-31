@@ -7,7 +7,6 @@ export default async function protectedRoute(req, res) {
 
     // make sure a user is signed in, so check for a token
     const token = await getToken({ req });
-    console.log({ token });
 
     // respond with status code 401 if there's no token
     if (!token) return res.status(401).end();
