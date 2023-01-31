@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
+import { AdminData } from '../../types';
 
 async function getData() {
     return await getAdminData().catch(error => console.log(error.message));
@@ -17,14 +18,7 @@ export default async function Page() {
         redirect('/login?callbackUrl=/admin');
     }
 
-    type DataObject = {
-        _id: string;
-        name: string;
-        age: number;
-        salary: number;
-    }
-
-    let data: DataObject[] | null = null;
+    let data: AdminData[] | null = null;
     if (session.role === 'admin') {
         data = await getData().catch(error => console.log(error.message));
     }
@@ -52,7 +46,7 @@ export default async function Page() {
                     <>
                         {data && data.length > 0 && (
                             <ul>
-                                {data.map((item: DataObject) => (
+                                {data.map((item: AdminData) => (
                                     <li key={item._id}>
                                         {item.name + ' - age: ' + item.age + ' (salary: $' + item.salary + ')'}
                                     </li>

@@ -1,16 +1,12 @@
 import { getUnprotectedData } from '../../lib/api/index';
+import { PublicData } from '../../types';
 
 async function getData() {
     return await getUnprotectedData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
-    type DataObject = {
-        _id: string;
-        name: string;
-    }
-
-    const data: DataObject[] | null = await getData().catch(error => console.log(error.message));
+    const data: PublicData[] | null = await getData().catch(error => console.log(error.message));
 
     return (
         <main id="main">
@@ -25,7 +21,7 @@ export default async function Page() {
 
                 {data && data.length > 0 &&
                     <ul>
-                        {data.map((item: DataObject) => (
+                        {data.map((item: PublicData) => (
                             <li key={item._id}>
                                 {item.name}
                             </li>
