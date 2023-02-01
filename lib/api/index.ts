@@ -1,49 +1,32 @@
 import { connectToDatabase } from '../../lib/mongodb';
-// import { ObjectId } from 'mongodb';
+// import { ObjectId } from 'bson';
 
 export const getUnprotectedData = async () => {
     const { db } = await connectToDatabase();
 
-    const data = await db.collection('data')
+    return await db.collection('data')
         .find({})
-        .project({ _id: 1, name: 1 })
+        .project({ _id: { '$toString': '$_id' }, name: 1 })
         .toArray();
-
-    data.forEach((item: any) => {
-        item._id = item._id.toString();
-    });
-
-    return data;
 };
 
 export const getProtectedData = async () => {
     const { db } = await connectToDatabase();
 
-    const data = await db.collection('data')
+    return await db.collection('data')
         .find({})
-        .project({ _id: 1, name: 1, age: 1 })
+        .project({ _id: { '$toString': '$_id' }, name: 1, age: 1 })
         .toArray();
-
-    data.forEach((item: any) => {
-        item._id = item._id.toString();
-    });
-
-    return data;
 };
 
 export const getAdminData = async () => {
     const { db } = await connectToDatabase();
 
-    const data = await db.collection('data')
+    return await db.collection('data')
         .find({})
-        .project({ _id: 1, name: 1, age: 1, salary: 1 })
+        .project({ _id: { '$toString': '$_id' }, name: 1, age: 1, salary: 1 })
         .toArray();
 
-    data.forEach((item: any) => {
-        item._id = item._id.toString();
-    });
-
-    return data;
 };
 
 export const getSettings = async () => {

@@ -1,11 +1,11 @@
-import { connectToDatabase } from '../../lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { connectToDatabase } from '../mongodb';
+import { ObjectId } from 'bson';
 import { mailTransporter } from '../nodemailerConfig';
 import { formatDateObject } from '../formatDate';
 import { usernamePattern, emailPattern, passwordPattern } from '../formInputPatterns';
 import { generateRandom, hashPassword } from '../cryptoUtils';
 
-export const getUserForSignin = async (username, password) => {
+export const getUserForSignin = async (username: string, password: string) => {
     const { db } = await connectToDatabase();
 
     const user = await db
@@ -44,15 +44,24 @@ export const testEmail = async () => {
     }
 };
 
-export const getUserProfile = async (_id) => {
+export const getUserProfile = async (_id: string) => {
     if (!_id || !ObjectId.isValid(_id)) return { code: 400 };
 
     const { db } = await connectToDatabase();
 
     return await db
         .collection('users')
-        .findOne({ _id: ObjectId(_id) }, { projection: { _id: 0, username: 1, email: 1 } });
+        .findOne({ _id: new ObjectId(_id) }, { projection: { _id: 0, username: 1, email: 1 } });
 };
+
+type UserInfo = {
+    username: string;
+    email: string;
+    role: string;
+    active: boolean;
+    registeredDate?: Date;
+    formattedRegisteredDate: string | null;
+}
 
 export const getInfoForAllUsers = async () => {
     const { db } = await connectToDatabase();
@@ -63,12 +72,21 @@ export const getInfoForAllUsers = async () => {
         .project({ username: 1, email: 1, role: 1, active: 1, registeredDate: 1 })
         .toArray();
 
-    data.forEach(item => item.registeredDate = formatDateObject(item.registeredDate, 'short'));
+    data.forEach((item: UserInfo) => {
+        if (item.registeredDate) {
+            item.formattedRegisteredDate = formatDateObject(item.registeredDate, 'short');
+        } else {
+            item.formattedRegisteredDate = null;
+        }
+        delete item.registeredDate;
+    });
 
     return data;
 };
 
-export const checkForAvailableUsername = async (db, username) => {
+export const checkForAvailableUsername = async (username: string) => {
+    const { db } = await connectToDatabase();
+
     // I could have used a "findOne" in this query, but I wanted to be able to tell the difference between a failed db query and an empty result (null vs empty array when using "find")
     return await db
         .collection('users')
@@ -78,7 +96,7 @@ export const checkForAvailableUsername = async (db, username) => {
         .toArray();
 };
 
-export const registerNewUser = async (username, password, email) => {
+export const registerNewUser = async (username: string, password: string, email: string) => {
     const pattern1 = new RegExp(usernamePattern);
     if (!username || !pattern1.test(username)) return { code: 400 };
 
@@ -91,7 +109,7 @@ export const registerNewUser = async (username, password, email) => {
     const { db } = await connectToDatabase();
 
     // first make sure the username isn't already in use
-    const usernameResult = await checkForAvailableUsername(db, username);
+    const usernameResult = await checkForAvailableUsername(username);
     if (!usernameResult) return { code: 500 };
     if (usernameResult.length > 0) return { code: 409 };
 
@@ -117,7 +135,7 @@ export const registerNewUser = async (username, password, email) => {
     return result?.insertedId ? { code: 201 } : { code: 500 };
 };
 
-export const changeUsername = async (_id, username) => {
+export const changeUsername = async (_id: string, username: string) => {
     if (!_id || !ObjectId.isValid(_id) || !username) return { code: 400 };
     const pattern = new RegExp(usernamePattern);
     if (!username || !pattern.test(username)) return { code: 400 };
@@ -125,19 +143,19 @@ export const changeUsername = async (_id, username) => {
     const { db } = await connectToDatabase();
 
     // first make sure the username isn't already in use
-    const usernameResult = await checkForAvailableUsername(db, username);
+    const usernameResult = await checkForAvailableUsername(username);
     if (!usernameResult) return { code: 500 };
     if (usernameResult.length > 0) return { code: 409 };
 
     // at this point, the new username must not already be in use, so make the change
     const updateResult = await db
         .collection('users')
-        .updateOne({ _id: ObjectId(_id) }, { $set: { username } });
+        .updateOne({ _id: new ObjectId(_id) }, { $set: { username } });
 
     return updateResult?.modifiedCount === 1 ? { code: 200 } : { code: 500 };
 };
 
-export const changePassword = async (_id, password, resetPasswordToken = null) => {
+export const changePassword = async (_id: string, password: string, resetPasswordToken = null) => {
     if (!_id || !ObjectId.isValid(_id)) return { code: 400 };
     const pattern = new RegExp(passwordPattern);
     if (!password || !pattern.test(password)) return { code: 400 };
@@ -148,7 +166,7 @@ export const changePassword = async (_id, password, resetPasswordToken = null) =
         // since a reset password token is being passed, get the expiration date/time of the token if it exists in the db
         const tokenValidCheck = await db
             .collection('users')
-            .find({ _id: ObjectId(_id), resetPasswordToken })
+            .find({ _id: new ObjectId(_id), resetPasswordToken })
             .project({ resetPasswordExpires: 1 })
             .limit(1)
             .toArray();
@@ -164,12 +182,12 @@ export const changePassword = async (_id, password, resetPasswordToken = null) =
 
     const updateResult = await db
         .collection('users')
-        .updateOne({ _id: ObjectId(_id) }, { $set: { password: hashedPassword, salt } });
+        .updateOne({ _id: new ObjectId(_id) }, { $set: { password: hashedPassword, salt } });
 
     return updateResult?.modifiedCount === 1 ? { code: 200 } : { code: 500 };
 };
 
-export const changeEmail = async (_id, email) => {
+export const changeEmail = async (_id: string, email: string) => {
     if (!_id || !ObjectId.isValid(_id)) return { code: 400 };
     const pattern = new RegExp(emailPattern);
     if (!email || !pattern.test(email)) return { code: 400 };
@@ -179,12 +197,12 @@ export const changeEmail = async (_id, email) => {
     // adding the emailUpdatedAt property will make modifiedCount return 1 even if the updated email address is the same as the old one
     const updateResult = await db
         .collection('users')
-        .updateOne({ _id: ObjectId(_id) }, { $set: { email, emailUpdatedAt: new Date() } });
+        .updateOne({ _id: new ObjectId(_id) }, { $set: { email, emailUpdatedAt: new Date() } });
 
     return updateResult?.modifiedCount === 1 ? { code: 200 } : { code: 500 };
 };
 
-export const forgotUsername = async (email) => {
+export const forgotUsername = async (email: string) => {
     if (!email) return { code: 400 };
 
     const { db } = await connectToDatabase();
@@ -197,25 +215,23 @@ export const forgotUsername = async (email) => {
     if (!user) return { code: 500 }; // query failed
     if (user.length === 0) return { code: 400 }; // email address doesn't match any in the database
 
-    if (user.length > 0) {
-        const mailDetails = {
-            from: process.env.NO_REPLY_EMAIL,
-            to: email,
-            subject: 'Forgot Username',
-            html: '<p>A request for your username(s) has been made for this email address.</p><p>The username(s) associated with this email address is/are:<br /><br />' + user.map(u => u.username).join('<br />') + '</p>',
-        };
+    const mailDetails = {
+        from: process.env.NO_REPLY_EMAIL,
+        to: email,
+        subject: 'Forgot Username',
+        html: '<p>A request for your username(s) has been made for this email address.</p><p>The username(s) associated with this email address is/are:<br /><br />' + user.map((u: { username: string }) => u.username).join('<br />') + '</p>',
+    };
 
-        try {
-            const emailSent = await mailTransporter.sendMail(mailDetails);
-            return emailSent ? { code: 200 } : { code: 500 };
-        } catch (error) {
-            console.log(error);
-            return { code: 500 };
-        }
+    try {
+        const emailSent = await mailTransporter.sendMail(mailDetails);
+        return emailSent ? { code: 200 } : { code: 500 };
+    } catch (error) {
+        console.log(error);
+        return { code: 500 };
     }
 };
 
-export const resetPassword = async (username, email, baseUrl) => {
+export const resetPassword = async (username: string, email: string, baseUrl: string) => {
     if (!username || !email || !baseUrl) return { code: 400 };
 
     const { db } = await connectToDatabase();
@@ -231,46 +247,44 @@ export const resetPassword = async (username, email, baseUrl) => {
     if (!user) return { code: 500 }; // query failed
     if (user.length === 0) return { code: 400 }; // username/email combo doesn't match any in the database
 
-    if (user.length === 1) {
-        const _id = user[0]._id;
+    const _id = user[0]._id;
 
-        // generate a reset password token
-        const resetPasswordToken = generateRandom(20);
-        const link = `${baseUrl}/reset-link/${_id.toString()}/${resetPasswordToken}`;
+    // generate a reset password token
+    const resetPasswordToken = generateRandom(20);
+    const link = `${baseUrl}/reset-link/${_id.toString()}/${resetPasswordToken}`;
 
-        const mailDetails = {
-            from: process.env.NO_REPLY_EMAIL,
-            to: email,
-            subject: 'Password Reset',
-            html: '<p>A password reset request for your username <strong>"' + username + '"</strong> has been made for this email address.</p><p>Click this <a href="' + link + '">link</a> to reset your password. The link will expire in 1 hour.</p><p>If you did not request a password reset, ignore this email.</p>',
-        };
+    const mailDetails = {
+        from: process.env.NO_REPLY_EMAIL,
+        to: email,
+        subject: 'Password Reset',
+        html: '<p>A password reset request for your username <strong>"' + username + '"</strong> has been made for this email address.</p><p>Click this <a href="' + link + '">link</a> to reset your password. The link will expire in 1 hour.</p><p>If you did not request a password reset, ignore this email.</p>',
+    };
 
-        // add the reset password token and expiration date to the user in the db
-        const resetPasswordExpires = new Date(Date.now() + (60 * 60 * 1000));
-        const updateResult = await db
-            .collection('users')
-            .updateOne({ _id }, { $set: { resetPasswordToken, resetPasswordExpires } });
+    // add the reset password token and expiration date to the user in the db
+    const resetPasswordExpires = new Date(Date.now() + (60 * 60 * 1000));
+    const updateResult = await db
+        .collection('users')
+        .updateOne({ _id }, { $set: { resetPasswordToken, resetPasswordExpires } });
 
-        if (updateResult?.modifiedCount !== 1) return { code: 500 };
+    if (updateResult?.modifiedCount !== 1) return { code: 500 };
 
-        try {
-            const emailSent = await mailTransporter.sendMail(mailDetails);
-            return emailSent ? { code: 200 } : { code: 500 };
-        } catch (error) {
-            console.log(error);
-            return { code: 500 };
-        }
+    try {
+        const emailSent = await mailTransporter.sendMail(mailDetails);
+        return emailSent ? { code: 200 } : { code: 500 };
+    } catch (error) {
+        console.log(error);
+        return { code: 500 };
     }
 };
 
-export const deleteUserAccount = async (_id) => {
+export const deleteUserAccount = async (_id: string) => {
     if (!_id || !ObjectId.isValid(_id)) return { code: 400 };
 
     const { db } = await connectToDatabase();
 
     const deleteResult = await db
         .collection('users')
-        .deleteOne({ _id: ObjectId(_id) });
+        .deleteOne({ _id: new ObjectId(_id) });
 
     return deleteResult?.deletedCount === 1 ? { code: 200 } : { code: 500 };
 };

@@ -1,7 +1,8 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { changePassword } from '../../../../lib/api/user';
 
-export default async function user(req, res) {
+export default async function user(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'PUT') return res.status(401).end();
     const token = await getToken({ req });
     if (!req.body.password) return res.status(400).end();
@@ -9,7 +10,7 @@ export default async function user(req, res) {
 
     try {
         let response;
-        if (token) {
+        if (token && typeof token._id === 'string') {
             response = await changePassword(token._id, req.body.password);
         } else if (req.body.userId && req.body.resetPasswordToken) {
             response = await changePassword(req.body.userId, req.body.password, req.body.resetPasswordToken);
@@ -18,9 +19,9 @@ export default async function user(req, res) {
         }
 
         if (!response) return res.status(500).end();
-        response?.code ? res.status(response.code).end() : res.status(500).end();
+        return response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
         console.error(error);
-        res.status(500).end();
+        return res.status(500).end();
     }
 }
