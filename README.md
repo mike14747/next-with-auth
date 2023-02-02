@@ -7,6 +7,8 @@
 ![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=f5f5f5 'ESLint')
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=f5f5f5 'Vercel')
 
+## Introduction
+
 This is my reference app for creating a next.js app using next-auth.
 
 It includes public and protected pages.
@@ -23,7 +25,7 @@ Right now the only type of sign in is using **Credentials**. I'd like to add a f
 
 ---
 
-### Starting this project
+## Starting this project
 
 Create a new project at github. Be sure the include a _Node_ **.gitignore** file and a **README.md** file.
 
@@ -46,6 +48,8 @@ Install the **next.js** app:
 ```bash
 npm i next react react-dom
 ```
+
+**NOTE**: This app was updated to use typescript a while after creating it. For instructions on how to update it to typescript, see: coding-notes/typescript/nextjs.md.
 
 It seems that **prop-types** is no longer a core component of **React** and it needs to be installed as a stand alone package.
 
@@ -96,7 +100,7 @@ I added **.env** to my **.gitignore** file, because by default the github node .
 
 ---
 
-### Populating the newly created files
+## Populating the newly created files
 
 For starters, let's populate just the files necessary to run the app. I've included my custom **SkipTpMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section.
 
@@ -259,7 +263,7 @@ export default function Footer() {
 
 ---
 
-### Linting rules and style guide
+## Linting rules and style guide
 
 Because I didn't use **create-next-app** to create this app, I had to manually install **eslint**. First, I added this to **scripts** in **package.json**:
 
@@ -319,7 +323,7 @@ I changed the error to a warning about using the **next/image** component instea
 
 ---
 
-### Setting up next-auth and a database
+## Setting up next-auth and a database
 
 I'm only using the database to store user data... not sessions. JWT sessions are being implemented.
 
@@ -348,10 +352,10 @@ NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET='i53ZfJ4PGVPcXHfl9MNPzXOhp4AE7upZconfP/VwxAo='
 ```
 
-One necessary file for next-auth is **/pages/api/auth/\[...nextauth\]**. This is where you set up your auth providers. In this app, I'm only using a **credentials provider** with a **username** and **password**. For this app, the file looks like this:
+One necessary file for next-auth is **/pages/api/auth/\[...nextauth\].js**. This is where you set up your auth providers. In this app, I'm only using a **credentials provider** with a **username** and **password**. For this app, the file looks like this:
 
 ```js
-// /page/api/auth/[...nextauth]
+// my original [...nextauth.js] file
 
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
@@ -361,18 +365,17 @@ import { getUserForSignin } from '../../../lib/api/user';
 export default NextAuth({
     providers: [
         Credentials({
-            // the name and credentials properties are not needed since we are using a custom login page
-            // I've commented them out but kept them in here in case they become needed
-            // name: 'username/password',
-            // credentials: {
-            //     username: { label: 'Username', type: 'text' },
-            //     password: { label: 'Password', type: 'password' },
-            // },
+            name: 'username/password',
+            credentials: {
+                username: { label: 'Username', type: 'text' },
+                password: { label: 'Password', type: 'password' },
+            },
 
             async authorize(credentials) {
-                const user = await getUserForSignin(credentials.username, credentials.password);
+                const { username, password } = credentials;
+                const user = await getUserForSignin(username, password);
 
-                // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback ffunctions
+                // I'm adding user id, username and role to the user object... which need to also be added to the token and session below in the callback functions
                 return user ? { _id: user._id, name: user.username, role: user.role } : null;
             },
         }),
@@ -402,11 +405,120 @@ export default NextAuth({
 });
 ```
 
-If I planned on using a sql database to store my users, I would change all references to **\_id** to **id**. But, since mongodb uses \_id, I just stuck to their protocol.
+```ts
+// after converting [...nextauth.js] to typescript
+
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
+
+import { getUserForSignin } from '../../../lib/api/user';
+
+export default NextAuth({
+    providers: [
+        Credentials({
+            name: 'Credentials',
+            credentials: {
+                username: { label: 'Username', type: 'text' },
+                password: { label: 'Password', type: 'password' },
+            },
+
+            async authorize(credentials) {
+                if (!credentials) return null;
+
+                const { username, password } = credentials;
+                const user = await getUserForSignin(username, password);
+
+                // I'm adding _id, username and role to the user object... which need to also be added to the token and session below in the callback functions
+                return user ? { _id: user._id, name: user.username, role: user.role } : null;
+            },
+        }),
+    ],
+    session: {
+        strategy: 'jwt',
+        maxAge: 90 * (24 * 60 * 60), // 24 * 60 * 60 is 1 day
+    },
+    pages: {
+        signIn: '/login',
+    },
+    secret: process.env.NEXTAUTH_SECRET,
+    callbacks: {
+        // I'm adding some extra properties to the jwt... this is where you must add them
+        async jwt({ token, user }) {
+            if (user?._id) token._id = user._id;
+            if (user?.role) token.role = user.role;
+            return token;
+        },
+        // I'm adding some extra properties to the session... this is where you must add them
+        async session({ session, token }) {
+            if (token._id && session.user) session.user._id = token._id;
+            if (token.role && session.user) session.user.role = token.role;
+            return session;
+        },
+    },
+});
+```
+
+Once I converted \[...nextauth\].js to typescript (\[...nextauth\].ts), I had to add the following type declarations file to my **/types/next-auth.d.ts** folder:
+
+```ts
+// next-auth.d.ts
+
+import NextAuth, { DefaultSession } from 'next-auth';
+
+declare module 'next-auth' {
+    interface User {
+        _id: string;
+        name: string;
+        role: string;
+        id?: string | number;
+    }
+
+    interface Session extends DefaultSession {
+        user?: User;
+    }
+}
+
+declare module 'next-auth/jwt' {
+    interface JWT {
+        _id: string;
+        role: string;
+    }
+}
+```
+
+I had to change next-auth's interfaces to get typescript to stop complaining about various portions of the code. One tricky thing was to set the User interface's id field to optional. The default User interface next-auth uses includes it as required.
+
+If I planned on using a sql database to store my users, I would change all references to **\_id** to **id**. But, since mongodb uses \_id, I just stuck to their protocol. Doing this would mean my **/types/next-auth.d.ts** file would need to be changed to this:
+
+```ts
+// next-auth.d.ts (using id instead of _id)
+
+import NextAuth, { DefaultSession } from 'next-auth';
+
+declare module 'next-auth' {
+    interface User {
+        name: string;
+        role: string;
+    }
+
+    interface Session extends DefaultSession {
+        user?: User;
+    }
+}
+
+declare module 'next-auth/jwt' {
+    interface JWT {
+        id: string;
+        role: string;
+    }
+}
+```
+
+The \_id property was removed from the User interface. The optional id property was also removed because it's include in the base next-auth User interface. I only made it optional when using \_id to get typescript to stop complaining about it being required.
 
 Some things to note with the next-auth file:
 
--   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session).
+-   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session), plus edit the /types/next-auth.d.ts file if using typescript.
 -   You can have more providers (eg: email or OAuth). They would get added to the **providers** array.
 
 I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.js**, but I wanted to keep layout.js as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.js. This allowed me to keep layout.js as a server component.
@@ -454,7 +566,7 @@ if (notRedirectableCheck.length > 0) redirectUrl = '/';
 
 ---
 
-### I forgot my login info
+## I forgot my login info
 
 On the login page, I've imported a **ForgotLoginInfo** component which allows users to retrieve their username or get a reset password link via email.
 
@@ -466,7 +578,7 @@ To receive a password reset link in an email, users need to enter both their use
 
 ---
 
-### Pages
+## Pages
 
 There are 3 types of pages in this app.
 
@@ -641,7 +753,7 @@ When (if) the admin pages are protected by middleware, I tend to have the middle
 
 ---
 
-### API Routes
+## API Routes
 
 There are 3 types of API routes in this app.
 
@@ -779,7 +891,7 @@ export default async function adminRoute(req, res) {
 
 ---
 
-### Using signOut()
+## Using signOut()
 
 The only places I'm using the next-auth **signOut()** is in the **Authbar** and **UpdateProfile** components.
 
@@ -801,7 +913,7 @@ For now, I'm redirecting to the homepage upon signOut().
 
 ---
 
-### Deploying to vercel
+## Deploying to vercel
 
 There were warnings in the build process on vercel concerning the node version needing to be v12, v14 or v16 and by default vercel uses v18. So, I downgraded vercel's node version to v16 and the warnings went away.
 
@@ -809,7 +921,7 @@ You need the **NEXTAUTH_URL** environment variable locally, but it's not needed 
 
 ---
 
-### next/navigation
+## next/navigation
 
 In next.js v13, **next/navigation** replaces **next/router** in the **/app** folder. You can still use _next/router_ in the _/pages_ folder.
 
@@ -842,7 +954,7 @@ export default async function CheckoutPage() {
 
 ---
 
-### getStaticProps and getServerSideProps replacements
+## getStaticProps and getServerSideProps replacements
 
 I haven't implemented any of these yet, but hope to shortly.
 
@@ -861,7 +973,7 @@ fetch(URL, { next: { revalidate: 20 } });
 
 ---
 
-### #\_\_next wrapping div
+## #\_\_next wrapping div
 
 Next.js version 13 does not seem to use a wrapper div with the id of **\_\_next** like previous versions did. This had made the css for my full height pages stop working.
 
@@ -873,22 +985,7 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** 
 
 ---
 
-### Miscellaneous
-
-In **/app/layout.js** I have an id of _main_ on the main tag.
-
-```jsx
-<main id="main" className="main-container">
-    {children}
-    <ScrollTop />
-</main>
-```
-
-The sole purpose of this is to support the **SkipToMain** component.
-
----
-
-### Todos
+## Todos
 
 -   Write tests.
 -   I'd like to come up with a way to clear button and nav focus on next/link page transition.
