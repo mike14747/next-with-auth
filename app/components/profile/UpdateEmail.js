@@ -6,7 +6,7 @@ import FormInputForEmail from '../FormInputForEmail';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateEmail({ _id, setUser }) {
+export default function UpdateEmail({ id, setUser }) {
     const email = useRef('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,7 +19,7 @@ export default function UpdateEmail({ _id, setUser }) {
         setIsEmailUpdated(false);
         setIsSubmitting(true);
 
-        const res = await fetch('/api/users/' + _id + '/change-email', {
+        const res = await fetch('/api/users/' + id + '/change-email', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -77,6 +77,6 @@ export default function UpdateEmail({ _id, setUser }) {
 }
 
 UpdateEmail.propTypes = {
-    _id: PropTypes.string,
+    id: PropTypes.string,
     setUser: PropTypes.func,
 };

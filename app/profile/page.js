@@ -4,8 +4,8 @@ import { getServerSession } from 'next-auth/next';
 import CurrentProfile from '../components/profile/CurrentProfile';
 import { getUserProfile } from '../../lib/api/user';
 
-async function getData(_id) {
-    return await getUserProfile(_id).catch(error => console.log(error.message));
+async function getData(id) {
+    return await getUserProfile(id).catch(error => console.log(error.message));
 }
 
 export default async function Page() {
@@ -17,8 +17,8 @@ export default async function Page() {
         redirect('/login?callbackUrl=/profile');
     }
 
-    const user = await getData(session._id).catch(error => console.log(error.message));
-    user._id = session._id;
+    const user = await getData(session.id).catch(error => console.log(error.message));
+    user.id = session.id;
 
     return (
         <main id="main">

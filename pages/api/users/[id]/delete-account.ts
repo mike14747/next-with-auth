@@ -8,14 +8,14 @@ export default async function protectedRoute(req: NextApiRequest, res: NextApiRe
     const token = await getToken({ req });
 
     if (!token) return res.status(401).end();
-    if (!req.query._id || typeof req.query._id !== 'string') return res.status(400).end();
-    if (token?._id !== req.query._id) return res.status(400).end();
+    if (!req.query.id || typeof req.query.id !== 'string') return res.status(400).end();
+    if (token?.id !== req.query.id) return res.status(400).end();
 
     try {
-        const response = await deleteUserAccount(req.query._id);
+        const response = await deleteUserAccount(req.query.id);
         return response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return res.status(500).end();
     }
 }

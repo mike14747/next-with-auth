@@ -14,7 +14,7 @@ export default function FormInput({ id, label = '', handleChange, errorMsg = '',
             <label htmlFor={id} className={`${styles.label} ${styles[inputSize]} ${type === 'checkbox' ? styles.labelCheckbox : ''}`}>
                 {label}
 
-                {/* you can disable the following line if you don't want to notify the user of fields that are required */}
+                {/* you can comment out the following line if you don't want to notify the user of fields that are required */}
                 {required && <span className={styles.required}>*required</span>}
             </label>
 

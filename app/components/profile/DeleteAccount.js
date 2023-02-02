@@ -6,7 +6,7 @@ import Loading from '../Loading';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function DeleteAccount({ _id }) {
+export default function DeleteAccount({ id }) {
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [deleteCounter, setDeleteCounter] = useState(0);
@@ -20,7 +20,7 @@ export default function DeleteAccount({ _id }) {
         if (deleteCounter > 0) {
             setIsSubmitting(true);
 
-            const res = await fetch('/api/users/' + _id + '/delete-account', {
+            const res = await fetch('/api/users/' + id + '/delete-account', {
                 method: 'DELETE',
             }).catch(error => console.error(error.name + ': ' + error.message));
 
@@ -69,5 +69,5 @@ export default function DeleteAccount({ _id }) {
 }
 
 DeleteAccount.propTypes = {
-    _id: PropTypes.string,
+    id: PropTypes.string,
 };

@@ -7,7 +7,7 @@ import FormInputForUsername from '../FormInputForUsername';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateUsername({ _id }) {
+export default function UpdateUsername({ id }) {
     const username = useRef('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -17,7 +17,7 @@ export default function UpdateUsername({ _id }) {
 
         setIsSubmitting(true);
 
-        const res = await fetch('/api/users/' + _id + '/change-username', {
+        const res = await fetch('/api/users/' + id + '/change-username', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -73,5 +73,5 @@ export default function UpdateUsername({ _id }) {
     );
 }
 UpdateUsername.propTypes = {
-    _id: PropTypes.string,
+    id: PropTypes.string,
 };

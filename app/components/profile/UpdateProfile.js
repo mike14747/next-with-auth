@@ -25,26 +25,26 @@ export default function UpdateProfile({ user, setUser }) {
             <div className={styles.updateContainer}>
                 {viewState.showUpdateUsername &&
                     <UpdateUsername
-                        _id={user?._id}
+                        id={user?.id}
                     />
                 }
 
                 {viewState.showUpdatePassword &&
                     <UpdatePassword
-                        _id={user?._id}
+                        id={user?.id}
                     />
                 }
 
                 {viewState.showUpdateEmail &&
                     <UpdateEmail
-                        _id={user?._id}
+                        id={user?.id}
                         setUser={setUser}
                     />
                 }
 
                 {viewState.showDeleteAccount &&
                     <DeleteAccount
-                        _id={user?._id}
+                        id={user?.id}
                     />
                 }
             </div>

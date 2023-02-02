@@ -10,8 +10,8 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
 
     try {
         let response;
-        if (token && typeof token._id === 'string') {
-            response = await changePassword(token._id, req.body.password);
+        if (token && typeof token.id === 'string') {
+            response = await changePassword(token.id, req.body.password);
         } else if (req.body.userId && req.body.resetPasswordToken) {
             response = await changePassword(req.body.userId, req.body.password, req.body.resetPasswordToken);
         } else {
@@ -21,7 +21,7 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
         if (!response) return res.status(500).end();
         return response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
-        console.error(error);
+        console.log(error);
         return res.status(500).end();
     }
 }

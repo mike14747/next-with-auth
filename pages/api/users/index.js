@@ -13,7 +13,7 @@ export default async function users(req, res) {
             const response = await getInfoForAllUsers();
             return response ? res.status(200).json(response) : res.status(500).end();
         } catch (error) {
-            console.error(error);
+            console.log(error);
             res.status(500).end();
         }
     } else if (req.method === 'POST') {
@@ -23,7 +23,7 @@ export default async function users(req, res) {
             const response = await registerNewUser(req.body.username, req.body.password, req.body.email);
             response?.code ? res.status(response.code).end() : res.status(500).end();
         } catch (error) {
-            console.error(error);
+            console.log(error);
             res.status(500).end();
         }
     } else {

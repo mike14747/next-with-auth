@@ -12,7 +12,7 @@ export interface AdminData extends ProtectedData {
 }
 
 export interface User {
-    _id: string;
+    id: string;
     name: string;
     role: 'user' | 'admin';
 }
@@ -21,9 +21,9 @@ export interface Session {
     user: User;
     expires: Date;
 }
-export interface token {
+export interface Token {
     name: string;
-    _id: string;
+    id: string;
     role: 'user' | 'admin';
     iat: number;
     exp: number;

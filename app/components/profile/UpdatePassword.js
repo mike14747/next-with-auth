@@ -7,7 +7,7 @@ import FormInputForNewPassword from '../FormInputForNewPassword';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdatePassword({ _id }) {
+export default function UpdatePassword({ id }) {
     const password = useRef('');
     const repeatPassword = useRef('');
     const [error, setError] = useState('');
@@ -23,7 +23,7 @@ export default function UpdatePassword({ _id }) {
 
         setIsSubmitting(true);
 
-        const res = await fetch('/api/users/' + _id + '/change-password', {
+        const res = await fetch('/api/users/' + id + '/change-password', {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8',
@@ -76,5 +76,5 @@ export default function UpdatePassword({ _id }) {
     );
 }
 UpdatePassword.propTypes = {
-    _id: PropTypes.string,
+    id: PropTypes.string,
 };
