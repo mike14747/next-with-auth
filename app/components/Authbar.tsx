@@ -28,7 +28,7 @@ const Authbar = () => {
                 </p>
             }
 
-            {session &&
+            {session?.user &&
                 <>
                     <p className={styles.username}>
                         <>User: </>
