@@ -993,7 +993,7 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** 
 -   Switch over from client fetch to swr for data fetching... for now at least. Using fetch to POST/DELETE seems fine though.
 -   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
 -   Why are my server-side console.logs not showing up?
--   Why is eslint not working as before since installing typescript-eslint? Not getting notifications for semicolons or an extra line at the end of file.
+-   Figure out optimized typescript-eslint config?
 
 ---
 
