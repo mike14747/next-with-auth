@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { FormEvent, ChangeEvent, useRef, useState, useEffect } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import FormInput from '../components/FormInput';
@@ -24,11 +24,11 @@ export default function Login() {
     // if a resistricted query parameter is included, redirect to the homepage
     if (notRedirectableCheck.length > 0) redirectUrl = '/';
 
-    const username = useRef('');
-    const password = useRef('');
-    const [error, setError] = useState(null);
+    const username = useRef<string>('');
+    const password = useRef<string>('');
+    const [error, setError] = useState<string>('');
 
-    const handleSignIn = async (e) => {
+    const handleSignIn = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         // use the built-in signIn function of next-auth to try to sign in a user
@@ -73,7 +73,7 @@ export default function Login() {
                             name="username"
                             type="text"
                             required={false}
-                            handleChange={(e) => username.current = e.target.value}
+                            handleChange={(e: ChangeEvent<HTMLInputElement>) => username.current = e.target.value}
                         />
 
                         <FormInput
@@ -82,7 +82,7 @@ export default function Login() {
                             name="password"
                             type="password"
                             required={false}
-                            handleChange={(e) => password.current = e.target.value}
+                            handleChange={(e: ChangeEvent<HTMLInputElement>) => password.current = e.target.value}
                         />
 
                         <div className="btn-container">
@@ -96,4 +96,6 @@ export default function Login() {
             </main>
         );
     }
+
+    return null;
 }
