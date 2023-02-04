@@ -17,10 +17,11 @@ export interface User {
     role: 'user' | 'admin';
 }
 
-export interface Session {
-    user: User;
-    expires: Date;
-}
+// export interface Session {
+//     user: User;
+//     expires: Date;
+// }
+
 export interface Token {
     name: string;
     id: string;

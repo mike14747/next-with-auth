@@ -1,8 +1,9 @@
-import { connectToDatabase } from '../../lib/mongodb';
+import clientPromise from '../../lib/mongodb';
 // import { ObjectId } from 'bson';
 
 export const getUnprotectedData = async () => {
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     return await db.collection('data')
         .find({})
@@ -11,7 +12,8 @@ export const getUnprotectedData = async () => {
 };
 
 export const getProtectedData = async () => {
-    const { db } = await connectToDatabase();
+    const client = await clientPromise;
+    const db = client.db();
 
     return await db.collection('data')
         .find({})
@@ -20,7 +22,8 @@ export const getProtectedData = async () => {
 };
 
 export const getAdminData = async () => {
-    const { db } = await connectToDatabase();
+    const client = await clientPromise;
+    const db = client.db();
 
     return await db.collection('data')
         .find({})
@@ -30,7 +33,8 @@ export const getAdminData = async () => {
 };
 
 export const getSettings = async () => {
-    const { db } = await connectToDatabase();
+    const client = await clientPromise;
+    const db = client.db();
 
     return await db.collection('settings')
         .findOne({ settingsName: 'current' });

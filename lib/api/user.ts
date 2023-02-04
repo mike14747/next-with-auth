@@ -1,4 +1,4 @@
-import { connectToDatabase } from '../mongodb';
+import clientPromise from '../mongodb';
 import { ObjectId } from 'bson';
 import { mailTransporter } from '../nodemailerConfig';
 import { formatDateObject } from '../formatDate';
@@ -6,7 +6,8 @@ import { usernamePattern, emailPattern, passwordPattern } from '../formInputPatt
 import { generateRandom, hashPassword } from '../cryptoUtils';
 
 export const getUserForSignin = async (username: string, password: string) => {
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     const user = await db
         .collection('users')
@@ -47,24 +48,26 @@ export const testEmail = async () => {
 export const getUserProfile = async (_id: string) => {
     if (!_id || !ObjectId.isValid(_id)) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     return await db
         .collection('users')
         .findOne({ _id: new ObjectId(_id) }, { projection: { _id: 0, username: 1, email: 1 } });
 };
 
-type UserInfo = {
-    username: string;
-    email: string;
-    role: string;
-    active: boolean;
-    registeredDate?: Date;
-    formattedRegisteredDate: string | null;
-}
+// type UserInfo = {
+//     username: string;
+//     email: string;
+//     role: string;
+//     active: boolean;
+//     registeredDate?: Date;
+//     formattedRegisteredDate: string | null;
+// }
 
 export const getInfoForAllUsers = async () => {
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     const data = await db
         .collection('users')
@@ -72,7 +75,7 @@ export const getInfoForAllUsers = async () => {
         .project({ username: 1, email: 1, role: 1, active: 1, registeredDate: 1 })
         .toArray();
 
-    data.forEach((item: UserInfo) => {
+    data.forEach((item) => {
         if (item.registeredDate) {
             item.formattedRegisteredDate = formatDateObject(item.registeredDate, 'short');
         } else {
@@ -85,7 +88,8 @@ export const getInfoForAllUsers = async () => {
 };
 
 export const checkForAvailableUsername = async (username: string) => {
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     // I could have used a "findOne" in this query, but I wanted to be able to tell the difference between a failed db query and an empty result (null vs empty array when using "find")
     return await db
@@ -106,7 +110,8 @@ export const registerNewUser = async (username: string, password: string, email:
     const pattern3 = new RegExp(emailPattern);
     if (!email || !pattern3.test(email)) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     // first make sure the username isn't already in use
     const usernameResult = await checkForAvailableUsername(username);
@@ -140,7 +145,8 @@ export const changeUsername = async (_id: string, username: string) => {
     const pattern = new RegExp(usernamePattern);
     if (!username || !pattern.test(username)) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     // first make sure the username isn't already in use
     const usernameResult = await checkForAvailableUsername(username);
@@ -160,7 +166,8 @@ export const changePassword = async (_id: string, password: string, resetPasswor
     const pattern = new RegExp(passwordPattern);
     if (!password || !pattern.test(password)) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     if (resetPasswordToken) {
         // since a reset password token is being passed, get the expiration date/time of the token if it exists in the db
@@ -192,7 +199,8 @@ export const changeEmail = async (_id: string, email: string) => {
     const pattern = new RegExp(emailPattern);
     if (!email || !pattern.test(email)) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     // adding the emailUpdatedAt property will make modifiedCount return 1 even if the updated email address is the same as the old one
     const updateResult = await db
@@ -205,7 +213,9 @@ export const changeEmail = async (_id: string, email: string) => {
 export const forgotUsername = async (email: string) => {
     if (!email) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
+
     const user = await db
         .collection('users')
         .find({ email })
@@ -219,7 +229,7 @@ export const forgotUsername = async (email: string) => {
         from: process.env.NO_REPLY_EMAIL,
         to: email,
         subject: 'Forgot Username',
-        html: '<p>A request for your username(s) has been made for this email address.</p><p>The username(s) associated with this email address is/are:<br /><br />' + user.map((u: { username: string }) => u.username).join('<br />') + '</p>',
+        html: '<p>A request for your username(s) has been made for this email address.</p><p>The username(s) associated with this email address is/are:<br /><br />' + user.map((u) => u.username).join('<br />') + '</p>',
     };
 
     try {
@@ -234,7 +244,8 @@ export const forgotUsername = async (email: string) => {
 export const resetPassword = async (username: string, email: string, baseUrl: string) => {
     if (!username || !email || !baseUrl) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     // get the user by username and email
     const user = await db
@@ -280,7 +291,8 @@ export const resetPassword = async (username: string, email: string, baseUrl: st
 export const deleteUserAccount = async (_id: string) => {
     if (!_id || !ObjectId.isValid(_id)) return { code: 400 };
 
-    const { db } = await connectToDatabase();
+    const connection = await clientPromise;
+    const db = connection.db();
 
     const deleteResult = await db
         .collection('users')

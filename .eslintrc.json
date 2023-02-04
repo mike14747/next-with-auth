@@ -14,40 +14,31 @@
     "globals": {
         "JSX": "readonly"
     },
-    // "overrides": [
-    //     {
-    //         "files": [
-    //             "**/*.ts",
-    //             "**/*.tsx"
-    //         ],
-    //         "plugins": [
-    //             "@typescript-eslint"
-    //         ],
-    //         "extends": [
-    //             "plugin:@typescript-eslint/eslint-recommended",
-    //             "plugin:@typescript-eslint/recommended"
-    //         ],
-    //         "parser": "@typescript-eslint/parser",
-    //         "parserOptions": {
-    //             "project": [
-    //                 "./tsconfig.json"
-    //             ]
-    //         },
-    //         "rules": {
-    //             "semi": "off",
-    //             "@typescript-eslint/semi": "error",
-    //             "multiline": {
-    //                 "delimiter": "semi",
-    //                 "requireLast": true
-    //             },
-    //             "singleline": {
-    //                 "delimiter": "semi",
-    //                 "requireLast": false
-    //             },
-    //             "multilineDetection": "brackets"
-    //         }
-    //     }
-    // ],
+    "overrides": [
+        {
+            "files": [
+                "**/*.ts",
+                "**/*.tsx"
+            ],
+            "env": {
+                "browser": true,
+                "es6": true,
+                "node": true
+            },
+            "extends": [
+                "plugin:@typescript-eslint/eslint-recommended",
+                "plugin:@typescript-eslint/recommended"
+            ],
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "project": "./tsconfig.json"
+            },
+            "plugins": [
+                "@typescript-eslint"
+            ],
+            "rules": {}
+        }
+    ],
     "rules": {
         "@next/next/no-img-element": "warn",
         "camelcase": [

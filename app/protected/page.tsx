@@ -9,7 +9,7 @@ async function getData() {
 }
 
 export default async function Page() {
-    // doing this will return the session in the form of a token... including the expiry date
+    // doing this will return the session in the form of a token
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });

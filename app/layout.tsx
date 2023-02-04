@@ -7,13 +7,14 @@ import Footer from './components/Footer';
 import ScrollTop from './components/ScrollTop';
 import SkipToMain from './components/SkipToMain';
 import { getSettings } from '../lib/api';
+import { Session } from 'next-auth';
 
 import '../styles/mg_base.css';
 import '../styles/globals.css';
 
 type RootLayoutProps = {
     children: ReactNode;
-    session: object | null;
+    session: Session;
     params: {
         numInitialNewsItems: number;
         newsItemIncrement: number;
