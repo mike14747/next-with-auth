@@ -1026,7 +1026,8 @@ import { MongoClient } from 'mongodb';
 
 const { MONGODB_URI, MONGODB_DB } = process.env;
 
-if (!MONGODB_URI || !MONGODB_DB) throw new Error('Please define the MONGODB_URI and MONGODB_DB environment variables in your .env file.');
+if (!MONGODB_URI || !MONGODB_DB)
+    throw new Error('Please define the MONGODB_URI and MONGODB_DB environment variables in your .env file.');
 
 // global is used here to maintain a cached connection across hot reloads in development. This prevents connections growing exponentiatlly during API Route usage.
 
@@ -1056,6 +1057,35 @@ export async function connectToDatabase() {
 }
 ```
 
+```js
+// from the mongodb docs (I think this was listed under v5.0.0)
+
+const { MongoClient } = require('mongodb');
+
+const uri = process.env.MONGODB_URI;
+
+const client = new MongoClient(uri);
+
+const db = client.db();
+
+async function run() {
+    try {
+        const database = client.db('sample_mflix');
+        const movies = database.collection('movies');
+
+        // Query for a movie that has the title 'Back to the Future'
+        const query = { title: 'Back to the Future' };
+        const movie = await movies.findOne(query);
+
+        console.log(movie);
+    } finally {
+        // Ensures that the client will close when you finish/error
+        await client.close();
+    }
+}
+run().catch(console.dir);
+```
+
 ---
 
 ## Todos
@@ -1067,6 +1097,9 @@ export async function connectToDatabase() {
 -   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
 -   Why are my server-side console.logs not showing up?
 -   Figure out optimized typescript-eslint config?
+-   Should I be closing the mongodb connection after use in serverless functions?
+-   Upgrade to mongodb v5.0.0?
+-   I've added "{/* @ts-expect-error Server Component */}" to each server component page that's been converted to typescript for now until the known issues between next and typescript are resolved.
 
 ---
 

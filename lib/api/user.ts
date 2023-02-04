@@ -12,6 +12,7 @@ export const getUserForSignin = async (username: string, password: string) => {
     const user = await db
         .collection('users')
         .findOne({ username: username }, { projection: { _id: 1, username: 1, password: 1, salt: 1, role: 1 } });
+
     if (!user) return null;
 
     const hashedPassword = hashPassword(password, user?.salt);

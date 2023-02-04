@@ -18,8 +18,8 @@ export default async function Page() {
         redirect('/login?callbackUrl=/protected');
     }
 
-    let data: ProtectedData[] | null = null;
-    data = await getData().catch(error => console.log(error.message));
+    {/* @ts-expect-error Server Component */}
+    const data: ProtectedData[] | null = await getData().catch(error => console.log(error.message));
 
     return (
         <main id="main">

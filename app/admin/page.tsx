@@ -20,6 +20,7 @@ export default async function Page() {
 
     let data: AdminData[] | null = null;
     if (session.role === 'admin') {
+        {/* @ts-expect-error Server Component */}
         data = await getData().catch(error => console.log(error.message));
     }
 
