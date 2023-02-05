@@ -18,29 +18,31 @@ export default async function Page() {
         redirect('/login?callbackUrl=/protected');
     }
 
-    {/* @ts-expect-error Server Component */}
-    const data: {_id: string, name: string, age: number}[] | null = await getData().catch(error => console.log(error.message));
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
         <main id="main">
             <article>
-                <h2 className="page-heading">
-                    Protected Page
-                </h2>
+                {/* had to add this nested fragment to get typescript to stop complaining about nested jsx elements */}
+                <>
+                    <h2 className="page-heading">
+                        Protected Page
+                    </h2>
 
-                <p>
-                    This page is getting data on the server-side, right in the component.
-                </p>
+                    <p>
+                        This page is getting data on the server-side, right in the component.
+                    </p>
 
-                {data && data.length > 0 &&
-                    <ul>
-                        {data.map((item) => (
-                            <li key={item._id}>
-                                {item.name + ' - age: ' + item.age}
-                            </li>
-                        ))}
-                    </ul>
-                }
+                    {data && data.length > 0 &&
+                        <ul>
+                            {data.map((item) => (
+                                <li key={item._id}>
+                                    {item.name + ' - age: ' + item.age}
+                                </li>
+                            ))}
+                        </ul>
+                    }
+                </>
             </article>
         </main>
     );

@@ -18,9 +18,8 @@ export default async function Page() {
         redirect('/login?callbackUrl=/admin');
     }
 
-    let data: {_id: string, name: string, age: number, salary: number}[] | null = null;
+    let data = null;
     if (session.role === 'admin') {
-        {/* @ts-expect-error Server Component */}
         data = await getData().catch(error => console.log(error.message));
     }
 
