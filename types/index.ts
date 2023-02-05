@@ -1,7 +1,11 @@
+import { Document } from 'mongodb';
+
 export interface PublicData {
     _id: string;
     name: string;
 }
+
+export interface PublicDataDocument extends PublicData, Document {}
 
 export interface ProtectedData extends PublicData {
     age: number;

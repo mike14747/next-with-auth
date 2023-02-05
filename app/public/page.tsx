@@ -1,5 +1,5 @@
 import { getUnprotectedData } from '../../lib/api/index';
-import { PublicData } from '../../types';
+// import { PublicData } from '../../types';
 
 // export const revalidate = 60;
 
@@ -9,7 +9,7 @@ async function getData() {
 
 export default async function Page() {
     {/* @ts-expect-error Server Component */}
-    const data: PublicData[] | null = await getData().catch(error => console.log(error.message));
+    const data: {_id: string, name: string}[] = await getData().catch(error => console.log(error.message));
 
     return (
         <main id="main">
@@ -24,7 +24,7 @@ export default async function Page() {
 
                 {data && data.length > 0 &&
                     <ul>
-                        {data.map((item: PublicData) => (
+                        {data.map((item) => (
                             <li key={item._id}>
                                 {item.name}
                             </li>

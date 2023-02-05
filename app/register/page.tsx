@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, FormEvent } from 'react';
 import { useSession } from 'next-auth/react';
 import FormInputForUsername from '../components/FormInputForUsername';
 import FormInputForNewPassword from '../components/FormInputForNewPassword';
@@ -11,15 +11,15 @@ import Loading from '../components/Loading';
 export default function Page() {
     const { status } = useSession();
 
-    const username = useRef('');
-    const email = useRef('');
-    const password = useRef('');
-    const repeatPassword = useRef('');
+    const username = useRef<string>('');
+    const email = useRef<string>('');
+    const password = useRef<string>('');
+    const repeatPassword = useRef<string>('');
 
-    const [error, setError] = useState(null);
-    const [isSuccessful, setIsSuccessful] = useState(false);
+    const [error, setError] = useState<string>('');
+    const [isSuccessful, setIsSuccessful] = useState<boolean>(false);
 
-    const handleRegisterSubmit = async (e) => {
+    const handleRegisterSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (password.current !== repeatPassword.current) {
@@ -41,7 +41,7 @@ export default function Page() {
         if (res) {
             if (res.status === 201) {
                 setIsSuccessful(true);
-                setError(null);
+                setError('');
             }
 
             if (res.status !== 201) {

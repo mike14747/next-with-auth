@@ -1,7 +1,7 @@
 'use client';
 
 import PropTypes from 'prop-types';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
@@ -11,17 +11,24 @@ import Loading from '../../../components/Loading';
 
 import styles from '../../../../styles/profile.module.css';
 
-export default function Page({ params }) {
+type PageProps = {
+    params: {
+        userId: string;
+        resetPasswordToken: string;
+    }
+}
+
+export default function Page({ params }: PageProps) {
     const { data: session } = useSession();
 
     const router = useRouter();
 
-    const password = useRef('');
-    const repeatPassword = useRef('');
+    const password = useRef<string>('');
+    const repeatPassword = useRef<string>('');
 
-    const [passwordError, setPasswordError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [isSuccessfullyUpdated, setIsSuccessfullyUpdated] = useState(false);
+    const [passwordError, setPasswordError] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isSuccessfullyUpdated, setIsSuccessfullyUpdated] = useState<boolean>(false);
 
     useEffect(() => {
         if (isSuccessfullyUpdated) {
@@ -30,7 +37,7 @@ export default function Page({ params }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccessfullyUpdated]);
 
-    const handleUpdatePasswordSubmit = async (e) => {
+    const handleUpdatePasswordSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setIsLoading(true);
@@ -60,7 +67,7 @@ export default function Page({ params }) {
         if (res.status === 200) {
             password.current = '';
             repeatPassword.current = '';
-            setPasswordError(null);
+            setPasswordError('');
             setIsSuccessfullyUpdated(true);
         }
     };

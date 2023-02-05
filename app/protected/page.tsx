@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { getProtectedData } from '../../lib/api/index';
 // eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
-import { ProtectedData } from '../../types';
+// import { ProtectedData } from '../../types';
 
 async function getData() {
     return await getProtectedData().catch(error => console.log(error.message));
@@ -19,7 +19,7 @@ export default async function Page() {
     }
 
     {/* @ts-expect-error Server Component */}
-    const data: ProtectedData[] | null = await getData().catch(error => console.log(error.message));
+    const data: {_id: string, name: string, age: number}[] | null = await getData().catch(error => console.log(error.message));
 
     return (
         <main id="main">
@@ -34,7 +34,7 @@ export default async function Page() {
 
                 {data && data.length > 0 &&
                     <ul>
-                        {data.map((item: ProtectedData) => (
+                        {data.map((item) => (
                             <li key={item._id}>
                                 {item.name + ' - age: ' + item.age}
                             </li>
