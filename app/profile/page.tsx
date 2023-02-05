@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import CurrentProfile from '../components/profile/CurrentProfile';
 import { getUserProfile } from '../../lib/api/user';
 
-async function getData(id) {
+async function getData(id: string) {
     return await getUserProfile(id).catch(error => console.log(error.message));
 }
 
@@ -17,8 +17,12 @@ export default async function Page() {
         redirect('/login?callbackUrl=/profile');
     }
 
-    const user = await getData(session.id).catch(error => console.log(error.message));
-    user.id = session.id;
+    let user = await getData(session.id).catch(error => console.log(error.message));
+    if (user?.username && user?.email) {
+        user.id = session.id;
+    } else {
+        user = null;
+    }
 
     return (
         <main id="main">
@@ -27,7 +31,16 @@ export default async function Page() {
                     Profile
                 </h2>
 
-                <CurrentProfile userObj={user} />
+                {user &&
+                    <CurrentProfile userObj={user} />
+                }
+
+                {!user &&
+                    <p className="error">
+                        An error occurred fetching user profile info.
+                    </p>
+                }
+
             </article>
         </main>
     );

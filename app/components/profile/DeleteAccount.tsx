@@ -6,10 +6,10 @@ import Loading from '../Loading';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function DeleteAccount({ id }) {
-    const [error, setError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [deleteCounter, setDeleteCounter] = useState(0);
+export default function DeleteAccount({ id }: {id: string}) {
+    const [error, setError] = useState<string>('');
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [deleteCounter, setDeleteCounter] = useState<number>(0);
 
     const handleDeleteAccount = async () => {
         if (deleteCounter === 0) {

@@ -4,6 +4,7 @@ import { mailTransporter } from '../nodemailerConfig';
 import { formatDateObject } from '../formatDate';
 import { usernamePattern, emailPattern, passwordPattern } from '../formInputPatterns';
 import { generateRandom, hashPassword } from '../cryptoUtils';
+import { UserInfo } from '../../types/mongodb';
 
 export const getUserForSignin = async (username: string, password: string) => {
     const connection = await clientPromise;
@@ -54,7 +55,7 @@ export const getUserProfile = async (_id: string) => {
 
     return await db
         .collection('users')
-        .findOne({ _id: new ObjectId(_id) }, { projection: { _id: 0, username: 1, email: 1 } });
+        .findOne<UserInfo>({ _id: new ObjectId(_id) }, { projection: { _id: 0, username: 1, email: 1 } });
 };
 
 // type UserInfo = {
