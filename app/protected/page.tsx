@@ -23,7 +23,7 @@ export default async function Page() {
     return (
         <main id="main">
             <article>
-                {/* had to add this nested fragment to get typescript to stop complaining about nested jsx elements */}
+                {/* had to add this nested fragment to get typescript to stop complaining about multiple children */}
                 <>
                     <h2 className="page-heading">
                         Protected Page

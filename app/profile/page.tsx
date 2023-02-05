@@ -17,30 +17,28 @@ export default async function Page() {
         redirect('/login?callbackUrl=/profile');
     }
 
-    let user = await getData(session.id).catch(error => console.log(error.message));
-    if (user?.username && user?.email) {
-        user.id = session.id;
-    } else {
-        user = null;
-    }
+    const user = await getData(session.id).catch(error => console.log(error.message));
+    if (user?.username && user?.email) user.id = session.id;
 
     return (
         <main id="main">
             <article className="mw-75ch">
-                <h2 className="page-heading">
-                    Profile
-                </h2>
+                {/* had to add this nested fragment to get typescript to stop complaining about multiple children */}
+                <>
+                    <h2 className="page-heading">
+                        Profile
+                    </h2>
 
-                {user &&
-                    <CurrentProfile userObj={user} />
-                }
+                    {user &&
+                        <CurrentProfile userObj={user} />
+                    }
 
-                {!user &&
-                    <p className="error">
-                        An error occurred fetching user profile info.
-                    </p>
-                }
-
+                    {!user &&
+                        <p className="error">
+                            An error occurred fetching user profile info.
+                        </p>
+                    }
+                </>
             </article>
         </main>
     );

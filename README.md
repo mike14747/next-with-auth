@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This is my reference app for creating a next.js app using next-auth.
+This was my reference app for creating a next.js app using next-auth. However, it seems to have become my reference app for next.js version 13 (and the new appDir), middleware and typescript.
 
 It includes public and protected pages.
 
