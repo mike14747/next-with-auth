@@ -3,18 +3,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import UpdateProfile from './UpdateProfile';
+import { UserInfo, UserObjProp } from '../../../types';
 
 import styles from '../../../styles/profile.module.css';
-
-type UserInfo = {
-    id: string;
-    username: string;
-    email: string;
-}
-
-type UserObjProp = {
-    userObj: UserInfo;
-}
 
 export default function CurrentProfile({ userObj }: UserObjProp) {
     const [user, setUser] = useState<UserInfo>(userObj);

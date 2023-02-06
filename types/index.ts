@@ -30,3 +30,20 @@ export interface Token {
     exp: number;
     jti: string;
 }
+
+export type UserInfo = {
+    id: string;
+    username: string;
+    email: string;
+}
+
+export type UserObjProp = {
+    userObj: UserInfo;
+}
+
+export type ViewButtonState = {
+    showUpdateUsername: boolean;
+    showUpdatePassword: boolean;
+    showUpdateEmail: boolean;
+    showDeleteAccount: boolean;
+}

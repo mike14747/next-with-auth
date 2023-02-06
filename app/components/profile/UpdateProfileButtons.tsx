@@ -1,9 +1,16 @@
 import PropTypes from 'prop-types';
+import { Dispatch, SetStateAction } from 'react';
 import Button from '../Button';
+import { ViewButtonState } from '../../../types';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateProfileButtons({ viewState, setViewState }) {
+type UpdateProfileButtonsProps = {
+    viewState: ViewButtonState
+    setViewState: Dispatch<SetStateAction<ViewButtonState>>;
+}
+
+export default function UpdateProfileButtons({ viewState, setViewState }: UpdateProfileButtonsProps) {
     return (
         <nav aria-label="Update / Delete your account navigation" className={styles.showButtonNav}>
             <h3 className={styles.updateButtonsHeading}>Update / Delete your account</h3>
