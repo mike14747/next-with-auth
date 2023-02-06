@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
-// eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
-// import { AdminData } from '../../types';
 
 async function getData() {
     return await getAdminData().catch(error => console.log(error.message));

@@ -1,8 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getProtectedData } from '../../lib/api/index';
-// eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
-// import { ProtectedData } from '../../types';
 
 async function getData() {
     return await getProtectedData().catch(error => console.log(error.message));

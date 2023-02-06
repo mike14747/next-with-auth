@@ -67,7 +67,7 @@ Add some things to **scripts** property in **package.json**... so it looks like 
 }
 ```
 
-Install this folder/file structure (include the last blank line and you won't have to hit enter after pasting it into the terminal):
+Install this folder/file structure (include the last blank line and you won't have to hit enter after pasting it into the terminal). **NOTE**: This was the folder/file structure before I used the new appDir and typescript.
 
 ```bash
 touch .env
@@ -82,12 +82,12 @@ cd ../../styles && touch globals.css Home.module.css Header.module.css Footer.mo
 
 Some of the above created files will need to be populated with code before this app will work. That will follow in subsequent sections.
 
-Since I've upgraded this app to use next.js version 13, the initial folder/file structure will now be:
+Since I've upgraded this app to use next.js version 13, the initial folder/file structure will now be the following. **NOTE**: This was the folder/file structure before I updated the app to typescript.
 
 ```bash
 touch .env
 mkdir app lib pages public styles
-cd app && mkdir components && touch page.js layout.js head.js
+cd app && mkdir components && touch page.js layout.tsx head.js
 cd components && touch Header.js Navbar.js Footer.js
 cd ../lib && mkdir api
 cd ../pages && mkdir api
@@ -104,34 +104,46 @@ I added **.env** to my **.gitignore** file, because by default the github node .
 
 For starters, let's populate just the files necessary to run the app. I've included my custom **SkipTpMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section.
 
-**UPDATE**: the **Layout** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.js**. **NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
+**UPDATE**: the **Layout** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.tsx**. **NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
 
 ```js
-// /app/layout.js
+// /app/layout.tsx
 
 import PropTypes from 'prop-types';
-import ClientSessionProvider from './components/ClientSession';
+import { ReactNode } from 'react';
+import ClientSessionProvider from './components/ClientSessionProvider';
 import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollTop from './components/ScrollTop';
 import SkipToMain from './components/SkipToMain';
 import { getSettings } from '../lib/api';
+import { Session } from 'next-auth';
 
+import '../styles/mg_base.css';
 import '../styles/globals.css';
 
+type RootLayoutProps = {
+    children: ReactNode;
+    session: Session;
+    params: {
+        numInitialNewsItems: number;
+        newsItemIncrement: number;
+    },
+};
+
 async function getSettingsData() {
-    return await getSettings().catch((error) => console.log(error.message));
+    return await getSettings().catch(error => console.log(error.message));
 }
 
-export default async function RootLayout({ children, session, ...props }) {
-    const settingsData = await getSettingsData().catch((error) => console.log(error.message));
+export default async function RootLayout({ children, session, params }: RootLayoutProps) {
+    const settingsData = await getSettingsData().catch(error => console.log(error.message));
 
-    props.params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
-    props.params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
+    params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
+    params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
 
     return (
-        <html lang="en">
+        <html lang='en'>
             <head />
             <body id="appWrapper">
                 <ClientSessionProvider session={session}>
@@ -139,10 +151,11 @@ export default async function RootLayout({ children, session, ...props }) {
                     <Header topInfoActive={settingsData?.topInfoActive} topInfoText={settingsData?.topInfoText} />
                     <Navbar />
 
-                    <main id="main" className="main-container">
+                    <div className="page-container">
                         {children}
                         <ScrollTop />
-                    </main>
+                    </div>
+
                     <Footer contactEmail={settingsData?.contactEmail} />
                 </ClientSessionProvider>
             </body>
@@ -521,18 +534,29 @@ Some things to note with the next-auth file:
 -   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session), plus edit the /types/next-auth.d.ts file if using typescript.
 -   You can have more providers (eg: email or OAuth). They would get added to the **providers** array.
 
-I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.js**, but I wanted to keep layout.js as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.js. This allowed me to keep layout.js as a server component.
+I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.tsx**, but I wanted to keep layout.tsx as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.tsx. This allowed me to keep layout.tsx as a server component.
 
 ```js
-// /app/compontents/ClientSessionProvider.js
+// /app/compontents/ClientSessionProvider.tsx
 
 'use client';
 
 import PropTypes from 'prop-types';
+import { ReactNode } from 'react';
+import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 
-export default function ClientSession({ children, session }) {
-    return <SessionProvider session={session}>{children}</SessionProvider>;
+type ClientSessionProps = {
+    children: ReactNode;
+    session: Session;
+}
+
+export default function ClientSession({ children, session }: ClientSessionProps) {
+    return (
+        <SessionProvider session={session}>
+            {children}
+        </SessionProvider>
+    );
 }
 
 ClientSession.propTypes = {
@@ -570,7 +594,7 @@ if (notRedirectableCheck.length > 0) redirectUrl = '/';
 
 On the login page, I've imported a **ForgotLoginInfo** component which allows users to retrieve their username or get a reset password link via email.
 
-I've implemented NodeMailer to handle the emails. The configuration for NodeMailer is in: /lib/nodemailerConfig.js and also in the .env file.
+I've implemented NodeMailer to handle the emails. The configuration for NodeMailer is in: /lib/nodemailerConfig.ts and also in the .env file.
 
 A user can have all usernames associated with the email address they enter emailed to them.
 
@@ -591,33 +615,42 @@ There are 3 types of pages in this app.
 I've upgraded to next.js version 13 and I'm using the new **/app** folder for all my pages. I'm taking advantage of their new Server Components as much as possible. As of 2023-01-13, this is an example of my old method of page construction. Notice that I'm calling a serverless function directly in page.js via an async function... and not using fetch.
 
 ```js
-// /app/public/page.js
+// /app/public/page.tsx
 
 import { getUnprotectedData } from '../../lib/api/index';
 
 async function getData() {
-    return await getUnprotectedData().catch((error) => console.log(error.message));
+    return await getUnprotectedData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
-    const data = await getData().catch((error) => console.log(error.message));
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
-        <>
+        <main id="main">
             <article>
-                <h2 className="page-heading">Public Page</h2>
+                {/* had to add this nested fragment to get typescript to stop complaining about multiple children */}
+                <>
+                    <h2 className="page-heading">
+                        Public Page
+                    </h2>
 
-                <p>This page is getting data on the server-side, right in the component.</p>
+                    <p>
+                        This page is getting data on the server-side, right in the component.
+                    </p>
 
-                {data?.length > 0 && (
-                    <ul>
-                        {data.map((item) => (
-                            <li key={item._id}>{item.name}</li>
-                        ))}
-                    </ul>
-                )}
+                    {data && data.length > 0 &&
+                        <ul>
+                            {data.map((item) => (
+                                <li key={item._id}>
+                                    {item.name}
+                                </li>
+                            ))}
+                        </ul>
+                    }
+                </>
             </article>
-        </>
+        </main>
     );
 }
 ```
@@ -627,19 +660,18 @@ export default async function Page() {
 This is very similar to the public page, but checks for a session and redirects to the login page if it doesn't find one.
 
 ```js
-// /app/protected/page.js
+// /app/protected/page.tsx
 
 import { redirect } from 'next/navigation';
 import { getProtectedData } from '../../lib/api/index';
-// eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getProtectedData().catch((error) => console.log(error.message));
+    return await getProtectedData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
-    // doing this will return the session in the form of a token... including the expiry date
+    // doing this will return the session in the form of a token
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });
@@ -647,24 +679,34 @@ export default async function Page() {
     if (!session) {
         redirect('/login?callbackUrl=/protected');
     }
-    const data = await getData().catch((error) => console.log(error.message));
+
+    const data = await getData().catch(error => console.log(error.message));
 
     return (
-        <>
+        <main id="main">
             <article>
-                <h2 className="page-heading">Protected Page</h2>
+                {/* had to add this nested fragment to get typescript to stop complaining about multiple children */}
+                <>
+                    <h2 className="page-heading">
+                        Protected Page
+                    </h2>
 
-                <p>This page is getting data on the server-side, right in the component.</p>
+                    <p>
+                        This page is getting data on the server-side, right in the component.
+                    </p>
 
-                {data?.length > 0 && (
-                    <ul>
-                        {data.map((item) => (
-                            <li key={item._id}>{item.name + ' - age: ' + item.age}</li>
-                        ))}
-                    </ul>
-                )}
+                    {data && data.length > 0 &&
+                        <ul>
+                            {data.map((item) => (
+                                <li key={item._id}>
+                                    {item.name + ' - age: ' + item.age}
+                                </li>
+                            ))}
+                        </ul>
+                    }
+                </>
             </article>
-        </>
+        </main>
     );
 }
 ```
@@ -687,19 +729,18 @@ This page is very similar to the protected page... with the following exception:
 -   If the user is logged in, but doesn't have a role of "admin", I show an error message telling they lack credentials, but I don't redirect them.
 
 ```js
-// /app/admin/page.js
+// /app/admin/page.tsx
 
 import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
-// eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getAdminData().catch((error) => console.log(error.message));
+    return await getAdminData().catch(error => console.log(error.message));
 }
 
 export default async function Page() {
-    // doing this will return the session in the form of a token... including the expiry date
+    // doing this will return the session in the form of a token
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });
@@ -710,13 +751,15 @@ export default async function Page() {
 
     let data = null;
     if (session.role === 'admin') {
-        data = await getData().catch((error) => console.log(error.message));
+        data = await getData().catch(error => console.log(error.message));
     }
 
     return (
-        <>
+        <main id="main">
             <article>
-                <h2 className="page-heading">Admin Page</h2>
+                <h2 className="page-heading">
+                    Admin Page
+                </h2>
 
                 {session?.role !== 'admin' && (
                     <>
@@ -732,7 +775,7 @@ export default async function Page() {
 
                 {session?.role === 'admin' && (
                     <>
-                        {data?.length > 0 && (
+                        {data && data.length > 0 && (
                             <ul>
                                 {data.map((item) => (
                                     <li key={item._id}>
@@ -744,7 +787,7 @@ export default async function Page() {
                     </>
                 )}
             </article>
-        </>
+        </main>
     );
 }
 ```
@@ -766,22 +809,20 @@ There are 3 types of API routes in this app.
 **Public API route**
 
 ```js
-// /pages/api/public.js
+// /pages/api/public.ts
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUnprotectedData } from '../../lib/api';
 
-export default async function publicRoute(req, res) {
-    // the only crud method allowed on this route is GET
+export default async function publicRoute(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(401).end();
 
     try {
-        // access a serverless function to retrieve data
         const response = await getUnprotectedData();
-        // if the data cannot be fetched respond with a status code of 500
-        response ? res.status(200).json(response) : res.status(500).end();
+        return response ? res.status(200).json(response) : res.status(500).end();
     } catch (error) {
         console.error(error);
-        res.status(500).end();
+        return res.status(500).end();
     }
 }
 ```
@@ -791,66 +832,62 @@ export default async function publicRoute(req, res) {
 Inside the async function are checks to make sure the following conditions are true (with a 401 status code being returned if they aren't):
 
 1.  Check that the proper crud method is being used.
-2.  Check that the user is logged via a session.
+2.  Check that the user is logged via a token.
 
 Only if the above conditions are met, the serverless function is called.
 
 This is a sample of my typical protected API route.
 
 ```js
-// /pages/api/protected.js
+// /pages/api/protected.ts
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { getProtectedData } from '../../lib/api';
 
-export default async function protectedRoute(req, res) {
-    // the only crud method allowed on this route is GET
+export default async function protectedRoute(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(401).end();
 
-    // make sure a user is signed in, so check for a token
     const token = await getToken({ req });
-
-    // respond with status code 401 if there's no token
     if (!token) return res.status(401).end();
 
     try {
-        // access a serverless function to retrieve data
         const response = await getProtectedData();
-        // if the data cannot be fetched respond with a status code of 500
-        response ? res.status(200).json(response) : res.status(500).end();
+        return response ? res.status(200).json(response) : res.status(500).end();
     } catch (error) {
         console.error(error);
-        res.status(500).end();
+        return res.status(500).end();
     }
 }
 ```
 
 Special protected API routes.
 
-Some of my API routes required not only that a user is logged in, but that a certain user is logged in. The user.\_id in the session must match the query parameter user id.
+Some of my API routes required not only that a user is logged in, but that a certain user is logged in. The user.\_id in the token must match the query parameter user id.
 
 This is an example of one of these special API routes (used to update a user's username).
 
 ```js
-// /pages/api/users/[_id]/change-username.js
+// /pages/api/users/[_id]/change-username.ts
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { changeUsername } from '../../../../lib/api/user';
 
-export default async function user(req, res) {
+export default async function user(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'PUT') return res.status(401).end();
+
     const token = await getToken({ req });
     if (!token) return res.status(401).end();
-    if (!req.query._id || !req.body.username) return res.status(400).end();
-    if (token?._id !== req.query._id) return res.status(401).end();
+    if (!req.query.id || typeof req.query.id !== 'string' || !req.body.username) return res.status(400).end();
+    if (token?.id !== req.query.id) return res.status(400).end();
 
     try {
-        // the changeUsername serverless function will first make sure the username isn't already in use and then will make the change if it's not in use
-        const response = await changeUsername(req.query._id, req.body.username);
-        response?.code ? res.status(response.code).end() : res.status(500).end();
+        const response = await changeUsername(req.query.id, req.body.username);
+        return response?.code ? res.status(response.code).end() : res.status(500).end();
     } catch (error) {
-        console.error(error);
-        res.status(500).end();
+        console.log(error);
+        return res.status(500).end();
     }
 }
 ```
@@ -860,31 +897,24 @@ export default async function user(req, res) {
 This is an example of an admin api route where a user must be signed in and have the role of "admin".
 
 ```js
-// /pages/api/admin.js
+// /pages/api/admin.ts
 
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
 import { getAdminData } from '../../lib/api';
 
-export default async function adminRoute(req, res) {
-    // the only crud method allowed on this route is GET
+export default async function adminRoute(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(401).end();
 
-    // make sure a user is signed in, so check for a token
     const token = await getToken({ req });
-
-    console.log({ token });
-
-    // respond with status code 401 if there's no token or the user does not have a role of admin
     if (token?.role !== 'admin') return res.status(401).end();
 
     try {
-        // access a serverless function to retrieve data
         const response = await getAdminData();
-        // if the data cannot be fetched respond with a status code of 500
-        response ? res.status(200).json(response) : res.status(500).end();
+        return response ? res.status(200).json(response) : res.status(500).end();
     } catch (error) {
         console.error(error);
-        res.status(500).end();
+        return res.status(500).end();
     }
 }
 ```
@@ -937,6 +967,8 @@ const router = useRouter();
 if (status === 'unauthenticated') router.push('/login?callbackUrl=/protected');
 ```
 
+To get the query params of the url, you have to use **useSearchParams**. This will get all the items after the ? and & symbols.
+
 ```js
 import { useSearchParams } from 'next/navigation';
 
@@ -977,113 +1009,10 @@ fetch(URL, { next: { revalidate: 20 } });
 
 Next.js version 13 does not seem to use a wrapper div with the id of **\_\_next** like previous versions did. This had made the css for my full height pages stop working.
 
-My fix was to add an id of **appWrapper** to the body tag in **/app/layout.js** which uses the same css as the old #\_\_next div.
+My fix was to add an id of **appWrapper** to the body tag in **/app/layout.tsx** which uses the same css as the old #\_\_next div.
 
 ```jsx
 <body id="appWrapper">{/* ... */}</body>
-```
-
----
-
-```ts
-// new /lib/mongodb.ts from next.js repo
-
-import { MongoClient } from 'mongodb';
-
-if (!process.env.MONGODB_URI) {
-    throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
-}
-
-const uri = process.env.MONGODB_URI;
-const options = {};
-
-let client;
-let clientPromise: Promise<MongoClient>;
-
-if (process.env.NODE_ENV === 'development') {
-    // In development mode, use a global variable so that the value
-    // is preserved across module reloads caused by HMR (Hot Module Replacement).
-    if (!global._mongoClientPromise) {
-        client = new MongoClient(uri, options);
-        global._mongoClientPromise = client.connect();
-    }
-    clientPromise = global._mongoClientPromise;
-} else {
-    // In production mode, it's best to not use a global variable.
-    client = new MongoClient(uri, options);
-    clientPromise = client.connect();
-}
-
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export default clientPromise;
-```
-
-```js
-// old /lib/mongodb.js
-
-import { MongoClient } from 'mongodb';
-
-const { MONGODB_URI, MONGODB_DB } = process.env;
-
-if (!MONGODB_URI || !MONGODB_DB)
-    throw new Error('Please define the MONGODB_URI and MONGODB_DB environment variables in your .env file.');
-
-// global is used here to maintain a cached connection across hot reloads in development. This prevents connections growing exponentiatlly during API Route usage.
-
-let cached = global.mongo;
-if (!cached) cached = global.mongo = {};
-
-export async function connectToDatabase() {
-    if (cached.conn) return cached.conn;
-    if (!cached.promise) {
-        const conn = {};
-        const options = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        };
-        cached.promise = MongoClient.connect(MONGODB_URI, options)
-            .then((client) => {
-                conn.client = client;
-                return client.db(MONGODB_DB);
-            })
-            .then((db) => {
-                conn.db = db;
-                cached.conn = conn;
-            });
-    }
-    await cached.promise;
-    return cached.conn;
-}
-```
-
-```js
-// from the mongodb docs (I think this was listed under v5.0.0)
-
-const { MongoClient } = require('mongodb');
-
-const uri = process.env.MONGODB_URI;
-
-const client = new MongoClient(uri);
-
-const db = client.db();
-
-async function run() {
-    try {
-        const database = client.db('sample_mflix');
-        const movies = database.collection('movies');
-
-        // Query for a movie that has the title 'Back to the Future'
-        const query = { title: 'Back to the Future' };
-        const movie = await movies.findOne(query);
-
-        console.log(movie);
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-}
-run().catch(console.dir);
 ```
 
 ---
@@ -1099,7 +1028,6 @@ run().catch(console.dir);
 -   Figure out optimized typescript-eslint config?
 -   Should I be closing the mongodb connection after use in serverless functions?
 -   Upgrade to mongodb v5.0.0?
--   I've added "{/* @ts-expect-error Server Component */}" to each server component page that's been converted to typescript for now until the known issues between next and typescript are resolved.
 
 ---
 
