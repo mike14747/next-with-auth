@@ -23,6 +23,7 @@ I'm hopeful that middleware will be the ultimate solution, but I've found the **
 
 Right now the only type of sign in is using **Credentials**. I'd like to add a few other types of options at some point.
 
+I've decided to use the **/styles** folder for all my global and css modules. I chose that system over placing the css modules with the files that use them because some of the css modules are shared between multiple pages/components.
 ---
 
 ## Starting this project
@@ -124,26 +125,26 @@ import '../styles/mg_base.css';
 import '../styles/globals.css';
 
 type RootLayoutProps = {
-    children: ReactNode;
-    session: Session;
+    children: ReactNode,
+    session: Session,
     params: {
-        numInitialNewsItems: number;
-        newsItemIncrement: number;
+        numInitialNewsItems: number,
+        newsItemIncrement: number,
     },
 };
 
 async function getSettingsData() {
-    return await getSettings().catch(error => console.log(error.message));
+    return await getSettings().catch((error) => console.log(error.message));
 }
 
 export default async function RootLayout({ children, session, params }: RootLayoutProps) {
-    const settingsData = await getSettingsData().catch(error => console.log(error.message));
+    const settingsData = await getSettingsData().catch((error) => console.log(error.message));
 
     params.numInitialNewsItems = settingsData?.numInitialNewsItems || 20;
     params.newsItemIncrement = settingsData?.newsItemIncrement || 50;
 
     return (
-        <html lang='en'>
+        <html lang="en">
             <head />
             <body id="appWrapper">
                 <ClientSessionProvider session={session}>
@@ -195,37 +196,59 @@ You can uncomment one of the favicon lines if you add a favicon to: **/public/im
 
 The initial **Header**, **Navbar** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, but for now it's just commented out.
 
-```js
-// /app/components/Header.js
+The Header component has a couple test props being passed down from layout.tsx, while the Footer.tsx component receives a contact email prop (contactEmail) from layout.tsx.
 
+```js
+// /app/components/Header.tsx
+
+import PropTypes from 'prop-types';
 import Link from 'next/link';
-// import Authbar from './Authbar';
+import Authbar from './Authbar';
 
 import styles from '../../styles/Header.module.css';
 
-export default function Header() {
+export default function Header({
+    topInfoActive = false,
+    topInfoText = '',
+}: {
+    topInfoActive: boolean,
+    topInfoText: string,
+}) {
     return (
-        <div className={styles.headerContainer}>
-            <header className={styles.header + ' container'}>
+        <header className={styles.header}>
+            <div className={styles.headerBody + ' container'}>
                 <div className={styles.leftDiv}>
                     <h1 className={styles.h1}>next-with-auth</h1>
+
+                    {topInfoActive && topInfoText && (
+                        <p>
+                            <small>{topInfoText}</small>
+                        </p>
+                    )}
 
                     <p>
                         <Link href="/">Home</Link>
                     </p>
                 </div>
 
-                <div className={styles.rightDiv}>{/* <Authbar /> */}</div>
-            </header>
-        </div>
+                <div className={styles.rightDiv}>
+                    <Authbar />
+                </div>
+            </div>
+        </header>
     );
 }
+
+Header.propTypes = {
+    topInfoActive: PropTypes.bool,
+    topInfoText: PropTypes.string,
+};
 ```
 
 ...and
 
 ```js
-// /app/components/Navbar.js
+// /app/components/Navbar.tsx
 
 import Link from 'next/link';
 
@@ -259,19 +282,32 @@ export default function Navbar() {
 ...and
 
 ```js
-// /app/components/Footer.js
+// /app/components/Footer.tsx
+
+import PropTypes from 'prop-types';
+import Link from 'next/link';
 
 import styles from '../../styles/Footer.module.css';
 
-export default function Footer() {
+export default function Footer({ contactEmail }: { contactEmail: string | undefined }) {
     return (
-        <div className={styles.footerContainer}>
-            <footer className={styles.footer + ' container'}>
-                <p className={styles.copyright}>&copy; 2022 next-with-auth</p>
-            </footer>
-        </div>
+        <footer className={styles.footer}>
+            <div className={styles.footerBody + ' container'}></div>
+            <p className={styles.copyright}>&copy; 2022 next-with-auth</p>
+
+            {contactEmail && (
+                <address className="text-center">
+                    Contact me at:<> </>
+                    <Link href={`mailto:${contactEmail}`}>{contactEmail}</Link>
+                </address>
+            )}
+        </footer>
     );
 }
+
+Footer.propTypes = {
+    contactEmail: PropTypes.string,
+};
 ```
 
 ---
@@ -418,8 +454,10 @@ export default NextAuth({
 });
 ```
 
+...then after converting it to typescript:
+
 ```ts
-// after converting [...nextauth.js] to typescript
+// [...nextauth.ts]
 
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
@@ -441,8 +479,8 @@ export default NextAuth({
                 const { username, password } = credentials;
                 const user = await getUserForSignin(username, password);
 
-                // I'm adding _id, username and role to the user object... which need to also be added to the token and session below in the callback functions
-                return user ? { _id: user._id, name: user.username, role: user.role } : null;
+                // I'm adding id, username and role to the user object... which need to also be added to the token and session below in the callback functions
+                return user ? { id: user._id, name: user.username, role: user.role } : null;
             },
         }),
     ],
@@ -457,13 +495,13 @@ export default NextAuth({
     callbacks: {
         // I'm adding some extra properties to the jwt... this is where you must add them
         async jwt({ token, user }) {
-            if (user?._id) token._id = user._id;
+            if (user?.id) token.id = user.id;
             if (user?.role) token.role = user.role;
             return token;
         },
         // I'm adding some extra properties to the session... this is where you must add them
         async session({ session, token }) {
-            if (token._id && session.user) session.user._id = token._id;
+            if (token.id && session.user) session.user.id = token.id;
             if (token.role && session.user) session.user.role = token.role;
             return session;
         },
@@ -471,46 +509,15 @@ export default NextAuth({
 });
 ```
 
-Once I converted \[...nextauth\].js to typescript (\[...nextauth\].ts), I had to add the following type declarations file to my **/types/next-auth.d.ts** folder:
+Once I converted \[...nextauth\].js to typescript (\[...nextauth\].ts), I had to add the following type declarations file to my **/types/next-auth.d.ts** folder (which include accommodations for the additions I'm making to the token and session):
 
 ```ts
 // next-auth.d.ts
 
-import NextAuth, { DefaultSession } from 'next-auth';
+import { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
     interface User {
-        _id: string;
-        name: string;
-        role: string;
-        id?: string | number;
-    }
-
-    interface Session extends DefaultSession {
-        user?: User;
-    }
-}
-
-declare module 'next-auth/jwt' {
-    interface JWT {
-        _id: string;
-        role: string;
-    }
-}
-```
-
-I had to change next-auth's interfaces to get typescript to stop complaining about various portions of the code. One tricky thing was to set the User interface's id field to optional. The default User interface next-auth uses includes it as required.
-
-If I planned on using a sql database to store my users, I would change all references to **\_id** to **id**. But, since mongodb uses \_id, I just stuck to their protocol. Doing this would mean my **/types/next-auth.d.ts** file would need to be changed to this:
-
-```ts
-// next-auth.d.ts (using id instead of _id)
-
-import NextAuth, { DefaultSession } from 'next-auth';
-
-declare module 'next-auth' {
-    interface User {
-        name: string;
         role: string;
     }
 
@@ -527,7 +534,7 @@ declare module 'next-auth/jwt' {
 }
 ```
 
-The \_id property was removed from the User interface. The optional id property was also removed because it's include in the base next-auth User interface. I only made it optional when using \_id to get typescript to stop complaining about it being required.
+Even though I like to use \_id when using mongodb and id when using a sql database, I decided to just use id with next-auth because the id field is included in the session by default and it would have been tricky to use \_id in its place. I'm still using \_id in front end pages and in the serverless components in this app.
 
 Some things to note with the next-auth file:
 
@@ -547,16 +554,12 @@ import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 
 type ClientSessionProps = {
-    children: ReactNode;
-    session: Session;
-}
+    children: ReactNode,
+    session: Session,
+};
 
 export default function ClientSession({ children, session }: ClientSessionProps) {
-    return (
-        <SessionProvider session={session}>
-            {children}
-        </SessionProvider>
-    );
+    return <SessionProvider session={session}>{children}</SessionProvider>;
 }
 
 ClientSession.propTypes = {
@@ -620,34 +623,28 @@ I've upgraded to next.js version 13 and I'm using the new **/app** folder for al
 import { getUnprotectedData } from '../../lib/api/index';
 
 async function getData() {
-    return await getUnprotectedData().catch(error => console.log(error.message));
+    return await getUnprotectedData().catch((error) => console.log(error.message));
 }
 
 export default async function Page() {
-    const data = await getData().catch(error => console.log(error.message));
+    const data = await getData().catch((error) => console.log(error.message));
 
     return (
         <main id="main">
             <article>
                 {/* had to add this nested fragment to get typescript to stop complaining about multiple children */}
                 <>
-                    <h2 className="page-heading">
-                        Public Page
-                    </h2>
+                    <h2 className="page-heading">Public Page</h2>
 
-                    <p>
-                        This page is getting data on the server-side, right in the component.
-                    </p>
+                    <p>This page is getting data on the server-side, right in the component.</p>
 
-                    {data && data.length > 0 &&
+                    {data && data.length > 0 && (
                         <ul>
                             {data.map((item) => (
-                                <li key={item._id}>
-                                    {item.name}
-                                </li>
+                                <li key={item._id}>{item.name}</li>
                             ))}
                         </ul>
-                    }
+                    )}
                 </>
             </article>
         </main>
@@ -667,7 +664,7 @@ import { getProtectedData } from '../../lib/api/index';
 import { getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getProtectedData().catch(error => console.log(error.message));
+    return await getProtectedData().catch((error) => console.log(error.message));
 }
 
 export default async function Page() {
@@ -680,30 +677,24 @@ export default async function Page() {
         redirect('/login?callbackUrl=/protected');
     }
 
-    const data = await getData().catch(error => console.log(error.message));
+    const data = await getData().catch((error) => console.log(error.message));
 
     return (
         <main id="main">
             <article>
                 {/* had to add this nested fragment to get typescript to stop complaining about multiple children */}
                 <>
-                    <h2 className="page-heading">
-                        Protected Page
-                    </h2>
+                    <h2 className="page-heading">Protected Page</h2>
 
-                    <p>
-                        This page is getting data on the server-side, right in the component.
-                    </p>
+                    <p>This page is getting data on the server-side, right in the component.</p>
 
-                    {data && data.length > 0 &&
+                    {data && data.length > 0 && (
                         <ul>
                             {data.map((item) => (
-                                <li key={item._id}>
-                                    {item.name + ' - age: ' + item.age}
-                                </li>
+                                <li key={item._id}>{item.name + ' - age: ' + item.age}</li>
                             ))}
                         </ul>
-                    }
+                    )}
                 </>
             </article>
         </main>
@@ -736,7 +727,7 @@ import { getAdminData } from '../../lib/api/index';
 import { getServerSession } from 'next-auth/next';
 
 async function getData() {
-    return await getAdminData().catch(error => console.log(error.message));
+    return await getAdminData().catch((error) => console.log(error.message));
 }
 
 export default async function Page() {
@@ -751,15 +742,13 @@ export default async function Page() {
 
     let data = null;
     if (session.role === 'admin') {
-        data = await getData().catch(error => console.log(error.message));
+        data = await getData().catch((error) => console.log(error.message));
     }
 
     return (
         <main id="main">
             <article>
-                <h2 className="page-heading">
-                    Admin Page
-                </h2>
+                <h2 className="page-heading">Admin Page</h2>
 
                 {session?.role !== 'admin' && (
                     <>

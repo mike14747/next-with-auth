@@ -4,12 +4,7 @@ import Authbar from './Authbar';
 
 import styles from '../../styles/Header.module.css';
 
-type HeaderProps = {
-    topInfoActive: boolean | null;
-    topInfoText: string | null;
-}
-
-export default function Header({ topInfoActive = false, topInfoText = '' }: HeaderProps) {
+export default function Header({ topInfoActive = false, topInfoText = '' }: { topInfoActive: boolean, topInfoText: string }) {
     return (
         <header className={styles.header}>
             <div className={styles.headerBody + ' container'}>

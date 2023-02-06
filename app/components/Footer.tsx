@@ -3,11 +3,7 @@ import Link from 'next/link';
 
 import styles from '../../styles/Footer.module.css';
 
-type FooterProps = {
-    contactEmail: string | undefined;
-}
-
-export default function Footer({ contactEmail }: FooterProps) {
+export default function Footer({ contactEmail }: { contactEmail: string | undefined }) {
     return (
         <footer className={styles.footer}>
             <div className={styles.footerBody + ' container'}>
