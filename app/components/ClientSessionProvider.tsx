@@ -5,12 +5,7 @@ import { ReactNode } from 'react';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 
-type ClientSessionProps = {
-    children: ReactNode;
-    session: Session;
-}
-
-export default function ClientSession({ children, session }: ClientSessionProps) {
+export default function ClientSession({ children, session }: { children: ReactNode, session: Session }) {
     return (
         <SessionProvider session={session}>
             {children}

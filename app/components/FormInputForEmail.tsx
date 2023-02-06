@@ -5,7 +5,7 @@ import { MutableRefObject, ChangeEvent } from 'react';
 import FormInput from './FormInput';
 import { emailPattern, emailErrorMsg } from '../../lib/formInputPatterns';
 
-export default function FormInputForEmail({ email }: {email: MutableRefObject<string>}) {
+export default function FormInputForEmail({ email }: { email: MutableRefObject<string> }) {
     return (
         <FormInput
             id="email"
