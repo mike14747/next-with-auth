@@ -3,9 +3,14 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import UpdateProfile from './UpdateProfile';
-import { UserInfo } from '../../../types/mongodb';
 
 import styles from '../../../styles/profile.module.css';
+
+type UserInfo = {
+    id: string;
+    username: string;
+    email: string;
+}
 
 type UserObjProp = {
     userObj: UserInfo;
