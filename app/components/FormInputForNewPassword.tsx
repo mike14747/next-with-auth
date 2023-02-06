@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
+import { MutableRefObject, ChangeEvent } from 'react';
 import FormInput from './FormInput';
 import { passwordPattern, passwordErrorMsg } from '../../lib/formInputPatterns';
 
-export default function FormInputForNewPassword({ password, repeatPassword }) {
+export default function FormInputForNewPassword({ password, repeatPassword }: {password: MutableRefObject<string>, repeatPassword: MutableRefObject<string>}) {
     return (
         <>
             <FormInput
@@ -11,7 +12,7 @@ export default function FormInputForNewPassword({ password, repeatPassword }) {
                 name="password"
                 type="password"
                 required={true}
-                handleChange={(e) => password.current = e.target.value}
+                handleChange={(e: ChangeEvent<HTMLInputElement>) => password.current = e.target.value}
                 pattern={passwordPattern}
                 errorMsg={passwordErrorMsg}
             />
@@ -22,7 +23,7 @@ export default function FormInputForNewPassword({ password, repeatPassword }) {
                 name="repeatPassword"
                 type="password"
                 required={true}
-                handleChange={(e) => repeatPassword.current = e.target.value}
+                handleChange={(e: ChangeEvent<HTMLInputElement>) => repeatPassword.current = e.target.value}
                 pattern={passwordPattern}
                 errorMsg={passwordErrorMsg}
             />
