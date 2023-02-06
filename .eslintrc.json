@@ -11,6 +11,34 @@
         "next",
         "next/core-web-vitals"
     ],
+    "globals": {
+        "JSX": "readonly"
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.ts",
+                "**/*.tsx"
+            ],
+            "env": {
+                "browser": true,
+                "es6": true,
+                "node": true
+            },
+            "extends": [
+                "plugin:@typescript-eslint/eslint-recommended",
+                "plugin:@typescript-eslint/recommended"
+            ],
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "project": "./tsconfig.json"
+            },
+            "plugins": [
+                "@typescript-eslint"
+            ],
+            "rules": {}
+        }
+    ],
     "rules": {
         "@next/next/no-img-element": "warn",
         "camelcase": [
@@ -84,7 +112,9 @@
             {
                 "extensions": [
                     ".js",
-                    ".jsx"
+                    ".jsx",
+                    ".ts",
+                    ".tsx"
                 ]
             }
         ],
@@ -92,7 +122,15 @@
             "error",
             4
         ],
-        "react/no-unknown-property": [1, { "ignore": ["key", "jsx"] }],
+        "react/no-unknown-property": [
+            1,
+            {
+                "ignore": [
+                    "key",
+                    "jsx"
+                ]
+            }
+        ],
         "react/prop-types": "error",
         "react/react-in-jsx-scope": "off",
         "react/require-default-props": "off",
@@ -119,7 +157,12 @@
             "error",
             "never"
         ],
-        "space-infix-ops": ["error", { "int32Hint": false }],
+        "space-infix-ops": [
+            "error",
+            {
+                "int32Hint": false
+            }
+        ],
         "space-unary-ops": [
             2,
             {
