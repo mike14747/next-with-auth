@@ -1051,9 +1051,9 @@ export default async function CheckoutPage() {
 
 ## getStaticProps and getServerSideProps replacements
 
-I haven't implemented any of these yet, but hope to shortly.
+**generateStaticParams** is the new getStaticPaths. I haven't implemented it yet, but hope to shortly.
 
--   **generateStaticParams** is the new getStaticPaths
+To make a page static HTML (server or client component), you can do
 
 ```js
 // generates statically like getStaticProps
@@ -1065,9 +1065,12 @@ fetch(URL, { cache: 'no-store' });
 // generates statically but revalidates every 20 seconds
 fetch(URL, { next: { revalidate: 20 } });
 
-// sets a global revalidate time for the whole page... though is only seems to work with making fetch requests and not accessing serverless functions directly
+// sets a revalidate time for any data fetching on the whole page
+// this is the way you need to do it when you are accessing serverless functions directly and not using fetch
 export const revalidate = 60;
 ```
+
+**NOTE**: Using any of the above only works with a production build... not with a dev server.
 
 ---
 
