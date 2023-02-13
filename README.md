@@ -1017,6 +1017,7 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.tsx**
 -   Figure out optimized typescript-eslint config?
 -   Should I be closing the mongodb connection after use in serverless functions?
 -   Upgrade to mongodb v5.0.0?
+-   Switch the database to my other account.
 
 ---
 
