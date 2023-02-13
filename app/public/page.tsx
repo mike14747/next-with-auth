@@ -1,7 +1,6 @@
 import { getUnprotectedData } from '../../lib/api/index';
-// import { PublicData } from '../../types';
 
-// export const revalidate = 60;
+export const revalidate = 60;
 
 async function getData() {
     return await getUnprotectedData().catch(error => console.log(error.message));

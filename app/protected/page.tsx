@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getProtectedData } from '../../lib/api/index';
 import { getServerSession } from 'next-auth/next';
 
+export const revalidate = 60;
+
 async function getData() {
     return await getProtectedData().catch(error => console.log(error.message));
 }

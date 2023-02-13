@@ -23,8 +23,7 @@ I'm hopeful that middleware will be the ultimate solution, but I've found the **
 
 Right now the only type of sign in is using **Credentials**. I'd like to add a few other types of options at some point.
 
-I've decided to use the **/styles** folder for all my global and css modules. I chose that system over placing the css modules with the files that use them because some of the css modules are shared between multiple pages/components.
----
+## I've decided to use the **/styles** folder for all my global and css modules. I chose that system over placing the css modules with the files that use them because some of the css modules are shared between multiple pages/components.
 
 ## Starting this project
 
@@ -83,19 +82,23 @@ cd ../../styles && touch globals.css Home.module.css Header.module.css Footer.mo
 
 Some of the above created files will need to be populated with code before this app will work. That will follow in subsequent sections.
 
-Since I've upgraded this app to use next.js version 13, the initial folder/file structure will now be the following. **NOTE**: This was the folder/file structure before I updated the app to typescript.
+Since I've upgraded this app to use next.js version 13, the initial folder/file structure will now be the following.
+
+**NOTE**: This was the folder/file structure before I updated the app to typescript.
 
 ```bash
 touch .env
-mkdir app lib pages public styles
-cd app && mkdir components && touch page.js layout.tsx head.js
-cd components && touch Header.js Navbar.js Footer.js
-cd ../lib && mkdir api
+mkdir app lib pages public styles types
+cd app && mkdir components && touch page.tsx layout.tsx head.tsx
+cd components && touch Header.tsx Navbar.tsx Footer.tsx
+cd ../../lib && mkdir api
 cd ../pages && mkdir api
 cd ../public && mkdir images
-cd ../styles && touch globals.css Home.module.css Header.module.css Navbar.module.css Footer.module.css
+cd ../styles && touch mg_base.css globals.css Home.module.css Header.module.css Navbar.module.css Footer.module.css
 
 ```
+
+More folders/files will need to be added for this app, but this is the basic skeleton structure to get started.
 
 I added **.env** to my **.gitignore** file, because by default the github node .gitignore file only includes .env.local.
 
@@ -103,9 +106,13 @@ I added **.env** to my **.gitignore** file, because by default the github node .
 
 ## Populating the newly created files
 
-For starters, let's populate just the files necessary to run the app. I've included my custom **SkipTpMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section.
+For starters, let's populate just the files necessary to run the app. I've included my custom **SkipToMain** component so anyone can hit tab on any page to quickly navigate to the **Main** section. There is an open issue with this component. When you navigate through the app's pages using \<Link\> components, the focus remains on the item you've clicked on after navigating (since the Navbar doesn't get rerendered upon navigation). This means you can only 'tab' to the SkipToMain component on full page refreshes. I don't know of a way around it at the moment. There would need to be a way of resetting focus upon navigation.
 
-**UPDATE**: the **Layout** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.tsx**. **NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
+### New layout component
+
+**UPDATE**: the **/components/Layout.js** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.tsx**.
+
+**NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
 
 ```js
 // /app/layout.tsx
@@ -170,17 +177,69 @@ RootLayout.propTypes = {
 };
 ```
 
-..and **/app/head.js**
+Something to note in the above layout.tsx is that I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.tsx**, but I wanted to keep layout.tsx as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.tsx. This allowed me to keep layout.tsx as a server component.
 
-```js
-export default function Head() {
+I'm not sure if this is best practice, but it seems work fine, so for now it's my preferred method.
+
+```ts
+// /app/compontents/ClientSessionProvider.tsx
+
+'use client';
+
+import PropTypes from 'prop-types';
+import { ReactNode } from 'react';
+import { Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
+
+type ClientSessionProps = {
+    children: ReactNode;
+    session: Session;
+};
+
+export default function ClientSession({ children, session }: ClientSessionProps) {
+    return <SessionProvider session={session}>{children}</SessionProvider>;
+}
+
+ClientSession.propTypes = {
+    children: PropTypes.node,
+    session: PropTypes.object,
+};
+```
+
+### Head info for each page
+
+I've decided to use a **head.ts** file in each page folder (in addition to the root one for the homepage).
+
+The only code that would differ in all the head.ts files is the title. So, instead of repeating all the code in every file, I've created a **DefaultHeadTags** component which includes all the repeat code. It looks like this:
+
+```ts
+// /app/components/DefaultHeadTags.ts
+
+export default function DefaultHeadTags() {
     return (
         <>
-            <title>next-with-auth</title>
             <meta content="width=device-width, initial-scale=1" name="viewport" />
             {/* <link rel="icon" href="data:," /> */}
             <link rel="icon" type="image/png" href="/images/next_with_auth_favicon-16x16.png" sizes="16x16" />
             <link rel="icon" type="image/png" href="/images/next_with_auth_favicon-32x32.png" sizes="32x32" />
+        </>
+    );
+}
+```
+
+Then, each head.ts component can import it and only have to add the title for that page.
+
+```ts
+// /app/head.ts
+
+import DefaultHeadTags from './components/DefaultHeadTags';
+
+export default function Head() {
+    return (
+        <>
+            <DefaultHeadTags />
+
+            <title>next-with-auth</title>
         </>
     );
 }
@@ -194,11 +253,13 @@ You can uncomment one of the favicon lines if you add a favicon to: **/public/im
 <link rel="icon" href="data:," />
 ```
 
+### Header, Navbar and Footer components
+
 The initial **Header**, **Navbar** and **Footer** are just basic functional components. The **Authbar** component imported in the Header will be utilized after Next-Auth is setup, but for now it's just commented out.
 
 The Header component has a couple test props being passed down from layout.tsx, while the Footer.tsx component receives a contact email prop (contactEmail) from layout.tsx.
 
-```js
+```ts
 // /app/components/Header.tsx
 
 import PropTypes from 'prop-types';
@@ -211,8 +272,8 @@ export default function Header({
     topInfoActive = false,
     topInfoText = '',
 }: {
-    topInfoActive: boolean,
-    topInfoText: string,
+    topInfoActive: boolean;
+    topInfoText: string;
 }) {
     return (
         <header className={styles.header}>
@@ -247,7 +308,7 @@ Header.propTypes = {
 
 ...and
 
-```js
+```ts
 // /app/components/Navbar.tsx
 
 import Link from 'next/link';
@@ -281,7 +342,7 @@ export default function Navbar() {
 
 ...and
 
-```js
+```ts
 // /app/components/Footer.tsx
 
 import PropTypes from 'prop-types';
@@ -368,6 +429,46 @@ I changed the error to a warning about using the **next/image** component instea
 
 ```json
 "@next/next/no-img-element": "warn"
+```
+
+### Linting typescript
+
+I had to supplement the above eslint config once I updated the app to typescript.
+
+First, I installed the following packages:
+
+```bash
+npm i -D @typescript-eslint/parser @typescript-eslint/eslint-plugin
+```
+
+I added some typescript overrides my **.eslintrc.json** file, but kept everything else the same. These will lint only on the .ts and .tsx files.
+
+```json
+"overrides": [
+    {
+        "files": [
+            "**/*.ts",
+            "**/*.tsx"
+        ],
+        "env": {
+            "browser": true,
+            "es6": true,
+            "node": true
+        },
+        "extends": [
+            "plugin:@typescript-eslint/eslint-recommended",
+            "plugin:@typescript-eslint/recommended"
+        ],
+        "parser": "@typescript-eslint/parser",
+        "parserOptions": {
+            "project": "./tsconfig.json"
+        },
+        "plugins": [
+            "@typescript-eslint"
+        ],
+        "rules": {}
+    }
+],
 ```
 
 ---
@@ -509,7 +610,7 @@ export default NextAuth({
 });
 ```
 
-Once I converted \[...nextauth\].js to typescript (\[...nextauth\].ts), I had to add the following type declarations file to my **/types/next-auth.d.ts** folder (which include accommodations for the additions I'm making to the token and session):
+Once I converted \[...nextauth\].js to typescript (\[...nextauth\].ts), I had to add the following type declarations file to my **/types/next-auth.d.ts** folder (which includes accommodations for the additions I'm making to the token and session):
 
 ```ts
 // next-auth.d.ts
@@ -540,33 +641,6 @@ Some things to note with the next-auth file:
 
 -   If you want to save any other properties in the jwt or session, it must be done in the **callbacks** functions (jwt and session), plus edit the /types/next-auth.d.ts file if using typescript.
 -   You can have more providers (eg: email or OAuth). They would get added to the **providers** array.
-
-I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.tsx**, but I wanted to keep layout.tsx as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.tsx. This allowed me to keep layout.tsx as a server component.
-
-```js
-// /app/compontents/ClientSessionProvider.tsx
-
-'use client';
-
-import PropTypes from 'prop-types';
-import { ReactNode } from 'react';
-import { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
-
-type ClientSessionProps = {
-    children: ReactNode,
-    session: Session,
-};
-
-export default function ClientSession({ children, session }: ClientSessionProps) {
-    return <SessionProvider session={session}>{children}</SessionProvider>;
-}
-
-ClientSession.propTypes = {
-    children: PropTypes.node,
-    session: PropTypes.object,
-};
-```
 
 I added my standard **login**, **register** and **profile** pages.
 
@@ -617,7 +691,7 @@ There are 3 types of pages in this app.
 
 I've upgraded to next.js version 13 and I'm using the new **/app** folder for all my pages. I'm taking advantage of their new Server Components as much as possible. As of 2023-01-13, this is an example of my old method of page construction. Notice that I'm calling a serverless function directly in page.js via an async function... and not using fetch.
 
-```js
+```ts
 // /app/public/page.tsx
 
 import { getUnprotectedData } from '../../lib/api/index';
@@ -656,7 +730,7 @@ export default async function Page() {
 
 This is very similar to the public page, but checks for a session and redirects to the login page if it doesn't find one.
 
-```js
+```ts
 // /app/protected/page.tsx
 
 import { redirect } from 'next/navigation';
@@ -719,7 +793,7 @@ This page is very similar to the protected page... with the following exception:
 -   I check for the role of the user before fetching data.
 -   If the user is logged in, but doesn't have a role of "admin", I show an error message telling they lack credentials, but I don't redirect them.
 
-```js
+```ts
 // /app/admin/page.tsx
 
 import { redirect } from 'next/navigation';
@@ -797,7 +871,7 @@ There are 3 types of API routes in this app.
 
 **Public API route**
 
-```js
+```ts
 // /pages/api/public.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -827,7 +901,7 @@ Only if the above conditions are met, the serverless function is called.
 
 This is a sample of my typical protected API route.
 
-```js
+```ts
 // /pages/api/protected.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -856,7 +930,7 @@ Some of my API routes required not only that a user is logged in, but that a cer
 
 This is an example of one of these special API routes (used to update a user's username).
 
-```js
+```ts
 // /pages/api/users/[_id]/change-username.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -885,7 +959,7 @@ export default async function user(req: NextApiRequest, res: NextApiResponse) {
 
 This is an example of an admin api route where a user must be signed in and have the role of "admin".
 
-```js
+```ts
 // /pages/api/admin.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -920,8 +994,8 @@ However, redirecting to the homepage upon signing out is useful when using middl
 
 For now, I'm redirecting to the homepage upon signOut().
 
-```js
-// /components/Authbar.js
+```ts
+// /components/Authbar.tsx
 
 <Button onClick={() => signOut({ redirect: false })} size="small" variant="text">Logout</Button>
 
@@ -977,20 +1051,26 @@ export default async function CheckoutPage() {
 
 ## getStaticProps and getServerSideProps replacements
 
-I haven't implemented any of these yet, but hope to shortly.
+**generateStaticParams** is the new getStaticPaths. I haven't implemented it yet, but hope to shortly.
 
--   **generateStaticParams** is the new getStaticPaths
+To make a page static HTML (server or client component), you can do
 
 ```js
-// Generates statically like getStaticProps.
+// generates statically like getStaticProps
 fetch(URL, { cache: 'force-cache' });
 
-// Generates server-side upon every request like getServerSideProps.
+// generates server-side upon every request like getServerSideProps
 fetch(URL, { cache: 'no-store' });
 
-// Generates statically but revalidates every 20 seconds
+// generates statically but revalidates every 20 seconds
 fetch(URL, { next: { revalidate: 20 } });
+
+// sets a revalidate time for any data fetching on the whole page
+// this is the way you need to do it when you are accessing serverless functions directly and not using fetch
+export const revalidate = 60;
 ```
+
+**NOTE**: Using any of the above only works with a production build... not with a dev server.
 
 ---
 

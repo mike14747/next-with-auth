@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation';
 import { getAdminData } from '../../lib/api/index';
 import { getServerSession } from 'next-auth/next';
 
+export const revalidate = 60;
+
 async function getData() {
     return await getAdminData().catch(error => console.log(error.message));
 }
