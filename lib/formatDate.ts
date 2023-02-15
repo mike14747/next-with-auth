@@ -28,7 +28,7 @@ const monthsLong = [
     'December',
 ];
 
-const isValidDateObject = (value: unknown): boolean => value instanceof Date && !isNaN(+value);
+const isValidDateObject = <T>(value: T): boolean => value instanceof Date && !isNaN(+value);
 
 export function formatDateObject(dateObj: Date, type = 'short'): string | null {
     if (!isValidDateObject(dateObj)) return null;
