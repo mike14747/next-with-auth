@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { ReactNode } from 'react';
 import ClientSessionProvider from './components/ClientSessionProvider';
 import Header from './components/Header';
@@ -51,8 +50,3 @@ export default async function RootLayout({ children, session, params }: RootLayo
         </html>
     );
 }
-
-RootLayout.propTypes = {
-    children: PropTypes.node,
-    session: PropTypes.object,
-};

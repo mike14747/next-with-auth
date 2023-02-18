@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
@@ -67,7 +66,3 @@ export default function DeleteAccount({ id }: {id: string}) {
         </>
     );
 }
-
-DeleteAccount.propTypes = {
-    id: PropTypes.string,
-};

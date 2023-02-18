@@ -1,6 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import UpdateProfile from './UpdateProfile';
 import { UserInfo, UserObjProp } from '../../../types';
@@ -26,7 +25,3 @@ export default function CurrentProfile({ userObj }: UserObjProp) {
         </>
     );
 }
-
-CurrentProfile.propTypes = {
-    userObj: PropTypes.object,
-};

@@ -1,6 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import { MutableRefObject, ChangeEvent } from 'react';
 import FormInput from './FormInput';
 import { emailPattern, emailErrorMsg } from '../../lib/formInputPatterns';
@@ -19,7 +18,3 @@ export default function FormInputForEmail({ email }: { email: MutableRefObject<s
         />
     );
 }
-
-FormInputForEmail.propTypes = {
-    email: PropTypes.string,
-};

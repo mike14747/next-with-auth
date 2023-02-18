@@ -1,6 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import { useState, Dispatch, SetStateAction } from 'react';
 import UpdateProfileButtons from './UpdateProfileButtons';
 import UpdateUsername from './UpdateUsername';
@@ -52,8 +51,3 @@ export default function UpdateProfile({ user, setUser }: {user: UserInfo, setUse
         </section>
     );
 }
-
-UpdateProfile.propTypes = {
-    user: PropTypes.object,
-    setUser: PropTypes.func,
-};

@@ -1,6 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import { Dispatch, SetStateAction } from 'react';
 import Button from '../Button';
 
@@ -39,10 +38,3 @@ export default function ForgotLoginButtons({ showForgotUsername, setShowForgotUs
         </nav>
     );
 }
-
-ForgotLoginButtons.propTypes = {
-    showForgotUsername: PropTypes.bool.isRequired,
-    setShowForgotUsername: PropTypes.func.isRequired,
-    showForgotPassword: PropTypes.bool.isRequired,
-    setShowForgotPassword: PropTypes.func.isRequired,
-};

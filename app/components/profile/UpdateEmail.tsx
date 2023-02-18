@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useRef, useState, Dispatch, SetStateAction, FormEvent, RefObject } from 'react';
 import Button from '../Button';
 import Loading from '../Loading';
@@ -76,8 +75,3 @@ export default function UpdateEmail({ id, setUser }: {id: string, setUser: Dispa
         </>
     );
 }
-
-UpdateEmail.propTypes = {
-    id: PropTypes.string,
-    setUser: PropTypes.func,
-};

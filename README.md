@@ -49,13 +49,7 @@ Install the **next.js** app:
 npm i next react react-dom
 ```
 
-**NOTE**: This app was updated to use typescript a while after creating it. For instructions on how to update it to typescript, see: coding-notes/typescript/nextjs.md.
-
-It seems that **prop-types** is no longer a core component of **React** and it needs to be installed as a stand alone package.
-
-```bash
-npm i prop-types
-```
+**NOTE**: This app was updated to use typescript a while after creating it. For instructions on how to update it to typescript, see: coding-notes/typescript/nextjs.md. Since I'm using typescript, I no longer feel the need to also us prop-types. All previous usage of them have been removed.
 
 Add some things to **scripts** property in **package.json**... so it looks like this:
 
@@ -117,7 +111,6 @@ For starters, let's populate just the files necessary to run the app. I've inclu
 ```js
 // /app/layout.tsx
 
-import PropTypes from 'prop-types';
 import { ReactNode } from 'react';
 import ClientSessionProvider from './components/ClientSessionProvider';
 import Header from './components/Header';
@@ -170,11 +163,6 @@ export default async function RootLayout({ children, session, params }: RootLayo
         </html>
     );
 }
-
-RootLayout.propTypes = {
-    children: PropTypes.node,
-    session: PropTypes.object,
-};
 ```
 
 Something to note in the above layout.tsx is that I needed to wrap a next-auth **SessionProvider** around all the components and pages in **/app/layout.tsx**, but I wanted to keep layout.tsx as a server component. With SessionProvider using React context, it can only be utilized in client components. So, I made a **/app/components/ClientSessionProvider.js** component that uses the SessionProvider, then imported that into layout.tsx. This allowed me to keep layout.tsx as a server component.
@@ -186,7 +174,6 @@ I'm not sure if this is best practice, but it seems work fine, so for now it's m
 
 'use client';
 
-import PropTypes from 'prop-types';
 import { ReactNode } from 'react';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
@@ -199,11 +186,6 @@ type ClientSessionProps = {
 export default function ClientSession({ children, session }: ClientSessionProps) {
     return <SessionProvider session={session}>{children}</SessionProvider>;
 }
-
-ClientSession.propTypes = {
-    children: PropTypes.node,
-    session: PropTypes.object,
-};
 ```
 
 ### Head info for each page
@@ -262,7 +244,6 @@ The Header component has a couple test props being passed down from layout.tsx, 
 ```ts
 // /app/components/Header.tsx
 
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Authbar from './Authbar';
 
@@ -299,11 +280,6 @@ export default function Header({
         </header>
     );
 }
-
-Header.propTypes = {
-    topInfoActive: PropTypes.bool,
-    topInfoText: PropTypes.string,
-};
 ```
 
 ...and
@@ -345,7 +321,6 @@ export default function Navbar() {
 ```ts
 // /app/components/Footer.tsx
 
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 import styles from '../../styles/Footer.module.css';
@@ -365,10 +340,6 @@ export default function Footer({ contactEmail }: { contactEmail: string | undefi
         </footer>
     );
 }
-
-Footer.propTypes = {
-    contactEmail: PropTypes.string,
-};
 ```
 
 ---

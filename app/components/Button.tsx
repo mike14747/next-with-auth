@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { ReactNode, MouseEventHandler } from 'react';
 
 import styles from '../../styles/Button.module.css';
@@ -33,12 +32,3 @@ export default function Button({ children, size = 'medium', variant = 'contained
         </button>
     );
 }
-
-Button.propTypes = {
-    children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
-    size: PropTypes.string,
-    variant: PropTypes.string,
-    type: PropTypes.string,
-    theme: PropTypes.string,
-    onClick: (props: ButtonProps) => props.type !== 'submit' && typeof (props.onClick) !== 'function' && new Error('onClick function is required unless the button type is submit!'),
-};

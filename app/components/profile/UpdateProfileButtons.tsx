@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { Dispatch, SetStateAction } from 'react';
 import Button from '../Button';
 import { ViewButtonState } from '../../../types';
@@ -73,8 +72,3 @@ export default function UpdateProfileButtons({ viewState, setViewState }: Update
         </nav>
     );
 }
-
-UpdateProfileButtons.propTypes = {
-    viewState: PropTypes.object,
-    setViewState: PropTypes.func,
-};

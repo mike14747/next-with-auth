@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 import styles from '../../styles/Footer.module.css';
@@ -22,7 +21,3 @@ export default function Footer({ contactEmail }: { contactEmail: string | undefi
         </footer>
     );
 }
-
-Footer.propTypes = {
-    contactEmail: PropTypes.string,
-};

@@ -1,6 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import { useRef, useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -109,7 +108,3 @@ export default function ResetLink({ params }: PageProps) {
         </main>
     );
 }
-
-ResetLink.propTypes = {
-    params: PropTypes.object,
-};

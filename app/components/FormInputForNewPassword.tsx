@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { MutableRefObject, ChangeEvent } from 'react';
 import FormInput from './FormInput';
 import { passwordPattern, passwordErrorMsg } from '../../lib/formInputPatterns';
@@ -30,7 +29,3 @@ export default function FormInputForNewPassword({ password, repeatPassword }: { 
         </>
     );
 }
-FormInputForNewPassword.propTypes = {
-    password: PropTypes.object,
-    repeatPassword: PropTypes.object,
-};

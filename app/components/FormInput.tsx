@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { ChangeEventHandler } from 'react';
 
 import styles from '../../styles/FormInput.module.css';
@@ -6,6 +5,7 @@ import styles from '../../styles/FormInput.module.css';
 type FormInputProps = {
     id: string;
     label?: string;
+    name: string;
     handleChange: ChangeEventHandler<HTMLInputElement>;
     errorMsg?: string;
     required?: boolean;
@@ -23,7 +23,7 @@ type FormInputProps = {
 
 const sizes = ['small', 'normal'];
 
-export default function FormInput({ id, label = '', handleChange, errorMsg = '', required = false, size = 'normal', type = 'text', placeholder = '', ...rest }: FormInputProps) {
+export default function FormInput({ id, label = '', name, handleChange, errorMsg = '', required = false, size = 'normal', type = 'text', placeholder = '', ...rest }: FormInputProps) {
     const inputSize = sizes?.includes(size) ? size : 'normal';
 
     const { checked } = { ...rest };
@@ -39,6 +39,7 @@ export default function FormInput({ id, label = '', handleChange, errorMsg = '',
 
             <input
                 id={id}
+                name={name}
                 className={`${styles.input} ${styles[inputSize]}`}
                 onChange={handleChange}
                 required={required}
@@ -58,33 +59,3 @@ export default function FormInput({ id, label = '', handleChange, errorMsg = '',
         </div>
     );
 }
-
-FormInput.propTypes = {
-    id: (props: FormInputProps) => props?.label?.length || 0 > 0 && (!props.id || typeof props.id !== 'string') && new Error('id is needed and must be in the proper format when a label is present'),
-    label: PropTypes.string,
-    handleChange: PropTypes.func.isRequired,
-    errorMsg: PropTypes.string,
-    required: PropTypes.bool,
-    size: PropTypes.string,
-    name: PropTypes.string.isRequired,
-    type: PropTypes.oneOf([
-        'text',
-        'number',
-        'password',
-        'date',
-        'email',
-        'tel',
-        'url',
-        'time',
-        'checkbox',
-    ]),
-    placeholder: PropTypes.string,
-    // ...rest are below
-    pattern: PropTypes.string,
-    step: PropTypes.string,
-    checked: PropTypes.bool,
-    value: PropTypes.string,
-    maxLength: PropTypes.number,
-    readOnly: PropTypes.bool,
-    disabled: PropTypes.bool,
-};

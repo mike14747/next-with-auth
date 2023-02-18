@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useRef, useState, FormEvent } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
@@ -72,6 +71,3 @@ export default function UpdateUsername({ id }: {id: string}) {
         </>
     );
 }
-UpdateUsername.propTypes = {
-    id: PropTypes.string,
-};

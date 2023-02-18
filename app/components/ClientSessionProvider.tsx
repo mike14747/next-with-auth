@@ -1,6 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
 import { ReactNode } from 'react';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
@@ -12,8 +11,3 @@ export default function ClientSession({ children, session }: { children: ReactNo
         </SessionProvider>
     );
 }
-
-ClientSession.propTypes = {
-    children: PropTypes.node,
-    session: PropTypes.object,
-};

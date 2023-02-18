@@ -1,7 +1,5 @@
 'use client';
 
-import PropTypes from 'prop-types';
-
 type HomepageProps = {
     params: {
         numInitialNewsItems: number;
@@ -32,7 +30,3 @@ export default function Homepage({ params }: HomepageProps) {
 
     );
 }
-
-Homepage.propTypes = {
-    params: PropTypes.object,
-};

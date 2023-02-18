@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import Link from 'next/link';
 import Authbar from './Authbar';
 
@@ -33,8 +32,3 @@ export default function Header({ topInfoActive = false, topInfoText = '' }: { to
         </header>
     );
 }
-
-Header.propTypes = {
-    topInfoActive: PropTypes.bool,
-    topInfoText: PropTypes.string,
-};
