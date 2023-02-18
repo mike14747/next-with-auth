@@ -8,7 +8,7 @@ import FormInputForEmail from '../components/FormInputForEmail';
 import Button from '../components/Button';
 import Loading from '../components/Loading';
 
-export default function Page() {
+export default function Register() {
     const { status } = useSession();
 
     const username = useRef<string>('');

@@ -8,7 +8,7 @@ async function getData() {
     return await getAdminData().catch(error => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Admin() {
     // doing this will return the session in the form of a token
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },

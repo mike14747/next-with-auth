@@ -8,7 +8,7 @@ async function getData(id: string) {
     return await getUserProfile(id).catch(error => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Profile() {
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
     });

@@ -18,7 +18,7 @@ type PageProps = {
     }
 }
 
-export default function Page({ params }: PageProps) {
+export default function ResetLink({ params }: PageProps) {
     const { data: session } = useSession();
 
     const router = useRouter();
@@ -110,6 +110,6 @@ export default function Page({ params }: PageProps) {
     );
 }
 
-Page.propTypes = {
+ResetLink.propTypes = {
     params: PropTypes.object,
 };

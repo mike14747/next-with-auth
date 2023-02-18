@@ -700,7 +700,7 @@ async function getData() {
     return await getUnprotectedData().catch((error) => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Public() {
     const data = await getData().catch((error) => console.log(error.message));
 
     return (
@@ -741,7 +741,7 @@ async function getData() {
     return await getProtectedData().catch((error) => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Protected() {
     // doing this will return the session in the form of a token
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
@@ -804,7 +804,7 @@ async function getData() {
     return await getAdminData().catch((error) => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Admin() {
     // doing this will return the session in the form of a token
     const session = await getServerSession({
         callbacks: { session: ({ token }) => token },
@@ -1090,7 +1090,7 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.tsx**
 
 -   Write tests.
 -   I'd like to come up with a way to clear button and nav focus on next/link page transition.
--   Decide what to name the page.js components (Page vs the name of the route folder).
+-   **Decide what to name the page.js components (Page vs the name of the route folder).**
 -   Switch over from client fetch to swr for data fetching... for now at least. Using fetch to POST/DELETE seems fine though.
 -   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
 -   Why are my server-side console.logs not showing up?

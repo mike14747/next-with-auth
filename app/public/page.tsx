@@ -6,7 +6,7 @@ async function getData() {
     return await getUnprotectedData().catch(error => console.log(error.message));
 }
 
-export default async function Page() {
+export default async function Public() {
     const data = await getData().catch(error => console.log(error.message));
 
     return (

@@ -9,7 +9,7 @@ type HomepageProps = {
     }
 }
 
-export default function Page({ params }: HomepageProps) {
+export default function Homepage({ params }: HomepageProps) {
     return (
         <>
             <aside>
@@ -33,6 +33,6 @@ export default function Page({ params }: HomepageProps) {
     );
 }
 
-Page.propTypes = {
+Homepage.propTypes = {
     params: PropTypes.object,
 };
