@@ -25,7 +25,7 @@ export default NextAuth({
     ],
     session: {
         strategy: 'jwt',
-        maxAge: 90 * (24 * 60 * 60), // 24 * 60 * 60 is 1 day
+        maxAge: 90 * (24 * 60 * 60), // (24 * 60 * 60) is 1 day
     },
     pages: {
         signIn: '/login',
