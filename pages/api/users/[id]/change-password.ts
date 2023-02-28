@@ -4,11 +4,12 @@ import { changePassword } from '../../../../lib/api/user';
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'PUT') return res.status(401).end();
-    const token = await getToken({ req });
-    if (!req.body.password) return res.status(400).end();
-    if (!token && (!req.body.userId  || !req.body.resetPasswordToken)) return res.status(401).end();
 
     try {
+        const token = await getToken({ req });
+        if (!req.body.password) return res.status(400).end();
+        if (!token && (!req.body.userId || !req.body.resetPasswordToken)) return res.status(401).end();
+
         let response;
         if (token && typeof token.id === 'string') {
             response = await changePassword(token.id, req.body.password);

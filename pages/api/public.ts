@@ -6,7 +6,8 @@ export default async function publicRoute(req: NextApiRequest, res: NextApiRespo
 
     try {
         const response = await getUnprotectedData();
-        return response ? res.status(200).json(response) : res.status(500).end();
+        if (!response) return res.status(500).end();
+        return response ? res.status(200).json(response) : res.status(404).end();
     } catch (error) {
         console.error(error);
         return res.status(500).end();

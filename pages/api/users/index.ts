@@ -7,12 +7,13 @@ import { getInfoForAllUsers, registerNewUser } from '../../../lib/api/user';
 
 export default async function users(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
-        const token = await getToken({ req });
-        if (token?.role !== 'admin') return res.status(401).end();
-
         try {
+            const token = await getToken({ req });
+            if (token?.role !== 'admin') return res.status(401).end();
+
             const response = await getInfoForAllUsers();
-            return response ? res.status(200).json(response) : res.status(500).end();
+            if (!response) return res.status(500).end();
+            return response.length > 0 ? res.status(200).json(response) : res.status(404).end();
         } catch (error) {
             console.log(error);
             return res.status(500).end();
