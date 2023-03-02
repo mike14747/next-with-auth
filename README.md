@@ -1069,6 +1069,8 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.tsx**
 -   Should I be closing the mongodb connection after use in serverless functions?
 -   Upgrade to mongodb v5.0.0?
 -   Switch the database to my other account.
+-   Implement a global 404 page once it's supported by next./js.
+-   Move the api routes to the appDir once next-auth has a patch to support getting tokens under this paradigm.
 
 ---
 
