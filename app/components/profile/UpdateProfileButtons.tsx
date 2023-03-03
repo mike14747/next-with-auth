@@ -14,43 +14,43 @@ export default function UpdateProfileButtons({ viewState, setViewState }: Update
         <nav aria-label="Update / Delete your account navigation" className={styles.showButtonNav}>
             <h3 className={styles.updateButtonsHeading}>Update / Delete your account</h3>
 
-            {viewState.showUpdateUsername
+            {viewState.showChangeUsername
                 ? <Button onClick={() => {
-                    setViewState(prev => ({ ...prev, showUpdateUsername: false }));
+                    setViewState(prev => ({ ...prev, showChangeUsername: false }));
                 }} type="button" size="small" variant="text" theme="primary">Hide Update Username</Button>
                 : <Button onClick={() => {
                     setViewState(() => ({
-                        showUpdateUsername: true,
-                        showUpdatePassword: false,
-                        showUpdateEmail: false,
+                        showChangeUsername: true,
+                        showChangePassword: false,
+                        showChangeEmail: false,
                         showDeleteAccount: false,
                     }));
                 }} type="button" size="small" variant="text" theme="primary">Update Username</Button>
             }
 
-            {viewState.showUpdatePassword
+            {viewState.showChangePassword
                 ? <Button onClick={() => {
-                    setViewState(prev => ({ ...prev, showUpdatePassword: false }));
+                    setViewState(prev => ({ ...prev, showChangePassword: false }));
                 }} type="button" size="small" variant="text" theme="primary">Hide Update Password</Button>
                 : <Button onClick={() => {
                     setViewState(() => ({
-                        showUpdateUsername: false,
-                        showUpdatePassword: true,
-                        showUpdateEmail: false,
+                        showChangeUsername: false,
+                        showChangePassword: true,
+                        showChangeEmail: false,
                         showDeleteAccount: false,
                     }));
                 }} type="button" size="small" variant="text" theme="primary">Update Password</Button>
             }
 
-            {viewState.showUpdateEmail
+            {viewState.showChangeEmail
                 ? <Button onClick={() => {
-                    setViewState(prev => ({ ...prev, showUpdateEmail: false }));
+                    setViewState(prev => ({ ...prev, showChangeEmail: false }));
                 }} type="button" size="small" variant="text" theme="primary">Hide Update Email</Button>
                 : <Button onClick={() => {
                     setViewState(() => ({
-                        showUpdateUsername: false,
-                        showUpdatePassword: false,
-                        showUpdateEmail: true,
+                        showChangeUsername: false,
+                        showChangePassword: false,
+                        showChangeEmail: true,
                         showDeleteAccount: false,
                     }));
                 }} type="button" size="small" variant="text" theme="primary">Update Email</Button>
@@ -62,9 +62,9 @@ export default function UpdateProfileButtons({ viewState, setViewState }: Update
                 }} type="button" size="small" variant="text" theme="primary">Hide Delete Account</Button>
                 : <Button onClick={() => {
                     setViewState(() => ({
-                        showUpdateUsername: false,
-                        showUpdatePassword: false,
-                        showUpdateEmail: false,
+                        showChangeUsername: false,
+                        showChangePassword: false,
+                        showChangeEmail: false,
                         showDeleteAccount: true,
                     }));
                 }} type="button" size="small" variant="text" theme="primary">Delete Account</Button>

@@ -6,14 +6,14 @@ import { UserInfo } from '../../../types';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function UpdateEmail({ id, setUser }: {id: string, setUser: Dispatch<SetStateAction<UserInfo>>}) {
+export default function ChangeEmail({ id, setUser }: {id: string, setUser: Dispatch<SetStateAction<UserInfo>>}) {
     const email = useRef<string>('');
     const [error, setError] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [isEmailUpdated, setIsEmailUpdated] = useState<boolean>(false);
     const emailForm = useRef<HTMLFormElement>(null);
 
-    const handleUpdateEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const handleChangeEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setIsEmailUpdated(false);
@@ -63,7 +63,7 @@ export default function UpdateEmail({ id, setUser }: {id: string, setUser: Dispa
 
             {isEmailUpdated && <p className={styles.success}>Your email address has been successfully updated.</p>}
 
-            <form ref={emailForm as RefObject<HTMLFormElement>} className={styles.updateGroup} onSubmit={handleUpdateEmailSubmit}>
+            <form ref={emailForm as RefObject<HTMLFormElement>} className={styles.updateGroup} onSubmit={handleChangeEmailSubmit}>
                 {isSubmitting && <Loading />}
 
                 {error && <p className={styles.error}>{error}</p>}

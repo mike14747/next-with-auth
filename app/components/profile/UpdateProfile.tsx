@@ -2,9 +2,9 @@
 
 import { useState, Dispatch, SetStateAction } from 'react';
 import UpdateProfileButtons from './UpdateProfileButtons';
-import UpdateUsername from './UpdateUsername';
-import UpdatePassword from './UpdatePassword';
-import UpdateEmail from './UpdateEmail';
+import ChangeUsername from './ChangeUsername';
+import ChangePassword from './ChangePassword';
+import ChangeEmail from './ChangeEmail';
 import DeleteAccount from './DeleteAccount';
 import { UserInfo, ViewButtonState } from '../../../types';
 
@@ -12,9 +12,9 @@ import styles from '../../../styles/profile.module.css';
 
 export default function UpdateProfile({ user, setUser }: {user: UserInfo, setUser: Dispatch<SetStateAction<UserInfo>>}) {
     const [viewState, setViewState] = useState<ViewButtonState>({
-        showUpdateUsername: false,
-        showUpdatePassword: false,
-        showUpdateEmail: false,
+        showChangeUsername: false,
+        showChangePassword: false,
+        showChangeEmail: false,
         showDeleteAccount: false,
     });
 
@@ -23,20 +23,20 @@ export default function UpdateProfile({ user, setUser }: {user: UserInfo, setUse
             <UpdateProfileButtons viewState={viewState} setViewState={setViewState} />
 
             <div className={styles.updateContainer}>
-                {viewState.showUpdateUsername &&
-                    <UpdateUsername
+                {viewState.showChangeUsername &&
+                    <ChangeUsername
                         id={user.id}
                     />
                 }
 
-                {viewState.showUpdatePassword &&
-                    <UpdatePassword
+                {viewState.showChangePassword &&
+                    <ChangePassword
                         id={user.id}
                     />
                 }
 
-                {viewState.showUpdateEmail &&
-                    <UpdateEmail
+                {viewState.showChangeEmail &&
+                    <ChangeEmail
                         id={user.id}
                         setUser={setUser}
                     />
