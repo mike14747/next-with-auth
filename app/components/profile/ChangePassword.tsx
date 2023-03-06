@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState, FormEvent } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
@@ -46,6 +48,9 @@ export default function ChangePassword({ id }: { id: string }) {
             case 401:
                 setError('An error occurred. You do not have permission to make this update.');
                 break;
+            case 404:
+                setError('An error occurred. User was not found.');
+                break;
             case 500:
                 setError('A server error occurred. Please try your update again.');
                 break;
@@ -57,7 +62,7 @@ export default function ChangePassword({ id }: { id: string }) {
     return (
         <div className={styles.updateContainer}>
             <div className={styles.updateHeading}>
-                <h3>Update your password:</h3>
+                <h3>Change your password:</h3>
 
                 <p className={styles.note}>
                     <strong>Note:</strong> changing your password will log you out.

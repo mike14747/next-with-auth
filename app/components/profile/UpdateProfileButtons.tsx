@@ -1,3 +1,5 @@
+'use client';
+
 import { Dispatch, SetStateAction } from 'react';
 import Button from '../Button';
 import { ViewButtonState } from '../../../types';

@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState, Dispatch, SetStateAction, FormEvent, RefObject } from 'react';
 import Button from '../Button';
 import Loading from '../Loading';
@@ -6,7 +8,7 @@ import { UserInfo } from '../../../types';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function ChangeEmail({ id, setUser }: {id: string, setUser: Dispatch<SetStateAction<UserInfo>>}) {
+export default function ChangeEmail({ id, setUser }: { id: string, setUser: Dispatch<SetStateAction<UserInfo>> }) {
     const email = useRef<string>('');
     const [error, setError] = useState<string>('');
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -49,6 +51,9 @@ export default function ChangeEmail({ id, setUser }: {id: string, setUser: Dispa
             case 401:
                 setError('An error occurred. You do not have permission to make this update.');
                 break;
+            case 404:
+                setError('An error occurred. User was not found.');
+                break;
             case 500:
                 setError('A server error occurred. Please try your update again.');
                 break;
@@ -60,7 +65,7 @@ export default function ChangeEmail({ id, setUser }: {id: string, setUser: Dispa
     return (
         <div className={styles.updateContainer}>
             <div className={styles.updateHeading}>
-                <h3>Update your email:</h3>
+                <h3>Change your email:</h3>
             </div>
 
             {isEmailUpdated && <p className={styles.success}>Your email address has been successfully updated.</p>}

@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef, useState, FormEvent } from 'react';
 import { signOut } from 'next-auth/react';
 import Button from '../Button';
@@ -40,6 +42,9 @@ export default function ChangeUsername({ id }: { id: string }) {
             case 401:
                 setError('An error occurred. You do not have permission to make this update.');
                 break;
+            case 404:
+                setError('An error occurred. User was not found.');
+                break;
             case 409:
                 setError('An error occurred. The username you submitted is already in use.');
                 break;
@@ -54,7 +59,7 @@ export default function ChangeUsername({ id }: { id: string }) {
     return (
         <div className={styles.updateContainer}>
             <div className={styles.updateHeading}>
-                <h3>Update your username:</h3>
+                <h3>Change your username:</h3>
 
                 <p className={styles.note}>
                     <strong>Note:</strong> changing your username will log you out.
