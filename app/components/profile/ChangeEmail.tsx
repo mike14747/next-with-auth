@@ -58,8 +58,10 @@ export default function ChangeEmail({ id, setUser }: {id: string, setUser: Dispa
     };
 
     return (
-        <>
-            <h3 className={styles.updateHeading}>Update your email:</h3>
+        <div className={styles.updateContainer}>
+            <div className={styles.updateHeading}>
+                <h3>Update your email:</h3>
+            </div>
 
             {isEmailUpdated && <p className={styles.success}>Your email address has been successfully updated.</p>}
 
@@ -72,6 +74,6 @@ export default function ChangeEmail({ id, setUser }: {id: string, setUser: Dispa
 
                 <Button type="submit" size="medium" variant="contained" theme="primary">Apply</Button>
             </form>
-        </>
+        </div>
     );
 }

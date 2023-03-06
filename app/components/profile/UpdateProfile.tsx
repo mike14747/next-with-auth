@@ -8,9 +8,7 @@ import ChangeEmail from './ChangeEmail';
 import DeleteAccount from './DeleteAccount';
 import { UserInfo, ViewButtonState } from '../../../types';
 
-import styles from '../../../styles/profile.module.css';
-
-export default function UpdateProfile({ user, setUser }: {user: UserInfo, setUser: Dispatch<SetStateAction<UserInfo>>}) {
+export default function UpdateProfile({ user, setUser }: { user: UserInfo, setUser: Dispatch<SetStateAction<UserInfo>> }) {
     const [viewState, setViewState] = useState<ViewButtonState>({
         showChangeUsername: false,
         showChangePassword: false,
@@ -22,32 +20,30 @@ export default function UpdateProfile({ user, setUser }: {user: UserInfo, setUse
         <section>
             <UpdateProfileButtons viewState={viewState} setViewState={setViewState} />
 
-            <div className={styles.updateContainer}>
-                {viewState.showChangeUsername &&
-                    <ChangeUsername
-                        id={user.id}
-                    />
-                }
+            {viewState.showChangeUsername &&
+                <ChangeUsername
+                    id={user.id}
+                />
+            }
 
-                {viewState.showChangePassword &&
-                    <ChangePassword
-                        id={user.id}
-                    />
-                }
+            {viewState.showChangePassword &&
+                <ChangePassword
+                    id={user.id}
+                />
+            }
 
-                {viewState.showChangeEmail &&
-                    <ChangeEmail
-                        id={user.id}
-                        setUser={setUser}
-                    />
-                }
+            {viewState.showChangeEmail &&
+                <ChangeEmail
+                    id={user.id}
+                    setUser={setUser}
+                />
+            }
 
-                {viewState.showDeleteAccount &&
-                    <DeleteAccount
-                        id={user.id}
-                    />
-                }
-            </div>
+            {viewState.showDeleteAccount &&
+                <DeleteAccount
+                    id={user.id}
+                />
+            }
         </section>
     );
 }

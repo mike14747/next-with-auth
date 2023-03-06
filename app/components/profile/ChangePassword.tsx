@@ -6,7 +6,7 @@ import FormInputForNewPassword from '../FormInputForNewPassword';
 
 import styles from '../../../styles/profile.module.css';
 
-export default function ChangePassword({ id }: {id: string}) {
+export default function ChangePassword({ id }: { id: string }) {
     const password = useRef<string>('');
     const repeatPassword = useRef<string>('');
     const [error, setError] = useState<string>('');
@@ -55,12 +55,14 @@ export default function ChangePassword({ id }: {id: string}) {
     };
 
     return (
-        <>
-            <h3 className={styles.updateHeading}>Update your password:</h3>
+        <div className={styles.updateContainer}>
+            <div className={styles.updateHeading}>
+                <h3>Update your password:</h3>
 
-            <p className={styles.note}>
-                <strong>Note:</strong> changing your password will log you out.
-            </p>
+                <p className={styles.note}>
+                    <strong>Note:</strong> changing your password will log you out.
+                </p>
+            </div>
 
             <form className={styles.updateGroup} onSubmit={handleChangePasswordSubmit}>
                 {isSubmitting && <Loading />}
@@ -71,6 +73,6 @@ export default function ChangePassword({ id }: {id: string}) {
 
                 <Button type="submit" size="medium" variant="contained" theme="secondary">Apply</Button>
             </form>
-        </>
+        </div>
     );
 }

@@ -50,7 +50,9 @@ export default function DeleteAccount({ id }: {id: string}) {
 
     return (
         <div className={styles.deleteContainer}>
-            <h3 className={styles.deleteHeading}>Delete your account</h3>
+            <div className={styles.deleteHeading}>
+                <h3>Delete your account</h3>
+            </div>
 
             {isSubmitting && <Loading />}
 

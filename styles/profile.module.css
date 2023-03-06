@@ -1,35 +1,48 @@
-.currentContainer,
-.updateContainer {
+.currentContainer {
     margin: 2rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px var(--mg-gray-2) solid;
 }
 
 .currentHeading,
 .updateHeading,
 .deleteHeading {
-    font-size: 1.44rem;
-    font-size: var(--step-2);
+    margin-bottom: 2rem;
 }
 
-.currentHeading {
+.currentHeading > h3,
+.updateHeading > h3,
+.deleteHeading > h3 {
+    font-size: 1.44rem;
+    font-size: var(--step-2);
+    margin: 0;
+    padding: 0;
+}
+
+.currentHeading > h3 {
     color: var(--mg-green);
-    margin-bottom: 2rem;
+}
+
+.updateHeading > h3 {
+    color: var(--mg-orange-dark);
+}
+
+.deleteHeading > h3 {
+    color: var(--mg--dark);
 }
 
 .updateButtonsHeading {
     font-size: var(--step-0-base);
     font-size: var(--step-0);
     font-weight: bolder;
-    margin: 2rem 0 0.5rem 0;
-    padding-top: 2rem;
+    margin: 0 0 0.5rem 0;
     color: var(--mg-dark);
-    border-top: 1px var(--mg-gray-2) solid;
 }
 
-.updateHeading {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    color: var(--mg-orange-dark);
-    border-top: 1px var(--mg-gray-2) solid;
+.updateContainer {
+    padding: 1rem;
+    border: 1px var(--mg-green) solid;
+    border-radius: 0.50rem;
 }
 
 .deleteContainer {
@@ -45,19 +58,16 @@
     border-radius: 0.50rem;
 }
 
-.deleteHeading {
-    margin-bottom: 1.5rem;
-    color: var(--mg--dark);
-}
-
-.note {
-    margin-bottom: 2rem;
-}
-
 .description {
     font-size: 0.833rem;
     font-size: var(--step--1);
     color: var(--mg-blue);
+}
+
+.note {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.833rem;
+    font-size: var(--step--1);
 }
 
 .success {
@@ -75,6 +85,10 @@
 .resetPageHeading {
     font-size: 1.44rem;
     font-size: var(--step-2);
+}
+
+.showButtonNav {
+    margin: 0 0 2rem 0;
 }
 
 .showButtonNav button {

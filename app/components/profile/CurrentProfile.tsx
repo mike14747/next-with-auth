@@ -12,7 +12,9 @@ export default function CurrentProfile({ userObj }: UserObjProp) {
     return (
         <>
             <div className={styles.currentContainer}>
-                <h3 className={styles.currentHeading}>Current profile information:</h3>
+                <div className={styles.currentHeading}>
+                    <h3>Current profile information:</h3>
+                </div>
 
                 <p><span className={styles.description}>Username: </span>{user.username}</p>
 
