@@ -49,7 +49,7 @@ export default function DeleteAccount({ id }: {id: string}) {
     };
 
     return (
-        <>
+        <div className={styles.deleteContainer}>
             <h3 className={styles.deleteHeading}>Delete your account</h3>
 
             {isSubmitting && <Loading />}
@@ -63,6 +63,6 @@ export default function DeleteAccount({ id }: {id: string}) {
             }
 
             <Button type="button" size={deleteCounter > 0 ? 'medium' : 'small'} variant="contained" theme="danger" onClick={handleDeleteAccount}>Delete Account</Button>
-        </>
+        </div>
     );
 }
