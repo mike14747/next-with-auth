@@ -4,6 +4,28 @@
     border-bottom: 1px var(--mg-gray-2) solid;
 }
 
+.updateContainer,
+.deleteContainer {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.updateContainer {
+    border: 1px var(--mg-green) solid;
+}
+
+.deleteContainer {
+    border: 1px var(--mg-red) solid;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 20px,
+        var(--mg-gray-1) 20px,
+        var(--mg-gray-1) 40px
+    );
+}
+
 .currentHeading,
 .updateHeading,
 .deleteHeading {
@@ -39,29 +61,12 @@
     color: var(--mg-dark);
 }
 
-.updateContainer {
-    padding: 1rem;
-    border: 1px var(--mg-green) solid;
-    border-radius: 0.50rem;
-}
-
-.deleteContainer {
-    padding: 1rem;
-    border: 1px var(--mg-red) solid;
-    background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 20px,
-        var(--mg-gray-1) 20px,
-        var(--mg-gray-1) 40px
-    );
-    border-radius: 0.50rem;
-}
-
 .description {
-    font-size: 0.833rem;
-    font-size: var(--step--1);
-    color: var(--mg-blue);
+    font-size: 0.694rem;
+    font-size: var(--step--2);
+    color: var(--mg-gray-6);
+    margin-right: 0.50rem;
+    margin-right: clamp(0.25rem, 0.092rem + 0.789vw, 0.75rem);
 }
 
 .note {
