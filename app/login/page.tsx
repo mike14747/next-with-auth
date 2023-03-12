@@ -35,8 +35,8 @@ export default function Login() {
         const loginStatus = await signIn('credentials', {
             username: username.current,
             password: password.current,
-            redirect: false,
-            // callbackUrl: redirectUrl,
+            // redirect: false,
+            callbackUrl: redirectUrl,
         });
 
         // if the user did not successfully log in, set the error that will be displayed
