@@ -37,6 +37,10 @@ const securityHeaders = [
         key: 'Permissions-Policy',
         value: '',
     },
+    {
+        key: 'X-XSS-Protection',
+        value: '1; mode=block',
+    },
 ];
 
 const nextConfig = {
@@ -49,7 +53,6 @@ const nextConfig = {
             {
                 source: '/(.*)',
                 headers: securityHeaders,
-                xssProtection: 'sanitize',
             },
         ];
     },
