@@ -49,6 +49,7 @@ const nextConfig = {
             {
                 source: '/(.*)',
                 headers: securityHeaders,
+                xssProtection: 'sanitize',
             },
         ];
     },
