@@ -977,9 +977,11 @@ For now, I'm redirecting to the homepage upon signOut().
 
 ## Deploying to vercel
 
-There were warnings in the build process on vercel concerning the node version needing to be v12, v14 or v16 and by default vercel uses v18. So, I downgraded vercel's node version to v16 and the warnings went away.
+I used to think the **NEXTAUTH_URL** environment variable was only needed in development, but it seems to be required in production as well.
 
-You need the **NEXTAUTH_URL** environment variable locally, but it's not needed if you deploy to vercel. Vercel will populate it itself as **VERCEL_URL**. You do need to make sure **Settings > Environment Variables > Automatically expose System Environment Variables** is checked.
+Set it at vercel: NEXTAUTH_URL=https://your-app.vercel.app/ (obviously use your correct production url), then check "production" so it isn't used on any of your preview urls... which would have different urls.
+
+You do need to make sure **Settings > Environment Variables > Automatically expose System Environment Variables** is checked.
 
 ---
 
