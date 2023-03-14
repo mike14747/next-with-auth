@@ -78,8 +78,6 @@ Some of the above created files will need to be populated with code before this 
 
 Since I've upgraded this app to use next.js version 13, the initial folder/file structure will now be the following.
 
-**NOTE**: This was the folder/file structure before I updated the app to typescript.
-
 ```bash
 touch .env
 mkdir app lib pages public styles types
@@ -1061,16 +1059,12 @@ My fix was to add an id of **appWrapper** to the body tag in **/app/layout.tsx**
 
 -   Write tests.
 -   I'd like to come up with a way to clear button and nav focus on next/link page transition.
--   **Decide what to name the page.js components (Page vs the name of the route folder).**
+-   Decide what to name the page.js components (Page vs the name of the route folder). **UPDATE**: I've settled on using the name of the route folder.
 -   Switch over from client fetch to swr for data fetching... for now at least. Using fetch to POST/DELETE seems fine though.
 -   There is still a login redirect bug in middleware protected pages. Implement it when it's working better?
--   Why are my server-side console.logs not showing up?
--   Figure out optimized typescript-eslint config?
 -   Should I be closing the mongodb connection after use in serverless functions?
 -   Upgrade to mongodb v5.0.0?
--   Switch the database to my other account.
--   Implement a global 404 page once it's supported by next./js.
--   Move the api routes to the appDir once next-auth has a patch to support getting tokens under this paradigm.
+-   Implement a global 404 page once it's supported by next.js.
 
 ---
 
