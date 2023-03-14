@@ -23,7 +23,7 @@ I'm hopeful that middleware will be the ultimate solution, but I've found the **
 
 Right now the only type of sign in is using **Credentials**. I'd like to add a few other types of options at some point.
 
-## I've decided to use the **/styles** folder for all my global and css modules. I chose that system over placing the css modules with the files that use them because some of the css modules are shared between multiple pages/components.
+I've decided to use the **/styles** folder for all my global and css modules. I chose that system over placing the css modules with the files that use them because some of the css modules are shared between multiple pages/components.
 
 ## Starting this project
 
