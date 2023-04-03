@@ -22,7 +22,8 @@
     --mg-orange-dark: #c75000;
     --mg-orange-soft: #fcd581;
     --mg-purple: #6f42c1;
-    --mg-red: #b71c1c;
+    --mg-red: #b22222; /* html firebrick */
+    --mg-red-dark: #8b0000;
     --mg-yellow: #fff44f; /* html lemon */
     --mg-yellow-pale: #ffffd5;
 

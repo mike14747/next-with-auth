@@ -35,23 +35,23 @@ export default function FormInput({ id, label = '', name, handleChange, errorMsg
 
                 {/* you can comment out the following line if you don't want to notify the user of fields that are required */}
                 {required && <span className={styles.required}>*required</span>}
+
+                <input
+                    id={id}
+                    name={name}
+                    className={`${styles.input} ${styles[inputSize]}`}
+                    onChange={handleChange}
+                    required={required}
+                    size={30}
+                    type={type}
+                    placeholder={placeholder}
+                    {...rest}
+                />
+
+                {type === 'checkbox' &&
+                    <div role="checkbox" aria-checked={checked || false} tabIndex={0} aria-labelledby={label} className={styles.fakeCheckbox}></div>
+                }
             </label>
-
-            <input
-                id={id}
-                name={name}
-                className={`${styles.input} ${styles[inputSize]}`}
-                onChange={handleChange}
-                required={required}
-                size={30}
-                type={type}
-                placeholder={placeholder}
-                {...rest}
-            />
-
-            {type === 'checkbox' &&
-                <div role="checkbox" aria-checked={checked || false} tabIndex={0} aria-labelledby={label} className={styles.fakeCheckbox}></div>
-            }
 
             {errorMsg &&
                 <p className={styles.errorMessage}>{errorMsg}</p>
