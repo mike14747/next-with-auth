@@ -4,8 +4,8 @@
 
 label.label,
 label.label + input.input {
-    display: block;
-    max-width: 30ch;
+    display: inline-block;
+    max-width: 24ch;
     margin: 0;
 }
 
@@ -22,12 +22,12 @@ input.input.normal {
 }
 
 label.label.small {
-    font-size: .833rem;
+    font-size: 0.833rem;
     font-size: var(--step--1);
 }
 
 input.input.small {
-    font-size: .833rem;
+    font-size: 0.833rem;
     font-size: var(--step--1);
     padding: 0.5rem;
     border: 1px var(--mg-gray-6) solid;
@@ -36,13 +36,13 @@ input.input.small {
 input.input:focus {
     border: 1px var(--mg-orange) solid;
     outline: 0;
-    box-shadow: 0 0 4px 0 var(--mg-orange);
+    box-shadow: 0 0 4px 4px var(--mg-orange-soft);
 }
 
 .errorMessage {
-    font-size: .833rem;
+    font-size: 0.833rem;
     font-size: var(--step--1);
-    color: var(--mg-red);
+    color: var(--mg-red-dark);
     display: none;
     margin: 0;
 }
@@ -56,15 +56,15 @@ input.submit {
 }
 
 label > .required {
-    font-size: .833rem;
+    font-size: 0.833rem;
     font-size: var(--step--1);
-    color: var(--mg-red);
+    color: var(--mg-red-dark);
     margin-left: 1rem;
 }
 
 /* start checkbox styling */
 
-label.label input.input[type="checkbox"] {
+label.label input.input[type='checkbox'] {
     display: none;
 }
 
@@ -90,16 +90,25 @@ label.label input.input[type="checkbox"] {
 
 .fakeCheckbox:focus {
     border: 1px var(--mg-orange) solid;
-    box-shadow: 0 0 4px 0 var(--mg-orange);
+    box-shadow: 0 0 4px 4px var(--mg-orange-soft);
     outline: 0;
 }
 
-label.label input.input[type="checkbox"]:checked + .fakeCheckbox {
+label.label input.input[type='checkbox']:checked + .fakeCheckbox {
     background-color: var(--mg-orange);
 }
 
-label.label input.input[type="checkbox"]:checked + .fakeCheckbox:focus {
+label.label input.input[type='checkbox']:checked + .fakeCheckbox:focus {
     border: 1px var(--mg-gray-6) solid;
 }
 
 /* end checkbox styling */
+
+@media (min-width: 768px) {
+    label.label,
+    label.label + input.input {
+        display: inline-block;
+        max-width: 30ch;
+        margin: 0;
+    }
+}
