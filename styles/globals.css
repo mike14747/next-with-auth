@@ -211,8 +211,8 @@ h2.page-heading {
 /* add site specific code here */
 
 .form {
-    width: fit-content;
-    max-width: 400px;
+    width: 100%;
+    max-width: 288px;
     margin: 0 auto;
 }
 
