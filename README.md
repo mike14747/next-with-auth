@@ -49,7 +49,7 @@ Install the **next.js** app:
 npm i next react react-dom
 ```
 
-**NOTE**: This app was updated to use typescript a while after creating it. For instructions on how to update it to typescript, see: coding-notes/typescript/nextjs.md. Since I'm using typescript, I no longer feel the need to also us prop-types. All previous usage of them have been removed.
+> **NOTE**: This app was updated to use typescript a while after creating it. For instructions on how to update it to typescript, see: coding-notes/typescript/nextjs.md. Since I'm using typescript, I no longer feel the need to also us prop-types. All previous usage of them have been removed.
 
 Add some things to **scripts** property in **package.json**... so it looks like this:
 
@@ -61,7 +61,9 @@ Add some things to **scripts** property in **package.json**... so it looks like 
 }
 ```
 
-Install this folder/file structure (include the last blank line and you won't have to hit enter after pasting it into the terminal). **NOTE**: This was the folder/file structure before I used the new appDir and typescript.
+Install this folder/file structure (include the last blank line and you won't have to hit enter after pasting it into the terminal).
+
+> **NOTE**: This was the folder/file structure before I used the new appDir and typescript.
 
 ```bash
 touch .env
@@ -102,9 +104,9 @@ For starters, let's populate just the files necessary to run the app. I've inclu
 
 ### New layout component
 
-**UPDATE**: the **/components/Layout.js** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.tsx**.
+> **UPDATE**: the **/components/Layout.js** component is no longer used in next.js version 13. This is how I set up its replacement in the **/app** folder... **layout.tsx**.
 
-**NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
+> **NOTE**: this is the final product and includes some things I'm doing to test out some of its capabilities. The bare minimum to get started is far simpler than this.
 
 ```js
 // /app/layout.tsx
@@ -617,7 +619,7 @@ Since an attempt to access a protected page would lead to a redirect to the logi
 
 There is also an array of possible callbackUrl query parameters that are bypassed upon a successful login. Those include: **/reset-link**, **/reset-password-success**, **/register** and the **/login** page itself. If any of these page are passed as the callbackUrl query parameter, the successful login redirect will send the user to the **homepage**. In fact, my check is to see if any of the redirect urls start with any of the _notRedirectable_ array items. This is because some of them (eg: /reset-link) will include query parameters so I can't just do an indexOf check on the array.
 
-**NOTE**: the **callbackUrl** has to either be an **absolute url from the same domain** or a **relative url starting with a "/"**.
+> **NOTE**: the **callbackUrl** has to either be an **absolute url from the same domain** or a **relative url starting with a "/"**.
 
 ```js
 const router = useRouter();
@@ -751,7 +753,7 @@ export default async function Protected() {
 
 The middleware does not allow anyone who is not authenticated to visit the page. The middleware sends the users to the login page (which handles the redirect back to the intended page upon successfully signing in).
 
-**NOTE**: I'm currently not using middleware to protect any pages, because I feel next-auth is currently too buggy with middleware... though I did include a middleware.js file with a matcher in this project. It only contains a dummy route in the matcher though.
+> **NOTE**: I'm currently not using middleware to protect any pages, because I feel next-auth is currently too buggy with middleware... though I did include a middleware.js file with a matcher in this project. It only contains a dummy route in the matcher though.
 
 ---
 
@@ -836,7 +838,7 @@ There are 3 types of API routes in this app.
 2.  **Protected** routes that can only be accessed by a logged in user (or in some cases, a specific logged in user... eg: update email, password and username routes).
 3.  **Admin** routes that can only be accessed by a user logged in with a role of admin.
 
-**NOTE**: the use of an explicit _return_ must be used with the response and status code if there is code that could still be run in the event that the above conditions are not met.
+> **NOTE**: the use of an explicit _return_ must be used with the response and status code if there is code that could still be run in the event that the above conditions are not met.
 
 **Public API route**
 
@@ -1041,7 +1043,7 @@ fetch(URL, { next: { revalidate: 20 } });
 export const revalidate = 60;
 ```
 
-**NOTE**: Using any of the above only works with a production build... not with a dev server.
+> **NOTE**: Using any of the above only works with a production build... not with a dev server.
 
 ---
 
