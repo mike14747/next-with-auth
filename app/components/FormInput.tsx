@@ -51,11 +51,11 @@ export default function FormInput({ id, label = '', name, handleChange, errorMsg
                 {type === 'checkbox' &&
                     <div role="checkbox" aria-checked={checked || false} tabIndex={0} aria-labelledby={label} className={styles.fakeCheckbox}></div>
                 }
-            </label>
 
-            {errorMsg &&
-                <p className={styles.errorMessage}>{errorMsg}</p>
-            }
+                {errorMsg &&
+                    <p className={styles.errorMessage}>{errorMsg}</p>
+                }
+            </label>
         </div>
     );
 }

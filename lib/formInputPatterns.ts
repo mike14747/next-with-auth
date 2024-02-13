@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-escape */
 
 // eslint-disable-next-line quotes
-export const usernamePattern = "^(?=.{4,15}$)[a-zA-Z0-9]+(?:[ _-][a-zA-Z0-9]+)*$";
-export const usernameErrorMsg = 'Username must be from 4 to 15 characters in length and not include any special characters other than dashes, spaces and underscores (but only 1 can be used consecutively). Must start and end with a letter or number.';
+export const usernamePattern = "^(?=.{4,15}$)[a-zA-Z0-9]+(?:[_-][a-zA-Z0-9]+)*$";
+export const usernameErrorMsg = 'Username must be from 4 to 15 characters in length and not include any special characters other than dashes and underscores (but only 1 can be used consecutively). Must start and end with a letter or number.';
 
 // eslint-disable-next-line quotes
 export const passwordPattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]{8,20}$";
