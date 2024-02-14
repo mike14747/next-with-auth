@@ -1,4 +1,4 @@
-import { getUnprotectedData } from '../../lib/api/index';
+import { getUnprotectedData } from '@/lib/api/index';
 
 export const revalidate = 60;
 

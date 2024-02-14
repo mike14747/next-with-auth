@@ -2,11 +2,11 @@
 
 import { useRef, useState, FormEvent } from 'react';
 import { signOut } from 'next-auth/react';
-import Button from '../Button';
-import Loading from '../Loading';
-import FormInputForUsername from '../FormInputForUsername';
+import Button from '@/components/Button';
+import Loading from '@/components/Loading';
+import FormInputForUsername from '@/components/FormInputForUsername';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '@/styles/profile.module.css';
 
 export default function ChangeUsername({ id }: { id: string }) {
     const username = useRef<string>('');

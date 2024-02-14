@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
-import { deleteUserAccount } from '../../../../lib/api/user';
+import { deleteUserAccount } from '@/lib/api/user';
 
 export default async function protectedRoute(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'DELETE') return res.status(401).end();

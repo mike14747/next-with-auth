@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { resetPassword } from '../../../lib/api/user';
+import { resetPassword } from '@/lib/api/user';
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') return res.status(401).end();

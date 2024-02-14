@@ -6,7 +6,7 @@ import ForgotLoginButtons from './ForgotLoginButtons';
 import ForgotUsername from './ForgotUsername';
 import ForgotPassword from './ForgotPassword';
 
-import styles from '../../../styles/ForgotLoginInfo.module.css';
+import styles from '@/styles/ForgotLoginInfo.module.css';
 
 export default function ForgottenUsername() {
     const [showForgotUsername, setShowForgotUsername] = useState<boolean>(false);

@@ -1,12 +1,12 @@
 'use client';
 
 import { useRef, useState, Dispatch, SetStateAction, FormEvent, RefObject } from 'react';
-import Button from '../Button';
-import Loading from '../Loading';
-import FormInputForEmail from '../FormInputForEmail';
-import { UserInfo } from '../../../types';
+import Button from '@/components/Button';
+import Loading from '@/components/Loading';
+import FormInputForEmail from '@/components/FormInputForEmail';
+import { UserInfo } from '@/types/index';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '@/styles/profile.module.css';
 
 export default function ChangeEmail({ id, setUser }: { id: string, setUser: Dispatch<SetStateAction<UserInfo>> }) {
     const email = useRef<string>('');

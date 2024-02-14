@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
-import { getUserProfile } from '../../../../lib/api/user';
+import { getUserProfile } from '@/lib/api/user';
 
 export default async function user(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(401).end();

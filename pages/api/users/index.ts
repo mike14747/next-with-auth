@@ -3,7 +3,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getToken } from 'next-auth/jwt';
-import { getInfoForAllUsers, registerNewUser } from '../../../lib/api/user';
+import { getInfoForAllUsers, registerNewUser } from '@/lib/api/user';
 
 export default async function users(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {

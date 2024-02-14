@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getProtectedData } from '../../lib/api/index';
+import { getProtectedData } from '@/lib/api/index';
 import { getServerSession } from 'next-auth/next';
 
 export const revalidate = 60;

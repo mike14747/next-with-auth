@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 import UpdateProfile from './UpdateProfile';
-import { UserInfo, UserObjProp } from '../../../types';
+import { UserInfo, UserObjProp } from '@/types/index';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '@/styles/profile.module.css';
 
 export default function CurrentProfile({ userObj }: UserObjProp) {
     const [user, setUser] = useState<UserInfo>(userObj);

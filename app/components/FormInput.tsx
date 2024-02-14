@@ -1,6 +1,6 @@
 import { ChangeEventHandler } from 'react';
 
-import styles from '../../styles/FormInput.module.css';
+import styles from '@/styles/FormInput.module.css';
 
 type FormInputProps = {
     id: string;

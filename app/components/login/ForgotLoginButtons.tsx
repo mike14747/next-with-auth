@@ -1,9 +1,9 @@
 'use client';
 
 import { Dispatch, SetStateAction } from 'react';
-import Button from '../Button';
+import Button from '@/components/Button';
 
-import styles from '../../../styles/ForgotLoginInfo.module.css';
+import styles from '@/styles/ForgotLoginInfo.module.css';
 
 type ForgotLoginButtonsProps = {
     showForgotUsername: boolean;

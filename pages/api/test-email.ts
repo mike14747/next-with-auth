@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { testEmail } from '../../lib/api/user';
+import { testEmail } from '@/lib/api/user';
 
 export default async function settings(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(401).end();

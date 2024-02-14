@@ -2,11 +2,11 @@
 
 import { useRef, useState, FormEvent } from 'react';
 import { useSession } from 'next-auth/react';
-import FormInputForUsername from '../components/FormInputForUsername';
-import FormInputForNewPassword from '../components/FormInputForNewPassword';
-import FormInputForEmail from '../components/FormInputForEmail';
-import Button from '../components/Button';
-import Loading from '../components/Loading';
+import FormInputForUsername from '@/components/FormInputForUsername';
+import FormInputForNewPassword from '@/components/FormInputForNewPassword';
+import FormInputForEmail from '@/components/FormInputForEmail';
+import Button from '@/components/Button';
+import Loading from '@/components/Loading';
 
 export default function Register() {
     const { status } = useSession();

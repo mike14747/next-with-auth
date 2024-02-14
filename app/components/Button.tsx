@@ -1,6 +1,6 @@
 import { ReactNode, MouseEventHandler } from 'react';
 
-import styles from '../../styles/Button.module.css';
+import styles from '@/styles/Button.module.css';
 
 type ButtonProps = {
     children: ReactNode;

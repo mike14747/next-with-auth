@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import Authbar from './Authbar';
+import Authbar from '@/components/Authbar';
 
-import styles from '../../styles/Header.module.css';
+import styles from '@/styles/Header.module.css';
 
 export default function Header({ topInfoActive = false, topInfoText = '' }: { topInfoActive: boolean, topInfoText: string }) {
     return (

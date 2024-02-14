@@ -1,8 +1,8 @@
 'use client';
 
 import { MutableRefObject, ChangeEvent } from 'react';
-import FormInput from './FormInput';
-import { emailPattern, emailErrorMsg } from '../../lib/formInputPatterns';
+import FormInput from '@/components/FormInput';
+import { emailPattern, emailErrorMsg } from '@/lib/formInputPatterns';
 
 export default function FormInputForEmail({ email }: { email: MutableRefObject<string> }) {
     return (

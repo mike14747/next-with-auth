@@ -23,6 +23,7 @@
                 "name": "next"
             },
         ],
+        "strictNullChecks": true,
         "noEmitOnError": true,
         "removeComments": true,
         "noUnusedParameters": true,
@@ -32,6 +33,21 @@
             "./types",
             "./node_modules/@types"
         ],
+        "baseUrl": ".",
+        "paths": {
+            "@/styles/*": [
+                "styles/*"
+            ],
+            "@/lib/*": [
+                "lib/*"
+            ],
+            "@/types/*": [
+                "types/*"
+            ],
+            "@/components/*": [
+                "app/components/*"
+            ]
+        }
     },
     "include": [
         "next-env.d.ts",

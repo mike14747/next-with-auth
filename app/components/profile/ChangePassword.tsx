@@ -2,11 +2,11 @@
 
 import { useRef, useState, FormEvent } from 'react';
 import { signOut } from 'next-auth/react';
-import Button from '../Button';
-import Loading from '../Loading';
-import FormInputForNewPassword from '../FormInputForNewPassword';
+import Button from '@/components/Button';
+import Loading from '@/components/Loading';
+import FormInputForNewPassword from '@/components/FormInputForNewPassword';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '@/styles/profile.module.css';
 
 export default function ChangePassword({ id }: { id: string }) {
     const password = useRef<string>('');

@@ -1,6 +1,6 @@
 import { MutableRefObject, ChangeEvent } from 'react';
-import FormInput from './FormInput';
-import { usernamePattern, usernameErrorMsg } from '../../lib/formInputPatterns';
+import FormInput from '@/components/FormInput';
+import { usernamePattern, usernameErrorMsg } from '@/lib/formInputPatterns';
 
 export default function FormInputForUsername({ username }: { username: MutableRefObject<string> }) {
     return (

@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { signOut } from 'next-auth/react';
-import Button from '../Button';
-import Loading from '../Loading';
+import Button from '@/components/Button';
+import Loading from '@/components/Loading';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '@/styles/profile.module.css';
 
 export default function DeleteAccount({ id }: { id: string }) {
     const [error, setError] = useState<string>('');

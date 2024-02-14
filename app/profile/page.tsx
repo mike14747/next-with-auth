@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 // eslint-disable-next-line camelcase
 import { getServerSession } from 'next-auth/next';
-import CurrentProfile from '../components/profile/CurrentProfile';
-import { getUserProfile } from '../../lib/api/user';
+import CurrentProfile from '@/components/profile/CurrentProfile';
+import { getUserProfile } from '@/lib/api/user';
 
 async function getData(id: string) {
     return await getUserProfile(id).catch(error => console.log(error.message));

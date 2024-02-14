@@ -1,9 +1,9 @@
-import clientPromise from '../mongodb';
+import clientPromise from '@/lib//mongodb';
 import { ObjectId } from 'bson';
-import { mailTransporter } from '../nodemailerConfig';
-import { formatDateObject } from '../formatDate';
-import { usernamePattern, emailPattern, passwordPattern } from '../formInputPatterns';
-import { generateRandom, hashPassword } from '../cryptoUtils';
+import { mailTransporter } from '@/lib/nodemailerConfig';
+import { formatDateObject } from '@/lib/formatDate';
+import { usernamePattern, emailPattern, passwordPattern } from '@/lib/formInputPatterns';
+import { generateRandom, hashPassword } from '@/lib/cryptoUtils';
 
 export const getUserForSignin = async (username: string, password: string) => {
     try {

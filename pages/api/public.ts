@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getUnprotectedData } from '../../lib/api';
+import { getUnprotectedData } from '@/lib/api';
 
 export default async function publicRoute(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'GET') return res.status(401).end();

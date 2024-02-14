@@ -1,10 +1,10 @@
 'use client';
 
 import { Dispatch, SetStateAction } from 'react';
-import Button from '../Button';
-import { ViewButtonState } from '../../../types';
+import Button from '@/components//Button';
+import { ViewButtonState } from '@/types/index';
 
-import styles from '../../../styles/profile.module.css';
+import styles from '@/styles/profile.module.css';
 
 type UpdateProfileButtonsProps = {
     viewState: ViewButtonState

@@ -1,6 +1,6 @@
 import { MutableRefObject, ChangeEvent } from 'react';
-import FormInput from './FormInput';
-import { passwordPattern, passwordErrorMsg } from '../../lib/formInputPatterns';
+import FormInput from '@/components/FormInput';
+import { passwordPattern, passwordErrorMsg } from '@/lib/formInputPatterns';
 
 export default function FormInputForNewPassword({ password, repeatPassword }: { password: MutableRefObject<string>, repeatPassword: MutableRefObject<string> }) {
     return (
