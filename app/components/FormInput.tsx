@@ -53,7 +53,7 @@ export default function FormInput({ id, label = '', name, handleChange, errorMsg
                 }
 
                 {errorMsg &&
-                    <p className={styles.errorMessage}>{errorMsg}</p>
+                    <span className={styles.errorMessage}>{errorMsg}</span>
                 }
             </label>
         </div>
